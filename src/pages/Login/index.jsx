@@ -21,8 +21,8 @@ const Login = () => {
       dispatch(setLoading(true));
       const res = await authService.loginUser(data);
       // if(res?.data?.res){
-      dispatch(login());
-      dispatch(login(res.data.user._id));
+      // dispatch(login());
+      dispatch(login(res.data.user));
       navigate("/");
       console.log(res.data.user._id);
     } catch (error) {

@@ -18,6 +18,9 @@ const authService = {
   rescheduleOrder: (orderId, data) =>
     api.put(`${config.RESCHEDULE_ORDER}${orderId}`, data),
 
+  // My booking Section
+  getUserOrder: (userId) => api.get(`${config.USER_ORDER}${userId}`),
+
   // Product Section
   rentalProduct: () => api.get(`${config.GET_RENTAL_PRODUCTS}`),
   relatedRentalProduct: (category) =>

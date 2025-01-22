@@ -6,6 +6,9 @@ import authService from "../../api/ApiService";
 import { logout } from "../../redux/slice/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { setLoading } from "../../redux/slice/LoaderSlice";
+import { getErrorMessage } from "../../utils/helperFunc";
+import { clearCart } from "../../redux/slice/CartSlice";
 
 const Account = () => {
   const [userDetails, setUserDetails] = useState([]);
@@ -14,14 +17,23 @@ const Account = () => {
   const navigate = useNavigate();
 
   const getAccount = async () => {
-    const res = await authService.getUserProfile(userId._id);
-    setUserDetails(res.data);
-    console.log(userId);
+    try {
+      dispatch(setLoading(true));
+      const res = await authService.getUserProfile(userId._id);
+      setUserDetails(res.data);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      getErrorMessage(error);
+    }
   };
 
   const handleLogout = () => {
+    dispatch(setLoading(true));
     dispatch(logout());
     navigate("/login");
+    dispatch(clearCart());
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {

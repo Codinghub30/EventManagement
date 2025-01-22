@@ -1,8 +1,13 @@
+// React Related imports
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+// Third party library
 import { Box, Typography, Button, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+
+// Custom Components
 import authService from "../../api/ApiService";
 import {
   addToCart,
@@ -10,9 +15,11 @@ import {
   quantityIncrement,
   removeFromCart,
 } from "../../redux/slice/CartSlice";
-import "./styles.scss";
 import { getErrorMessage } from "../../utils/helperFunc";
 import EventDetails from "./components/EventDetails";
+
+// Styles
+import "./styles.scss";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cart);
@@ -160,7 +167,20 @@ const Cart = () => {
           </Box>
         </Box>
       </Box>
-      <EventDetails cartItems={cartItems} />
+      <EventDetails
+        cartItems={cartItems}
+        billingDetails={{
+          cartValue: totalPrice,
+          eventDays: 2,
+          baseAmount: totalPrice * 0.9,
+          tdsCharges: totalPrice * 0.02,
+          amountAfterTds: totalPrice * 0.98,
+          cgst: totalPrice * 0.09,
+          sgst: totalPrice * 0.09,
+          totalGst: totalPrice * 0.18,
+          grandTotal: totalPrice * 1.18 - totalPrice * 0.02,
+        }}
+      />
     </>
   );
 };

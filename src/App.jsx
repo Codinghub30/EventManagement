@@ -17,6 +17,8 @@ import Account from "./pages/Account";
 import LoginWithMobile from "./pages/Login/component/LoginWithMobile";
 import Profile from "./pages/Account/components/Profile";
 import CompanyDetails from "./pages/CompanyDetails";
+import BookingDetails from "./pages/Bookings/components/BookingDetails";
+// import CalendarModal from "./pages/Calender";
 // import LoginMobile from "./pages/LoginMobile";
 
 // Lazy-loaded components
@@ -71,6 +73,7 @@ function App() {
                 // </PublicRoute>
               }
             />
+            x */}
             <Route
               path="/login"
               element={
@@ -88,7 +91,6 @@ function App() {
               }
             />
             <Route path="/about" element={<AboutUs />} />
-
             {/* Protected Routes */}
             <Route
               path="/category/:category"
@@ -127,6 +129,14 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <Bookings />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/booking/:id"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <BookingDetails />
                 </PrivateRoute>
               }
             />

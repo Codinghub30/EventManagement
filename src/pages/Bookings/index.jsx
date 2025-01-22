@@ -1,67 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Card, CardContent, Button, Chip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  Chip,
+} from "@mui/material";
 import EventIcon from "@mui/icons-material/Event";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import "./styles.scss";
 import authService from "../../api/ApiService";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { setLoading } from "../../redux/slice/LoaderSlice";
+import { getErrorMessage } from "../../utils/helperFunc";
+import EventImg from "../../assets/bookingImg.jpg";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
+  const userData = useSelector((state) => state.auth.userDetails);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // Simulating API call to fetch bookings
-    const fetchBookings = async () => {
-      const mockBookings = [
-        {
-          id: 1,
-          eventName: "Wedding Ceremony",
-          location: "Grand Palace, New York",
-          date: "2025-01-25",
-          time: "5:00 PM",
-          status: "Confirmed",
-          image: "https://via.placeholder.com/150",
-        },
-        {
-          id: 2,
-          eventName: "Corporate Meeting",
-          location: "Hilton Conference Hall, LA",
-          date: "2025-02-10",
-          time: "10:00 AM",
-          status: "Pending",
-          image: "https://via.placeholder.com/150",
-        },
-        {
-          id: 3,
-          eventName: "Birthday Party",
-          location: "Luxe Banquet Hall, Chicago",
-          date: "2025-03-15",
-          time: "7:00 PM",
-          status: "Cancelled",
-          image: "https://via.placeholder.com/150",
-        },
-      ];
-      setBookings(mockBookings);
+    const getBookings = async () => {
+      try {
+        dispatch(setLoading(true));
+        const res = await authService.getUserOrder(userData._id);
+        console.log("the response", res);
+        setBookings(res.data.userOrder);
+        dispatch(setLoading(false));
+      } catch (error) {
+        setLoading(false);
+        getErrorMessage(error);
+      }
     };
 
-    // const getOrder = async() => {
-    //   const res = await authService.getOrder();
-
-    // }
-
-    fetchBookings();
+    getBookings();
   }, []);
 
   return (
     <Box className="my-bookings-page" sx={{ padding: "2rem" }}>
-      <Typography variant="h4" sx={{ textAlign: "center", marginBottom: "2rem" }}>
+      <Typography
+        variant="h4"
+        sx={{ textAlign: "center", marginBottom: "2rem" }}
+      >
         My Bookings
       </Typography>
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", justifyContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "1.5rem",
+          justifyContent: "center",
+        }}
+      >
         {bookings.length > 0 ? (
-          bookings.map((booking) => (
+          bookings?.map((booking) => (
             <Card
-              key={booking.id}
+              key={booking._id}
               sx={{
                 width: "350px",
                 boxShadow: 3,
@@ -69,48 +67,81 @@ const Bookings = () => {
                 overflow: "hidden",
               }}
             >
-              <img src={booking.image} alt={booking.eventName} style={{ width: "100%", height: "180px", objectFit: "cover" }} />
+              <img
+                src={EventImg}
+                alt={booking.eventName}
+                style={{ width: "100%", height: "180px", objectFit: "cover" }}
+              />
               <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-                  {booking.eventName}
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", marginBottom: "0.5rem" }}
+                >
+                  {booking.event_name}
                 </Typography>
-                <Box sx={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "0.5rem",
+                  }}
+                >
                   <LocationOnIcon fontSize="small" color="primary" />
                   <Typography variant="body2" sx={{ marginLeft: "0.5rem" }}>
-                    {booking.location}
+                    {booking.event_location}
                   </Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "0.5rem",
+                  }}
+                >
                   <EventIcon fontSize="small" color="secondary" />
                   <Typography variant="body2" sx={{ marginLeft: "0.5rem" }}>
-                    {booking.date}
+                    {booking.event_date}
                   </Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "1rem",
+                  }}
+                >
                   <AccessTimeIcon fontSize="small" color="action" />
                   <Typography variant="body2" sx={{ marginLeft: "0.5rem" }}>
-                    {booking.time}
+                    {booking.event_start_time}
                   </Typography>
                 </Box>
                 <Chip
                   label={booking.status}
                   color={
-                    booking.status === "Confirmed"
+                    booking.payment_status === "success"
                       ? "success"
-                      : booking.status === "Pending"
+                      : booking.status === "pending"
                       ? "warning"
                       : "error"
                   }
-                  sx={{ fontWeight: "bold", marginBottom: "1rem" }}
+                  sx={{ fontWeight: "bold", width: "0.9rem", height: "15px" }}
                 />
-                <Button variant="outlined" color="primary" fullWidth>
-                  View Details
-                </Button>
+                <Typography variant="p" sx={{ marginLeft: "0.6rem" }}>
+                  {booking.payment_status}
+                </Typography>
+                <Link to={`/booking/${booking._id}`}>
+                  <Button variant="outlined" color="primary" fullWidth>
+                    View Details
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))
         ) : (
-          <Typography variant="h6" sx={{ textAlign: "center", marginTop: "2rem" }}>
+          <Typography
+            variant="h6"
+            sx={{ textAlign: "center", marginTop: "2rem" }}
+          >
             No bookings found.
           </Typography>
         )}

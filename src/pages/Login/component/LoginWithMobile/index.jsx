@@ -30,12 +30,7 @@ const LoginWithMobile = () => {
       console.log("The data:", res.data.user);
 
       if (res.data && res.data.user) {
-        // Destructure user data from response
         const user = res.data.user;
-
-        console.log("The datass:", user);
-
-        // Update local state with user data
         setUserData(user);
         dispatch(login(user));
 

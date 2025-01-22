@@ -4,19 +4,20 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     isAuthenticated: sessionStorage.getItem("isAuthenticated") === "true",
-    userDetails: null,
+    userDetails: {},
   },
   reducers: {
     login(state, action) {
       state.isAuthenticated = true;
-
       state.userDetails = action.payload;
       sessionStorage.setItem("isAuthenticated", "true");
+      sessionStorage.setItem("userDetails", JSON.stringify(state.userDetails));
     },
     logout(state) {
       state.isAuthenticated = false;
       sessionStorage.removeItem("isAuthenticated");
-      state.userDetails = null;
+      sessionStorage.removeItem("userDetails");
+      state.userDetails = {};
     },
   },
 });
