@@ -1,18 +1,21 @@
-import { configureStore } from '@reduxjs/toolkit';
-import cartReducer from '../slice/CartSlice';
-import authReducer from '../slice/authSlice';
-import loaderReducer from '../slice/LoaderSlice';
-import persistStore from 'redux-persist/es/persistStore';
-import { persistedReducer } from '../persists/persistsReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import cartReducer from "../slice/CartSlice";
+import authReducer from "../slice/authSlice";
+import loaderReducer from "../slice/LoaderSlice";
+import persistStore from "redux-persist/es/persistStore";
+import {
+  persistedCartReducer,
+  persistedAuthReducer,
+} from "../persists/persistsReducer";
 const store = configureStore({
   reducer: {
-    cart: persistedReducer,
+    cart: persistedCartReducer,
     loader: loaderReducer,
-    auth: authReducer,
+    auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, 
+      serializableCheck: false,
     }),
 });
 

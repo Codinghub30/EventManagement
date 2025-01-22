@@ -16,6 +16,7 @@ import FeaturedProduct from "./pages/Products/FeaturedProduct";
 import Account from "./pages/Account";
 import LoginWithMobile from "./pages/Login/component/LoginWithMobile";
 import Profile from "./pages/Account/components/Profile";
+import CompanyDetails from "./pages/CompanyDetails";
 // import LoginMobile from "./pages/LoginMobile";
 
 // Lazy-loaded components
@@ -34,7 +35,7 @@ const AboutUs = lazy(() => import("./pages/About"));
 
 // PrivateRoute Component
 const PrivateRoute = ({ isAuthenticated, children }) => {
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 // PublicRoute Component
@@ -45,6 +46,9 @@ const PublicRoute = ({ isAuthenticated, children }) => {
 function App() {
   const loading = useSelector((state) => state.loader.loading);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  console.log(isAuthenticated);
+
   useReactFontLoader({
     url: "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap",
   });
@@ -91,6 +95,14 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <Category />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/company"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <CompanyDetails />
                 </PrivateRoute>
               }
             />

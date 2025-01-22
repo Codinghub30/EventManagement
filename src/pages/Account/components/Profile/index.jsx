@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -24,7 +24,21 @@ const Profile = () => {
     panCard: "838733838",
   });
   const userDetails = useSelector((state) => state.auth.userDetails);
-  console.log("The userDetails", userDetails);
+  console.log(userDetails);
+  const companyDetails = userDetails.company_profile?.[0] || {};
+  useEffect(() => {
+    if (userDetails) {
+      setAccountDetails({
+        name: userDetails.username || "",
+        email: userDetails.email || "",
+        mobileNumber: userDetails.mobilenumber || "",
+        companyName: companyDetails.company_name || "",
+        companyType: companyDetails.company_type || "",
+        designation: companyDetails.designation || "",
+        panCard: companyDetails.pan_number || "",
+      });
+    }
+  }, [userDetails]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

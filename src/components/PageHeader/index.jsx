@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, TextField, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.jpg";
 import "./styles.scss";
 import { useSelector } from "react-redux";
 import { getCurrentCity } from "../../utils/helperFunc";
-import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 const PageHeader = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentLocation, setCurrentLocation] = useState("Fetching location...");
+  const [currentLocation, setCurrentLocation] = useState(
+    "Fetching location..."
+  );
   const count = useSelector((state) => state.cart.cart.length);
-const location = useLocation();
+  const location = useLocation();
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -37,8 +46,16 @@ const location = useLocation();
           <span className="header-lists">Nithya</span>
 
           <Toolbar disableGutters className="header-container">
-            <Box className="header-nav" sx={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom:'0.6rem' }}>
-            <TextField
+            <Box
+              className="header-nav"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+                marginBottom: "0.6rem",
+              }}
+            >
+              <TextField
                 variant="outlined"
                 placeholder="Search events..."
                 size="small"
@@ -62,9 +79,14 @@ const location = useLocation();
                 }}
               />
               <span className="header-list">Events in Bengaluru</span>
-          
-              <span className="header-list" style={{display:'flex', alignItems:'center', gap:'0.2rem'}}><FmdGoodOutlinedIcon/>{currentLocation}</span>
-           
+
+              <span
+                className="header-list"
+                style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
+              >
+                <FmdGoodOutlinedIcon />
+                {currentLocation}
+              </span>
             </Box>
           </Toolbar>
         </Toolbar>
@@ -76,8 +98,8 @@ const location = useLocation();
             alignItems: "center",
             padding: "9px 18px",
             color: "white",
-            width:"95rem",
-            marginLeft:"-24px",
+            width: "95rem",
+            marginLeft: "-24px",
             background:
               "linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)",
           }}
@@ -96,15 +118,11 @@ const location = useLocation();
               },
             }}
           >
-            <Link
-              to={"/"}
-              style={{ textDecoration: "none" }}
-       
-            >
+            <Link to={"/"} style={{ textDecoration: "none" }}>
               <Box
                 sx={{
                   // color: location.pathname === "/" ? "black" : "white",
-                  color:'white'
+                  color: "white",
                 }}
                 className="header-list"
               >
@@ -112,15 +130,11 @@ const location = useLocation();
               </Box>
             </Link>
 
-            <Link
-              to={"/about"}
-              style={{ textDecoration: "none" }}
-            >
+            <Link to={"/about"} style={{ textDecoration: "none" }}>
               <Box
                 sx={{
                   // color: location.pathname === "/about" ? "black" : "white",
-                  color:'white'
-
+                  color: "white",
                 }}
                 className="header-list"
               >
@@ -131,8 +145,7 @@ const location = useLocation();
             <Box
               sx={{
                 // color: location.pathname === "/about#testimonials" ? "black" : "white",
-                color:'white'
-
+                color: "white",
               }}
               className="header-list"
             >
@@ -147,8 +160,7 @@ const location = useLocation();
             <Box
               sx={{
                 // color: location.pathname === "/testimonials" ? "black" : "white",
-                color:'white'
-
+                color: "white",
               }}
               className="header-list"
             >
@@ -163,8 +175,7 @@ const location = useLocation();
             <Box
               sx={{
                 // color: location.pathname === '/categories' ? "black" : "white",
-                color:'white'
-
+                color: "white",
               }}
               className="header-list"
             >
@@ -175,31 +186,23 @@ const location = useLocation();
                 Categories
               </a>
             </Box>
-            
-            <Link
-              to={"/booking"}
-              style={{ textDecoration: "none" }}
-            >
-            <Box
-              sx={{
-                // color: location.pathname === "/booking" ? "black" : "white",
-                color:'white'
 
-              }}
-              className="header-list"
-            >
-              My Booking
-            </Box>
+            <Link to={"/booking"} style={{ textDecoration: "none" }}>
+              <Box
+                sx={{
+                  // color: location.pathname === "/booking" ? "black" : "white",
+                  color: "white",
+                }}
+                className="header-list"
+              >
+                My Booking
+              </Box>
             </Link>
-            <Link
-              to={"/cart"}
-              style={{ textDecoration: "none" }}
-            >
+            <Link to={"/cart"} style={{ textDecoration: "none" }}>
               <Box
                 sx={{
                   // color: location.pathname === "/cart" ? "black" : "white",
-                  color:'white'
-
+                  color: "white",
                 }}
                 className="header-list"
               >
@@ -225,15 +228,11 @@ const location = useLocation();
                 </Box>
               </Box>
             </Link>
-            <Link
-              to={"/account"}
-              style={{ textDecoration: "none" }}
-            >
+            <Link to={"/account"} style={{ textDecoration: "none" }}>
               <Box
                 sx={{
                   // color: location.pathname === "/account" ? "black" : "white",
-                  color:'white'
-
+                  color: "white",
                 }}
                 className="header-list"
               >

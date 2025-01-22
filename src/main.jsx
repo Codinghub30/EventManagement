@@ -11,10 +11,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-    <LocalizationProvider dateAdapter={AdapterDayjs}> 
-      <App />
-      </LocalizationProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <App />
+        </LocalizationProvider>
       </PersistGate>
     </Provider>
   </StrictMode>

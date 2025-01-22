@@ -9,22 +9,19 @@ import { Box } from "@mui/material";
 
 const Account = () => {
   const [userDetails, setUserDetails] = useState([]);
-  const userId = sessionStorage.getItem("userId");
+  const userId = useSelector((state) => state.auth.userDetails);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log("the acc ", userId);
-
   const getAccount = async () => {
-    const res = await authService.getUserProfile(userId);
-    console.log("the getdetails", res.data);
+    const res = await authService.getUserProfile(userId._id);
     setUserDetails(res.data);
+    console.log(userId);
   };
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
-    console.log("naviga");
   };
 
   useEffect(() => {
