@@ -6,7 +6,7 @@ export const config = {
   USER_REGISTER: "/user/user-register",
   USER_LOGIN: "/user/user-login",
   LOGIN_WITH_MOBILE: "/user/login-with-mobile-number",
-  UPDATE_VENDOR_PROFILE: "/user/update-profile/",
+  UPDATE_USER_PROFILE: "/user/update-profile/",
   GET_USER_PROFILE: "/user/get-user-profile/",
   USER_ORDER: "/user-order/get-a-order/",
   ADD_ADDRESS: "/user/save-delivery-address/",
@@ -31,6 +31,8 @@ export const config = {
 
   // SERVICE
   GET_ALL_SERVICE: "/service/get-all-service",
+  GET_SERVICE_BY_SERVICE_NAME: "/vendor/get-vendor-by-servicename/",
+  GET_PARTICULAR_SERVICE: "/vendor/getprofile/",
 
   // SERVICE REVIEW
   GET_SERVICE_REVIEW: "/vendor/get-service-review/",
@@ -58,6 +60,7 @@ export const config = {
   // COMPANY DETAILS
   GET_PAYOUT_CONFIG: "/payout-config/get-payout-config-profile",
   GET_PROFILE: "/company-profile/get-profile",
+  GET_COMPANY_PROFILE: "/user/get-user-profile/",
 
   // FAQ
   GET_ALL_FAQ: "/faq/get-all-faq",

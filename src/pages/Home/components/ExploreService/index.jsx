@@ -1,9 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import "./styles.scss";
 import authService from "../../../../api/ApiService";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ExploreService = () => {
+  const navigate = useNavigate();
   const fetchApi = async () => {
     const res = await authService.getServices();
     console.log(res);
@@ -17,35 +19,44 @@ const ExploreService = () => {
     {
       id: 1,
       ServiceName: "Resort",
-      image: "https://www.aquays.com/images/neil-island/outside/andaman-holiday-inn-resort.webp",
+      image:
+        "https://www.aquays.com/images/neil-island/outside/andaman-holiday-inn-resort.webp",
     },
     {
       id: 2,
       ServiceName: "Rooms",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKydMZxPp7ZSz-qBBTeD3WT4nh_yDb_Am2ng&s",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKydMZxPp7ZSz-qBBTeD3WT4nh_yDb_Am2ng&s",
     },
     {
       id: 3,
       ServiceName: "Hotels",
-      image: "https://www.gingerhotels.com/resourcefiles/hotelprofile/udaipur-0.jpg?version=1152025053419",
+      image:
+        "https://www.gingerhotels.com/resourcefiles/hotelprofile/udaipur-0.jpg?version=1152025053419",
     },
     {
       id: 4,
       ServiceName: " Freelancer",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcCtv6bLcZPc_Ux301aMphk5fHYMvAG9JNnw&s",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcCtv6bLcZPc_Ux301aMphk5fHYMvAG9JNnw&s",
     },
     {
       id: 5,
       ServiceName: " Photographers",
-      image: "https://cdn.expertphotography.com/wp-content/uploads/2021/08/Become-Professional-Photographer-Colin-Lloyd.jpg",
+      image:
+        "https://cdn.expertphotography.com/wp-content/uploads/2021/08/Become-Professional-Photographer-Colin-Lloyd.jpg",
     },
     {
       id: 6,
       ServiceName: "Stage Designer",
-      image: "https://dean-www.s3.amazonaws.com/files/news/deancollegemarcom2018-218.jpg",
+      image:
+        "https://dean-www.s3.amazonaws.com/files/news/deancollegemarcom2018-218.jpg",
     },
   ];
 
+  const handleService = () => {
+    navigate("/services");
+  };
   const colors = [
     // "#FFEBEE", // Light Red
     // "#E3F2FD", // Light Blue
@@ -64,13 +75,15 @@ const ExploreService = () => {
   return (
     <Box className="Explore-container">
       <Box className="Service-header">
-        <Typography variant="h5" className="header-title">
-          Explore Services
-        </Typography>
-        <Typography variant="subtitle1" className="header-subtitle">
-          Explore. Discover. Make a Plan.
-        </Typography>
+        <Box className="Service-header-content">
+          <Typography variant="h5" className="header-title">
+            Explore Services
+          </Typography>
+        </Box>
+
+        <Button onClick={handleService}>view all</Button>
       </Box>
+      <Box></Box>
       <Box className="service-container">
         {services.map((item, index) => (
           <Box

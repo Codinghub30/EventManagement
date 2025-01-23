@@ -1,0 +1,21 @@
+.review-section {
+    margin-top: 1rem;
+  
+    .review {
+      border-bottom: 1px solid #ddd;
+      padding: 1rem 0;
+  
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  
+    .add-review {
+      margin-top: 2rem;
+  
+      .MuiTextField-root {
+        margin-top: 1rem;
+      }
+    }
+  }
+  

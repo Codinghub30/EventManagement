@@ -6,10 +6,16 @@ const authService = {
   registerUser: (payload) => api.post(config.USER_REGISTER, payload),
   loginUser: (payload) => api.post(config.USER_LOGIN, payload),
   getUserProfile: (userId) => api.get(`${config.GET_USER_PROFILE}${userId}`),
-  updateUserProfile: (userId, data) =>
-    api.put(`${config.UPDATE_VENDOR_PROFILE}${userId}`, data),
   addAddress: (data) => api.post(config.ADD_ADDRESS, data),
   loginWithMobile: (payload) => api.post(config.LOGIN_WITH_MOBILE, payload),
+
+  // Company Details
+  updateUserProfile: (userId, data) =>
+    api.put(`${config.UPDATE_USER_PROFILE}${userId}`, data),
+  getCompanyDetail: (userId) =>
+    api.get(`${config.GET_COMPANY_PROFILE}${userId}`),
+
+  // updateUserProfile:(userId) => api.put(`${config.UPDATE_USER_PROFILE}`,userId),
 
   // Order Management
   createOrder: (data) => api.post(config.CREATE_ORDER, data),
@@ -21,6 +27,11 @@ const authService = {
   // My booking Section
   getUserOrder: (userId) => api.get(`${config.USER_ORDER}${userId}`),
 
+  // Services
+  getAllServices: () => api.get(config.GET_ALL_SERVICE),
+  getService: (service) =>
+    api.get(`${config.GET_SERVICES_BY_SERVICE_NAME}/${service}`),
+
   // Product Section
   rentalProduct: () => api.get(`${config.GET_RENTAL_PRODUCTS}`),
   relatedRentalProduct: (category) =>
@@ -29,6 +40,12 @@ const authService = {
 
   // Services
   getServices: () => api.get(`${config.GET_ALL_SERVICE}`),
+  getParticularService: (serviceId) =>
+    api.get(`${config.GET_PARTICULAR_SERVICE}${serviceId}`),
+  writeServiceReview: (payload, serviceId) =>
+    api.put(`${config.WRITE_VENDORS_REVIEW}${serviceId}`, payload),
+  getServiceReview: (serviceId) =>
+    api.get(`${config.GET_SERVICE_REVIEW}${serviceId}`),
 
   // Featured section
   featuredProducts: () => api.get(`${config.GET_FEATURED_PRODUCTS}?limit=4`),

@@ -1,61 +1,165 @@
 import React, { useEffect, useState } from "react";
+import "./styles.scss";
+import {
+  Box,
+  Card,
+  CardContent,
+  Checkbox,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import authService from "../../../../../api/ApiService";
-import "./styles.scss"; // Ensure the styles are scoped to avoid clashes
-import { Box, Button, Divider, Typography } from "@mui/material";
 
-const Technician = () => {
+const Technician = ({
+  productCategory,
+  onSelectTechnician,
+  selectedTechnicians,
+}) => {
   const [technicians, setTechnicians] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const getTechnicians = async () => {
-    try {
-      setLoading(true);
-      const res = await authService.getAllTechnicians();
-      setTechnicians(res.data.tech); // Update according to your API response structure
-    } catch (err) {
-      setError("Failed to fetch technicians. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [filteredTechnicians, setFilteredTechnicians] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTechnicians();
+    const fetchTechnicians = async () => {
+      try {
+        setLoading(true);
+
+        const res = await authService.getAllTechnicians();
+        setTechnicians(res.data.tech);
+      } catch (error) {
+        console.error("Error fetching technicians:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTechnicians();
   }, []);
 
+  useEffect(() => {
+    if (productCategory) {
+      const filtered = technicians.filter(
+        (tech) => tech.category === productCategory
+      );
+      setFilteredTechnicians(filtered);
+    }
+  }, [productCategory, technicians]);
+
+  if (loading) {
+    return (
+      <Box sx={{ textAlign: "center", mt: 5 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-   <>
-       {technicians.length > 0 && (
-        <Box className="Technicians-section">
-          <Typography variant="h5" className="Technicians-title">
-            Additional Technicians
-          </Typography>
-          <Divider sx={{ marginBottom: "1rem" }} />
-          <Box className="Technicians-list">
-            {technicians.map((tech) => (
-              <Box key={tech._id} className="Technician-card">
-                <Typography variant="p" className="Tech-name">
-                  {tech.service_name} ({tech.category})
+    <Box sx={{ padding: "2rem" }}>
+      <Typography
+        variant="h5"
+        sx={{
+          textAlign: "center",
+          fontWeight: "bold",
+          marginBottom: "1.5rem",
+          color: "#333",
+        }}
+      >
+        Select a Technician for {productCategory || "Product"}
+      </Typography>
+      {filteredTechnicians.length > 0 ? (
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "2rem",
+          }}
+        >
+          {filteredTechnicians.map((tech) => (
+            <Card
+              key={tech._id}
+              sx={{
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                transition: "transform 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                  boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.2)",
+                },
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  padding: "1.5rem",
+                }}
+              >
+                <img
+                  src={
+                    tech.image ||
+                    "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg"
+                  }
+                  alt={tech.service_name}
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginBottom: "1rem",
+                  }}
+                />
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 600,
+                    color: "#333",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {tech.service_name}
                 </Typography>
-                <Typography variant="p" className="Tech-price">
-                  Price: ₹{tech.price.toLocaleString()}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#666",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Category: {tech.category || "N/A"}
                 </Typography>
-                <Typography variant="p" className="Tech-vendor">
-                  Vendor: {tech.vendor_name}
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#007BFF",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  ₹{tech.price?.toLocaleString()}
                 </Typography>
-                <Typography variant="p" className="Tech-commission">
-                  Shop Name: {tech.shop_name}
-                </Typography>
-                <Button variant="outlined" variant="p" className="Add-tech-btn" onClick={() => handleAddTechnicianToCart(tech)}>
-                  Add to Cart
-                </Button>
-              </Box>
-            ))}
-          </Box>
+                <Checkbox
+                  checked={selectedTechnicians?.some((t) => t._id === tech._id)}
+                  onChange={() => onSelectTechnician(tech)}
+                  color="primary"
+                  sx={{
+                    "& .MuiSvgIcon-root": { fontSize: 30 },
+                  }}
+                />
+              </CardContent>
+            </Card>
+          ))}
         </Box>
+      ) : (
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ textAlign: "center", mt: 3 }}
+        >
+          No technicians available for this category.
+        </Typography>
       )}
-   </>
+    </Box>
   );
 };
 

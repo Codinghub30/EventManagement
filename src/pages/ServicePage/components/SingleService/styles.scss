@@ -1,0 +1,85 @@
+.single-service {
+    padding: 1rem;
+  
+    .header {
+      display: flex;
+      gap: 1rem;
+  
+      .shop-logo {
+        width: 171px;
+    height: 138px;
+    border-radius: 8px;
+    object-fit: cover;
+      }
+    }
+  
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+  
+    .tabs {
+      margin-top: 1rem;
+    }
+  
+    .services {
+        margin-top: 2rem;
+      .service {
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 0.5rem;
+      }
+    }
+  
+    .photos {
+      img {
+        width: 80%;
+        height: 404px;
+        border-radius: 8px;
+      }
+    }
+  }
+  
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+  
+    .modal-header {
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+  
+    .business-hour {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #ddd;
+  
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  
+    .highlight {
+      font-weight: bold;
+      color: #f50057;
+    }
+  
+    button {
+      display: block;
+      margin: 1rem auto 0;
+      padding: 0.5rem 2rem;
+    }
+  }

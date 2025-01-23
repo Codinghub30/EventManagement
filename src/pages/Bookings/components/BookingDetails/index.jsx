@@ -19,7 +19,7 @@ const BookingDetails = () => {
         dispatch(setLoading(true));
         const res = await authService.getOrder(id);
         setBooking(res.data.orderId);
-        console.log("The order Id", res.data.orderId);
+        console.log("The order Id", res.data);
         setProducts(res.data.orderId.product_data);
         dispatch(setLoading(false));
       } catch (error) {
@@ -54,9 +54,9 @@ const BookingDetails = () => {
                 {products.map((item) => (
                   <Box className="booking-products" key={item.id}>
                     {/* Product Image */}
-                    <Box className="product-image">
-                      <img src={item.imageUrl} alt={item.productName} />
-                    </Box>
+                    {/* <Box className="product-image">
+                        <img src={item.imageUrl} alt={item.productName} />
+                      </Box> */}
 
                     {/* Product Details */}
                     <Box className="product-details">

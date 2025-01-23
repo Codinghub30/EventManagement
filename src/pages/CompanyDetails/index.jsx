@@ -10,29 +10,68 @@ import {
   IconButton,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import authService from "../../api/ApiService";
+import { useSelector } from "react-redux";
 
 const CompanyDetails = () => {
   const [companyType, setCompanyType] = useState("");
   const [formData, setFormData] = useState({
-    companyName: "",
+    company_type: "",
+    company_name: "",
     designation: "",
-    tds: "2%",
-    gstNumber: "",
-    panNumber: "",
-    panFrontImage: null,
-    panBackImage: null,
-    cinNumber: "",
-    tradeLicense: "",
+    gst_number: "",
+    pan_number: "",
+    cin_number: "",
+    pan_front_image: null,
+    pan_back_image: null,
   });
+  const userDetails = useSelector((state) => state.auth.userDetails);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCompanyTypeChange = (e) => {
+    const value = e.target.value;
+    setCompanyType(value);
+
+    setFormData({
+      company_type: value,
+      company_name: formData.company_name,
+      designation: formData.designation,
+      gst_number: formData.gst_number,
+      pan_number: formData.pan_number,
+      cin_number: formData.cin_number,
+      pan_front_image: formData.pan_front_image,
+      pan_back_image: formData.pan_back_image,
+    });
+  };
+
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     setFormData({ ...formData, [name]: files[0] });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const payload = new FormData();
+      Object.keys(formData).forEach((key) => {
+        payload.append(key, formData[key]);
+      });
+
+      console.log("Payload before sending to API:", payload);
+      console.log("Payload with files:", payload);
+
+      const response = await authService.updateUserProfile(
+        userDetails._id,
+        payload
+      );
+      console.log("API Response:", response);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
   };
 
   return (
@@ -44,8 +83,6 @@ const CompanyDetails = () => {
         backgroundColor: "#fff",
         borderRadius: 4,
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-        position: "relative",
-        marginTop: "5rem",
       }}
     >
       <Typography
@@ -68,23 +105,9 @@ const CompanyDetails = () => {
             select
             fullWidth
             label="Company Type"
-            name="companyType"
+            name="company_type"
             value={companyType}
-            onChange={(e) => {
-              setCompanyType(e.target.value);
-              setFormData({
-                ...formData,
-                companyName: "",
-                designation: "",
-                tds: "2%",
-                gstNumber: "",
-                panNumber: "",
-                panFrontImage: null,
-                panBackImage: null,
-                cinNumber: "",
-                tradeLicense: "",
-              });
-            }}
+            onChange={handleCompanyTypeChange}
             variant="outlined"
           >
             <MenuItem value="Private Limited & Limited">
@@ -101,8 +124,8 @@ const CompanyDetails = () => {
           <TextField
             fullWidth
             label="Company Name"
-            name="companyName"
-            value={formData.companyName}
+            name="company_name"
+            value={formData.company_name}
             onChange={handleChange}
             variant="outlined"
             required
@@ -128,7 +151,7 @@ const CompanyDetails = () => {
               fullWidth
               label="TDS"
               name="tds"
-              value={formData.tds}
+              value={"2%"} // Presuming TDS should always be "2%"
               onChange={handleChange}
               variant="outlined"
               disabled
@@ -147,8 +170,8 @@ const CompanyDetails = () => {
               <TextField
                 fullWidth
                 label="GST Number"
-                name="gstNumber"
-                value={formData.gstNumber}
+                name="gst_number"
+                value={formData.gst_number}
                 onChange={handleChange}
                 variant="outlined"
                 required
@@ -158,8 +181,8 @@ const CompanyDetails = () => {
               <TextField
                 fullWidth
                 label="PAN Number"
-                name="panNumber"
-                value={formData.panNumber}
+                name="pan_number"
+                value={formData.pan_number}
                 onChange={handleChange}
                 variant="outlined"
                 required
@@ -183,7 +206,7 @@ const CompanyDetails = () => {
                     hidden
                     accept="image/*"
                     type="file"
-                    name="panFrontImage"
+                    name="pan_front_image"
                     onChange={handleFileChange}
                   />
                 </IconButton>
@@ -210,7 +233,7 @@ const CompanyDetails = () => {
                     hidden
                     accept="image/*"
                     type="file"
-                    name="panBackImage"
+                    name="pan_back_image"
                     onChange={handleFileChange}
                   />
                 </IconButton>
@@ -227,8 +250,8 @@ const CompanyDetails = () => {
             <TextField
               fullWidth
               label="CIN Number"
-              name="cinNumber"
-              value={formData.cinNumber}
+              name="cin_number"
+              value={formData.cin_number}
               onChange={handleChange}
               variant="outlined"
               required
@@ -262,9 +285,7 @@ const CompanyDetails = () => {
             textTransform: "uppercase",
             fontWeight: "bold",
           }}
-          onClick={() => {
-            console.log("Form Data Submitted:", formData);
-          }}
+          onClick={handleSubmit}
         >
           Submit
         </Button>

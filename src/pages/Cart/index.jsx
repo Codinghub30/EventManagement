@@ -26,6 +26,8 @@ const Cart = () => {
   const [technicians, setTechnicians] = useState([]);
   const dispatch = useDispatch();
 
+  console.log("Carttesss", cartItems);
+
   const getTechnicians = async () => {
     try {
       const res = await authService.getAllTechnicians();

@@ -109,8 +109,8 @@ const Home = () => {
       </Box>
       <ExploreCategory />
       <Trusted />
-      <Featured />`
-      <ExploreService/>
+      <Featured />
+      <ExploreService />
       {/* <Gallery /> */}
       <NearVendor />
       <Details />

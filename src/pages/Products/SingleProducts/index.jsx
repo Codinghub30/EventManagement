@@ -109,7 +109,7 @@ const SingleProducts = () => {
     const updatedTechnicians = [...technicians, technician];
     setTechnicians(updatedTechnicians);
     setTechnicianModalOpen(false);
-    setSuccessModalOpen(true); 
+    setSuccessModalOpen(true);
   };
 
   const handleCloseSuccessModal = () => {
@@ -118,17 +118,82 @@ const SingleProducts = () => {
 
   let TimeoutId;
 
-  const handleAddToCart = () => {
-    dispatch(addToCart(product));    
-    setTechnicianModalOpen(true);
+  const handleAddToCart = async () => {
+    try {
+      // Open technician modal
+      setTechnicianModalOpen(true);
+
+      // Fetch all technicians
+      const res = await authService.getAllTechnicians();
+
+      // Filter technicians based on the current product's category
+      const filteredTechnicians = res.data.tech.filter(
+        (tech) => tech.category === product.product_category
+      );
+
+      console.log(filteredTechnicians);
+
+      // Update the technicians state with filtered technicians
+      setTechnicians(filteredTechnicians);
+    } catch (error) {
+      getErrorMessage(error);
+    }
+  };
+
+  const handleContinue = () => {
+    // Add the product to the cart
+    if (product) {
+      dispatch(
+        addToCart({
+          _id: product._id,
+          product_image: product.product_image,
+          product_name: product.product_name,
+          product_price: product.product_price,
+          quantity: 1,
+        })
+      );
+    }
+
+    // Add each selected technician as a separate item in the cart
+    if (technicians && technicians.length > 0) {
+      technicians.forEach((technician) => {
+        dispatch(
+          addToCart({
+            _id: `tech_${technician._id}`, // Ensure a unique ID for each technician
+            product_image:
+              technician.image ||
+              "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg", // Placeholder image if none exists
+            product_name: `${technician.service_name} (${technician.category})`,
+            product_price: technician.price,
+            quantity: 1,
+          })
+        );
+      });
+    }
+
+    // Close technician modal and show success modal
+    setTechnicianModalOpen(false);
     setOpen(true);
-    TimeoutId = setTimeout(() => {
+
+    // Auto-close success modal after 1.5 seconds
+    setTimeout(() => {
       setOpen(false);
     }, 1500);
   };
 
+  const handleTechnicianSelect = (selectedTechnician) => {
+    // Check if the technician is already selected
+    if (technicians.find((tech) => tech._id === selectedTechnician._id)) {
+      setTechnicians(
+        technicians.filter((tech) => tech._id !== selectedTechnician._id)
+      );
+    } else {
+      setTechnicians([...technicians, selectedTechnician]); // Add the technician to the list
+    }
+  };
+
   const handleCloseTechnicianModal = () => {
-    setTechnicianModalOpen(false);
+    setTechnicianModalOpen(false); // Close modal without adding
   };
 
   const handleClose = () => {
@@ -428,7 +493,7 @@ const SingleProducts = () => {
               ))}
             </Box>
           </Box>
-          <Technician />
+          {/* <Technician /> */}
           <Review onSubmit={handleReviewSubmit} productId={productId} />
           <Modal
             open={technicianModalOpen}
@@ -442,7 +507,6 @@ const SingleProducts = () => {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 500,
                 bgcolor: "background.paper",
                 boxShadow: 24,
                 p: 4,
@@ -453,7 +517,11 @@ const SingleProducts = () => {
               <Typography id="technician-modal-title" variant="h6">
                 Select a Technician
               </Typography>
-              <Technician onAdd={handleAddTechnician} />
+              <Technician
+                onSelectTechnician={handleTechnicianSelect} // Pass the function correctly
+                selectedTechnicians={technicians}
+                productCategory={product.product_category}
+              />
               <Button
                 variant="contained"
                 color="secondary"
@@ -461,6 +529,14 @@ const SingleProducts = () => {
                 sx={{ mt: 3 }}
               >
                 Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleContinue}
+                sx={{ mt: 3, ml: 2 }}
+              >
+                Continue
               </Button>
             </Box>
           </Modal>

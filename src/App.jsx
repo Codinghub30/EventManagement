@@ -18,6 +18,9 @@ import LoginWithMobile from "./pages/Login/component/LoginWithMobile";
 import Profile from "./pages/Account/components/Profile";
 import CompanyDetails from "./pages/CompanyDetails";
 import BookingDetails from "./pages/Bookings/components/BookingDetails";
+import ServicePage from "./pages/ServicePage";
+import ServiceDetails from "./pages/ServicePage/components/ServiceDetails";
+import SingleService from "./pages/ServicePage/components/SingleService";
 // import CalendarModal from "./pages/Calender";
 // import LoginMobile from "./pages/LoginMobile";
 
@@ -60,7 +63,7 @@ function App() {
       <Loading loading={loading} />
       <ScrollToTop />
       <PageHeader />
-      <Box style={{ paddingTop: "4.5rem" }}>
+      <Box style={{ paddingTop: "5.5rem" }}>
         <Suspense fallback={<Loading />}>
           <Routes>
             {/* Public Routes */}
@@ -73,7 +76,7 @@ function App() {
                 // </PublicRoute>
               }
             />
-            x */}
+
             <Route
               path="/login"
               element={
@@ -97,6 +100,30 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <Category />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/services"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <ServicePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/service/:serviceName"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <ServiceDetails />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/service/:serviceName/:id"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <SingleService />
                 </PrivateRoute>
               }
             />
@@ -137,6 +164,14 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <BookingDetails />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Products />
                 </PrivateRoute>
               }
             />

@@ -22,6 +22,7 @@ const Products = () => {
   const [categories] = useState([
     "All",
     "Sound",
+    "Lighting",
     "Genset",
     "Video",
     "Fabrication",
@@ -30,7 +31,7 @@ const Products = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortOption, setSortOption] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState(""); 
+  const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const Products = () => {
       setProducts(res.data.data);
       setFilteredItems(res.data.data);
       console.log(res.data.data);
-      
+
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -53,7 +54,6 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-
 
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
@@ -71,14 +71,17 @@ const Products = () => {
           (!maxPrice || item.product_price <= parseFloat(maxPrice))
       );
     }
- 
+
+    setFilteredItems(filtered);
   };
 
   const handlePriceFilter = () => {
     let filtered = products;
 
     if (activeCategory !== "All") {
-      filtered = filtered.filter((item) => item.product_category === activeCategory);
+      filtered = filtered.filter(
+        (item) => item.product_category === activeCategory
+      );
     }
 
     if (minPrice || maxPrice) {
@@ -128,7 +131,11 @@ const Products = () => {
           {categories.map((cat) => (
             <Button
               key={cat}
-            className={cat === activeCategory ? "filter-button-active" : "filter-button"}
+              className={
+                cat === activeCategory
+                  ? "filter-button-active"
+                  : "filter-button"
+              }
               onClick={() => handleCategoryChange(cat)}
             >
               {cat}
@@ -158,37 +165,39 @@ const Products = () => {
             variant="contained"
             color="primary"
             onClick={handlePriceFilter}
-            sx={{ marginTop: "1rem", background:'linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)' }}
+            sx={{
+              marginTop: "1rem",
+              background:
+                "linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)",
+            }}
           >
             Apply
           </Button>
         </Box>
         <Box className="filter-group">
-      <Typography variant="subtitle1">Brand</Typography>
-      <TextField
-        placeholder="Search Brand"
-        variant="outlined"
-        size="small"
-        className="search-brand"
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <Box sx={{marginTop:'3rem'}}>
-
-        <CustomSort onSortChange={handleSortChange} />
-      </Box>
-    </Box>
+          <Typography variant="subtitle1">Brand</Typography>
+          <TextField
+            placeholder="Search Brand"
+            variant="outlined"
+            size="small"
+            className="search-brand"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Box sx={{ marginTop: "3rem" }}>
+            <CustomSort onSortChange={handleSortChange} />
+          </Box>
+        </Box>
       </Box>
 
       {/* Main Content */}
       <Box className="main-content">
         <Box className="sorting-header">
-        <Typography variant="h5">
+          <Typography variant="h5">
             Showing {filteredItems.length} results
           </Typography>
         </Box>
 
         <Box className="products-grid">
-        
           {filteredItems.map((item) => (
             <Card
               key={item.id}

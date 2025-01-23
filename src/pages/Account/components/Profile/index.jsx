@@ -12,30 +12,41 @@ import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import authService from "../../../../api/ApiService";
 
 const Profile = () => {
   const [accountDetails, setAccountDetails] = useState({
-    name: "Anup",
-    email: "anup30@gmail.com",
-    mobileNumber: "7605968434",
-    companyName: "NNC",
-    companyType: "Partnership & LLP",
-    designation: "Developer",
-    panCard: "838733838",
+    name: "",
+    email: "",
+    mobileNumber: "",
+    companyName: "",
+    companyType: "",
+    designation: "",
+    panCard: "",
   });
+  const [otherDetails, setOtherDetails] = useState([]);
   const userDetails = useSelector((state) => state.auth.userDetails);
-  console.log(userDetails);
   const companyDetails = userDetails.company_profile?.[0] || {};
+
+  const getUser = async () => {
+    const res = await authService.getCompanyDetail(userDetails._id);
+    setOtherDetails(res.data.company_profile[0]);
+    console.log(res.data.company_profile[0]);
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
   useEffect(() => {
     if (userDetails) {
       setAccountDetails({
         name: userDetails.username || "",
         email: userDetails.email || "",
         mobileNumber: userDetails.mobilenumber || "",
-        companyName: companyDetails.company_name || "",
-        companyType: companyDetails.company_type || "",
-        designation: companyDetails.designation || "",
-        panCard: companyDetails.pan_number || "",
+        companyName: otherDetails.company_name || "",
+        companyType: otherDetails.company_type || "",
+        designation: otherDetails.designation || "",
+        panCard: otherDetails.pan_number || "",
       });
     }
   }, [userDetails]);

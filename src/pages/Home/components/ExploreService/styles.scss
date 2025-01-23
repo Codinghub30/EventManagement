@@ -5,7 +5,11 @@
   .Service-header {
     text-align: center;
     margin-bottom: 20px;
-
+    display: flex;
+    justify-content: space-between;
+    .Service-header-content{
+      text-align: center;
+    }
     .header-title {
       display: inline-block;
       overflow: hidden;
