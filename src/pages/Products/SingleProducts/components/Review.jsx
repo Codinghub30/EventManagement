@@ -211,7 +211,9 @@ const Review = ({ onSubmit, productId }) => {
             ))}
           </Box>
         ) : (
-          <Typography sx={{ textAlign: "center" }}>No reviews yet.</Typography>
+          <Typography sx={{ textAlign: "center", margin: "0 auto" }}>
+            No reviews yet.
+          </Typography>
         )}
       </Box>
 

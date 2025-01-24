@@ -12,12 +12,16 @@ import {
   Modal,
   Alert,
   Snackbar,
+  Divider,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import {
   DatePicker,
   TimePicker,
   renderTimeViewClock,
 } from "@mui/x-date-pickers";
+import { GoogleMap, LoadScript, Autocomplete } from "@react-google-maps/api";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -27,6 +31,7 @@ import Terms from "../Terms";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../../../../redux/slice/CartSlice";
 import CustomAlert from "../../../../components/CustomAlerts";
+import LocationSection from "./components/LocationSection";
 
 const FieldLabel = ({ label }) => (
   <Typography component="span">
@@ -54,27 +59,45 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [isCheckoutAllowed, setIsCheckoutAllowed] = useState(false);
+  const [isOrderSummaryOpen, setIsOrderSummaryOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [openLocation, setOpenLocation] = useState(false);
+  const [addLocation, setAddLocation] = useState("");
 
   const dispatch = useDispatch();
 
-  console.log("Theee cartt", cartItems);
-
-  const handleOpenAddressModal = () => {
-    setIsAddressModalOpen(true);
-  };
-
-  const handleCloseAddressModal = () => {
-    setIsAddressModalOpen(false);
-  };
-
   const handleProceedToTerms = () => {
-    setShowTerms(true);
+    if (
+      !eventDetails.eventDate ||
+      !eventDetails.startTime ||
+      !eventDetails.endTime ||
+      !eventDetails.eventName.trim() ||
+      !eventDetails.eventVenue.trim() ||
+      !eventDetails.receiverName.trim() ||
+      !eventDetails.receiverMobile.trim()
+    ) {
+      setSnackbarOpen(true);
+      return;
+    } else {
+      setShowTerms(true);
+    }
   };
 
   const handleAcceptTerms = () => {
     setShowTerms(false);
     setIsCheckoutAllowed(true);
+  };
+  const handleLocationContinue = (locationData) => {
+    console.log(locationData);
+
+    setAddLocation(locationData.address); // Store the location name
+    setEventDetails((prevDetails) => ({
+      ...prevDetails,
+      event_location: locationData.address,
+      location_lat: locationData.lat, // Latitude from LocationSection
+      location_long: locationData.lng, // Longitude from LocationSection
+    }));
+    setOpenLocation(false); // Close the location section
   };
 
   const handleAddressChange = (value) => {
@@ -86,11 +109,12 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     const { name, value } = e.target;
     setEventDetails({ ...eventDetails, [name]: value });
   };
+
   const productData = cartItems?.map(
     (item, index) => (
       console.log("product data items", item),
       {
-        orderId: `${Date.now()}${index}`,
+        orderId: item._id,
         id: item._id || "undefined",
         productName: item.product_name || "Unknown",
         productPrice: item.product_price || 0,
@@ -116,27 +140,22 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   };
 
   const handleFileChange = (e) => {
+    console.log("Function is running");
+
     const { name, files } = e.target;
-    setEventDetails({ ...eventDetails, [name]: files[0] });
+    if (files && files[0]) {
+      console.log(`File selected for ${name}:`, files[0]);
+      setEventDetails((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    }
+    console.log(`${name} file selected:`, files[0]);
   };
 
-  const handleCheckout = async () => {
-    if (
-      !eventDetails.eventDate ||
-      !eventDetails.startTime ||
-      !eventDetails.endTime ||
-      !eventDetails.eventName.trim() ||
-      !eventDetails.eventVenue.trim() ||
-      !eventDetails.receiverName.trim() ||
-      !eventDetails.receiverMobile.trim()
-    ) {
-      setSnackbarOpen(true);
-      return;
-    }
-
+  const handleConfirmOrder = async () => {
     const formData = new FormData();
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-
     formData.append("event_date", eventDetails.eventDate?.format("YYYY-MM-DD"));
     // formData.append(
     //   "venue_start",
@@ -168,9 +187,9 @@ const EventDetails = ({ cartItems, billingDetails }) => {
       "venue_open_time",
       eventDetails.startTime?.format("hh:mm A")
     );
-    formData.append("location_lat", "12.900526");
-    formData.append("location_long", "77.5231878");
-    formData.append("event_location", "Nakshatra Namaha Creations, Bangalore"); //static..............
+    formData.append("location_lat", eventDetails.location_lat);
+    formData.append("location_long", eventDetails.location_long);
+    formData.append("event_location", eventDetails.event_location);
     formData.append(
       "event_start_time",
       eventDetails.startTime?.format("hh:mm A")
@@ -197,7 +216,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     try {
       const response = await authService.createOrder(formData);
       console.log("Order Created Successfully:", response.data);
-      alert("Order created successfully!");
+      <CustomAlert message={"Order Placed Successfully"} />;
     } catch (error) {
       console.error(
         "Error creating order:",
@@ -209,21 +228,59 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     dispatch(clearCart());
   };
 
+  const handleModalClose = () => {
+    setIsOrderSummaryOpen(false);
+  };
+  const handleCheckout = async () => {
+    if (
+      !eventDetails.eventDate ||
+      !eventDetails.startTime ||
+      !eventDetails.endTime ||
+      !eventDetails.eventName.trim() ||
+      !eventDetails.eventVenue.trim() ||
+      !eventDetails.receiverName.trim() ||
+      !eventDetails.receiverMobile.trim()
+    ) {
+      setSnackbarOpen(true);
+      return;
+    }
+    setIsOrderSummaryOpen(true);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box
         sx={{
-          height: "100vh",
+          padding: "2rem",
+          backgroundColor: "#f9f9f9",
+          minHeight: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#f5f5f5",
         }}
       >
-        <Paper elevation={3} sx={{ p: 4, maxWidth: 600, width: "100%" }}>
-          <Typography variant="h5" textAlign="center" gutterBottom>
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            width: "100%",
+            maxWidth: 700,
+            borderRadius: 2,
+            backgroundColor: "#fff",
+          }}
+        >
+          <Typography
+            variant="h5"
+            textAlign="center"
+            fontWeight="bold"
+            sx={{
+              padding: "2rem",
+            }}
+            gutterBottom
+          >
             Event Details
           </Typography>
+
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <DatePicker
@@ -233,20 +290,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </Grid>
-            {/* <Grid item xs={12}>
-              <TimePicker
-                label={<FieldLabel label="Venue Start Time" />}
-                value={eventDetails.venueStart}
-                onChange={(newTime) => handleTimeChange("venueStart", newTime)}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                  seconds: renderTimeViewClock,
-                }}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </Grid> */}
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TimePicker
                 label={<FieldLabel label="Event Start Time" />}
                 value={eventDetails.startTime}
@@ -259,7 +303,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TimePicker
                 label={<FieldLabel label="Event End Time" />}
                 value={eventDetails.endTime}
@@ -277,71 +321,97 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 label={<FieldLabel label="Event Name" />}
                 name="eventName"
                 value={eventDetails.eventName}
-                onChange={handleChange}
+                onChange={(e) =>
+                  setEventDetails({
+                    ...eventDetails,
+                    eventName: e.target.value,
+                  })
+                }
                 placeholder="Enter event name"
                 fullWidth
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label={<FieldLabel label="Event Venue Name" />}
+                label={<FieldLabel label="Event Venue" />}
                 name="eventVenue"
                 value={eventDetails.eventVenue}
-                onChange={handleChange}
-                placeholder="Enter event venue"
+                onChange={(e) =>
+                  setEventDetails({
+                    ...eventDetails,
+                    eventVenue: e.target.value,
+                  })
+                }
+                placeholder="Enter venue name"
                 fullWidth
               />
             </Grid>
-            <Grid container spacing={3}>
-              {/* Select Address Field */}
-              <Grid item xs={12}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  fullWidth
-                  onClick={handleOpenAddressModal}
-                >
-                  {eventDetails.address
-                    ? eventDetails.address.label
-                    : "Select Address"}
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <input
-                type="file"
-                name="invitation"
-                onChange={(e) => handleFileChange(e)}
-                accept="image/*"
+            <Grid item xs={6}>
+              <TextField
+                label={<FieldLabel label="Receiver Name" />}
+                name="receiverName"
+                value={eventDetails.receiverName}
+                onChange={(e) =>
+                  setEventDetails({
+                    ...eventDetails,
+                    receiverName: e.target.value,
+                  })
+                }
+                placeholder="Receiver Name"
+                fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
-              <input
-                type="file"
-                name="gatePass"
-                onChange={(e) => handleFileChange(e)}
-                accept="image/*"
+            <Grid item xs={6}>
+              <TextField
+                label={<FieldLabel label="Receiver Mobile" />}
+                name="receiverMobile"
+                value={eventDetails.receiverMobile}
+                onChange={(e) =>
+                  setEventDetails({
+                    ...eventDetails,
+                    receiverMobile: e.target.value,
+                  })
+                }
+                placeholder="Receiver Mobile Number"
+                fullWidth
               />
             </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                // startIcon={<UploadFileIcon />}
+              >
+                Upload Invitation
+                <input
+                  type="file"
+                  name="upload_invitation"
+                  onChange={handleFileChange}
+                  hidden
+                />
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                // startIcon={<UploadFileIcon />}
+              >
+                Upload Gate Pass
+                <input
+                  type="file"
+                  name="upload_gatepass"
+                  hidden
+                  onChange={handleFileChange}
+                />
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} mt={4}>
-            <TextField
-              label={<FieldLabel label="Receiver Name" />}
-              name="receiverName"
-              value={eventDetails.receiverName}
-              onChange={handleChange}
-              placeholder="Enter Receiver Name"
-              // fullWidth
-            />
-            <TextField
-              label={<FieldLabel label="Receiver Mobile Number" />}
-              name="receiverMobile"
-              value={eventDetails.receiverMobile}
-              onChange={handleChange}
-              placeholder="Enter Receiver Mobile Number"
-              sx={{ marginLeft: "1rem" }}
-            />
-          </Grid>
+          <Button onClick={() => setOpenLocation(!openLocation)}>
+            Location
+          </Button>
           <Box mt={4} textAlign="center">
             {isCheckoutAllowed ? (
               <Button
@@ -364,7 +434,6 @@ const EventDetails = ({ cartItems, billingDetails }) => {
             )}
           </Box>
         </Paper>
-
         <Modal
           open={showTerms}
           onClose={() => setShowTerms(false)}
@@ -392,12 +461,11 @@ const EventDetails = ({ cartItems, billingDetails }) => {
             <Terms onContinue={handleAcceptTerms} />
           </Box>
         </Modal>
-
         <Modal
-          open={isAddressModalOpen}
-          onClose={handleCloseAddressModal}
-          aria-labelledby="address-modal-title"
-          aria-describedby="address-modal-description"
+          open={isOrderSummaryOpen}
+          onClose={handleModalClose}
+          aria-labelledby="order-summary-title"
+          aria-describedby="order-summary-description"
         >
           <Box
             sx={{
@@ -405,37 +473,139 @@ const EventDetails = ({ cartItems, billingDetails }) => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: 400,
+              width: "90%",
+              maxWidth: 500,
               bgcolor: "background.paper",
               boxShadow: 24,
-              p: 4,
               borderRadius: 2,
+              p: 3,
             }}
           >
             <Typography
-              id="address-modal-title"
+              id="order-summary-title"
               variant="h6"
               textAlign="center"
               gutterBottom
+              sx={{ color: "#6c63ff", fontWeight: "bold" }}
             >
-              Search Address
+              Order Summary
             </Typography>
-            {/* <GooglePlacesAutocomplete
-              apiKey="YOUR_GOOGLE_PLACES_API_KEY" // Replace with your API key
-              selectProps={{
-                value: eventDetails.address,
-                onChange: handleAddressChange,
-                placeholder: "Search for an address",
-              }}
-            /> */}
+            <Divider sx={{ mb: 2 }} />
+
+            {/* Product Details */}
+            {cartItems?.map((item, index) => (
+              <Grid
+                container
+                spacing={2}
+                key={index}
+                sx={{ marginBottom: "1rem" }}
+              >
+                <Grid item xs={6}>
+                  <Typography>{item.product_name}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography>X{item.quantity}</Typography>
+                </Grid>
+                <Grid item xs={3}>
+                  <Typography>₹{item.product_price}</Typography>
+                </Grid>
+              </Grid>
+            ))}
+
+            <Divider sx={{ mb: 2 }} />
+
+            {/* Billing Details */}
+            <Box>
+              <Typography>Cart Value: ₹{billingDetails.cartValue}</Typography>
+              <Typography>
+                Event Days: {billingDetails.eventDays} Days
+              </Typography>
+              <Typography>
+                Base Amount: ₹{billingDetails.baseAmount.toLocaleString()}
+              </Typography>
+              <Typography>
+                TDS Charges (2%): -₹{billingDetails.tdsCharges.toLocaleString()}
+              </Typography>
+              <Typography>
+                Amount After TDS Deduction: ₹
+                {billingDetails.amountAfterTds.toLocaleString()}
+              </Typography>
+              <Typography>
+                CGST (9%): ₹{billingDetails.cgst.toLocaleString()}
+              </Typography>
+              <Typography>
+                SGST (9%): ₹{billingDetails.sgst.toLocaleString()}
+              </Typography>
+              <Typography>
+                Total GST (CGST + SGST): ₹
+                {billingDetails.totalGst.toLocaleString()}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="h6" fontWeight="bold">
+                Grand Total: ₹{billingDetails.grandTotal.toLocaleString()}
+              </Typography>
+            </Box>
+
+            <Box mt={3} textAlign="center">
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                onClick={handleConfirmOrder}
+                sx={{ marginRight: "1rem" }}
+              >
+                Confirm Order
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                size="large"
+                onClick={handleModalClose}
+              >
+                Cancel
+              </Button>
+            </Box>
           </Box>
         </Modal>
-        <CustomAlert
+        {/* <Modal
+          open={openLocation}
+          onClose={() => setOpenLocation(false)}
+          aria-labelledby="order-summary-title"
+          aria-describedby="order-summary-description"
+        > */}
+        <Box sx={{ position: "relative" }}>
+          {openLocation && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "90%",
+                transform: "translate(-120%, -50%)",
+                width: "50rem",
+                height: "600px",
+                maxWidth: 500,
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                borderRadius: 2,
+                p: 3,
+                zIndex: "20",
+              }}
+            >
+              <LocationSection
+                onContinue={handleLocationContinue}
+                setOpenLocation={setOpenLocation}
+              />
+            </Box>
+          )}
+        </Box>
+        <Snackbar
           open={snackbarOpen}
+          autoHideDuration={4000}
           onClose={() => setSnackbarOpen(false)}
-          severity="error"
-          message="Please fill in all mandatory fields before proceeding!"
-        />
+        >
+          <Alert severity="error" sx={{ width: "100%" }}>
+            Please fill in all mandatory fields!
+          </Alert>
+        </Snackbar>
       </Box>
     </LocalizationProvider>
   );

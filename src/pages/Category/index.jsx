@@ -1,5 +1,9 @@
+// React and react related imports
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+// Third party library
 import {
   Box,
   Typography,
@@ -8,10 +12,11 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+
+// Custom Components
 import CustomSort from "./components/CustomSort";
 import "./styles.scss";
 import authService from "../../api/ApiService";
-import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../utils/helperFunc";
 
@@ -141,7 +146,7 @@ const Category = () => {
 
   return (
     <Box className="category-page">
-      <Box className="filters-sidebar">
+      <Box className="filters-sidebar-category">
         <Typography variant="h6" className="filters-title">
           Filters
         </Typography>

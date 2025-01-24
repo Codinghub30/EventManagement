@@ -49,7 +49,7 @@ const Profile = () => {
         panCard: otherDetails.pan_number || "",
       });
     }
-  }, [userDetails]);
+  }, [userDetails, otherDetails]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,6 +123,7 @@ const Profile = () => {
               value={accountDetails.name}
               name="name"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -133,6 +134,7 @@ const Profile = () => {
               value={accountDetails.email}
               name="email"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -143,6 +145,7 @@ const Profile = () => {
               value={accountDetails.mobileNumber}
               name="mobileNumber"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
         </Grid>
@@ -170,6 +173,7 @@ const Profile = () => {
               value={accountDetails.companyName}
               name="companyName"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -180,6 +184,7 @@ const Profile = () => {
               value={accountDetails.companyType}
               name="companyType"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -190,6 +195,7 @@ const Profile = () => {
               value={accountDetails.designation}
               name="designation"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
         </Grid>
@@ -217,6 +223,7 @@ const Profile = () => {
               value={accountDetails.panCard}
               name="panCard"
               onChange={handleChange}
+              InputProps={{ readOnly: true }}
             />
           </Grid>
         </Grid>

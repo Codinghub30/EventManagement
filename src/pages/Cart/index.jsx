@@ -3,9 +3,24 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // Third party library
-import { Box, Typography, Button, Divider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Divider,
+  Grid,
+  Paper,
+  IconButton,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Table,
+  TableBody,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 // Custom Components
 import authService from "../../api/ApiService";
@@ -20,6 +35,7 @@ import EventDetails from "./components/EventDetails";
 
 // Styles
 import "./styles.scss";
+import { setLoading } from "../../redux/slice/LoaderSlice";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cart);
@@ -29,11 +45,14 @@ const Cart = () => {
   console.log("Carttesss", cartItems);
 
   const getTechnicians = async () => {
+    dispatch(setLoading(true));
     try {
       const res = await authService.getAllTechnicians();
       setTechnicians(res.data.tech);
       console.log(res.data.tech);
+      dispatch(setLoading(false));
     } catch (error) {
+      dispatch(setLoading(false));
       getErrorMessage(error);
     }
   };
@@ -61,114 +80,159 @@ const Cart = () => {
   }, []);
 
   return (
-    <>
-      <Box className="Cart-container">
-        <Box className="Cart-items">
-          <Typography variant="h5" className="Cart-title">
-            My Cart
-          </Typography>
-          {cartItems.length > 0 ? (
-            cartItems.map((item) => (
-              <Box className="Cart-card" key={item._id}>
-                <img
-                  src={item.product_image}
-                  className="Cart-image"
-                  alt={item.name}
-                />
-                <Box className="Cart-details">
-                  <Typography variant="subtitle1">
-                    {item.product_name}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {item.product_price}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      gap: "2rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <AddIcon
-                      variant="contained"
-                      color="primary"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => dispatch(quantityIncrement(item.id))}
-                    />
-
-                    <Typography variant="subtitle2">{item.quantity}</Typography>
-
-                    <RemoveIcon
-                      variant="contained"
-                      color="primary"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => dispatch(quantityDecrement(item.id))}
-                    />
-                  </Box>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    className="Remove-btn"
-                    onClick={() => dispatch(removeFromCart(item._id))}
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="subtitle1">Your cart is empty.</Typography>
-          )}
-        </Box>
+    <Box sx={{ padding: "2rem" }}>
+      <Grid container spacing={4}>
+        {/* Product Section */}
+        <Grid item xs={12} md={8}>
+          <Paper elevation={3} sx={{ padding: "1.5rem" }}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 600, marginBottom: "1rem" }}
+            >
+              My Cart
+            </Typography>
+            {cartItems.length > 0 ? (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Image</TableCell>
+                      <TableCell>Product Name</TableCell>
+                      <TableCell>Price (₹)</TableCell>
+                      <TableCell>Quantity</TableCell>
+                      <TableCell>Total (₹)</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {cartItems.map((item) => (
+                      <TableRow key={item._id}>
+                        <TableCell>
+                          <img
+                            src={item.product_image}
+                            alt={item.product_name}
+                            style={{
+                              width: 50,
+                              height: 50,
+                              objectFit: "cover",
+                              borderRadius: 4,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell>{item.product_name}</TableCell>
+                        <TableCell>
+                          {item.product_price.toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "0.5rem",
+                            }}
+                          >
+                            <IconButton
+                              onClick={() =>
+                                dispatch(quantityDecrement(item._id))
+                              }
+                              color="primary"
+                            >
+                              <RemoveIcon />
+                            </IconButton>
+                            <Typography>{item.quantity}</Typography>
+                            <IconButton
+                              onClick={() =>
+                                dispatch(quantityIncrement(item._id))
+                              }
+                              color="primary"
+                            >
+                              <AddIcon />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          {(
+                            item.product_price * item.quantity
+                          ).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() => dispatch(removeFromCart(item._id))}
+                            color="secondary"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <Typography>Your cart is empty.</Typography>
+            )}
+          </Paper>
+        </Grid>
 
         {/* Billing Section */}
-        <Box className="Billing-summary">
-          <Typography variant="h6" className="Billing-title">
-            Bill Details
-          </Typography>
-          <Box className="Billing-row">
-            <Typography>Cart Value:</Typography>
-            <Typography>₹{totalPrice.toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>Event Days:</Typography>
-            <Typography>2 Days</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>Base Amount:</Typography>
-            <Typography>₹{(totalPrice * 0.9).toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>TDS Charges (2%):</Typography>
-            <Typography>-₹{(totalPrice * 0.02).toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>Amount After TDS Deduction:</Typography>
-            <Typography>₹{(totalPrice * 0.98).toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>CGST 9%:</Typography>
-            <Typography>₹{(totalPrice * 0.09).toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>SGST 9%:</Typography>
-            <Typography>₹{(totalPrice * 0.09).toLocaleString()}</Typography>
-          </Box>
-          <Box className="Billing-row">
-            <Typography>Total GST (CGST + SGST):</Typography>
-            <Typography>₹{(totalPrice * 0.18).toLocaleString()}</Typography>
-          </Box>
-          <Divider sx={{ my: 2 }} />
-          <Box className="Billing-total">
-            <Typography variant="h6">Grand Total:</Typography>
-            <Typography variant="h6">
-              ₹{(totalPrice * 1.18 - totalPrice * 0.02).toLocaleString()}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ padding: "1.5rem" }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, marginBottom: "1rem" }}
+            >
+              Billing Summary
             </Typography>
-          </Box>
-        </Box>
-      </Box>
+            <Divider sx={{ marginBottom: "1rem" }} />
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>Cart Value:</Typography>
+              <Typography>₹{totalPrice.toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>Event Days:</Typography>
+              <Typography>2 Days</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>Base Amount:</Typography>
+              <Typography>₹{(totalPrice * 0.9).toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>TDS Charges (2%):</Typography>
+              <Typography>-₹{(totalPrice * 0.02).toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>CGST (9%):</Typography>
+              <Typography>₹{(totalPrice * 0.09).toLocaleString()}</Typography>
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography>SGST (9%):</Typography>
+              <Typography>₹{(totalPrice * 0.09).toLocaleString()}</Typography>
+            </Box>
+            <Divider sx={{ margin: "1rem 0" }} />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontWeight: 600,
+              }}
+            >
+              <Typography>Grand Total:</Typography>
+              <Typography>
+                ₹{(totalPrice * 1.18 - totalPrice * 0.02).toLocaleString()}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: "100%", marginTop: "1rem" }}
+            >
+              Proceed to Checkout
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Event Details */}
       <EventDetails
         cartItems={cartItems}
         billingDetails={{
@@ -183,8 +247,48 @@ const Cart = () => {
           grandTotal: totalPrice * 1.18 - totalPrice * 0.02,
         }}
       />
-    </>
+    </Box>
   );
 };
 
 export default Cart;
+
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import {
+//   Box,
+//   Typography,
+//   Button,
+//   Divider,
+//   Grid,
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableContainer,
+//   TableHead,
+//   TableRow,
+//   Paper,
+//   IconButton,
+// } from "@mui/material";
+
+// import authService from "../../api/ApiService";
+// import {
+//   addToCart,
+//   quantityDecrement,
+//   quantityIncrement,
+//   removeFromCart,
+// } from "../../redux/slice/CartSlice";
+// import EventDetails from "./components/EventDetails";
+
+// const Cart = () => {
+//   const cartItems = useSelector((state) => state.cart.cart);
+//   const dispatch = useDispatch();
+
+//   const totalPrice = cartItems.reduce((total, item) => {
+//     if (!item.product_price) return total;
+//     return total + item.product_price * item.quantity;
+//   }, 0);
+
+//   useEffect(() => {
+//     // Fetch technicians or other required data if needed
+//   }, []);

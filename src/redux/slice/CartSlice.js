@@ -20,20 +20,23 @@ const cartSlice = createSlice({
     },
 
     quantityIncrement: (state, action) => {
-      const item = state.cart.find(
-        (item) => item.product._id === action.payload
-      );
+      console.log("State of cart before increment:", state.cart); // Debugging current cart state
+      console.log("Payload received for increment:", action.payload);
+
+      const item = state.cart.find((item) => item._id === action.payload);
       if (item) {
         item.quantity += 1;
       }
     },
 
     quantityDecrement: (state, action) => {
-      const item = state.cart.find(
-        (item) => item.product._id === action.payload
-      );
-      if (item && item.quantity > 1) {
-        item.quantity -= 1;
+      const item = state.cart.find((item) => item._id === action.payload);
+      if (item) {
+        if (item.quantity > 1) {
+          item.quantity -= 1;
+        } else {
+          state.cart = state.cart.filter((item) => item._id !== action.payload);
+        }
       }
     },
 

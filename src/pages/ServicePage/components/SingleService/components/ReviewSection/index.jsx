@@ -61,7 +61,7 @@ const ReviewSection = ({ id }) => {
           </Box>
         ))
       ) : (
-        <Typography>
+        <Typography variant="p" sx={{ margin: "0 auto" }}>
           No reviews yet. Be the first to review this service!
         </Typography>
       )}
