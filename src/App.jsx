@@ -21,7 +21,8 @@ import BookingDetails from "./pages/Bookings/components/BookingDetails";
 import ServicePage from "./pages/ServicePage";
 import ServiceDetails from "./pages/ServicePage/components/ServiceDetails";
 import SingleService from "./pages/ServicePage/components/SingleService";
-// import CalendarModal from "./pages/Calender";
+import CalendarModal from "./pages/Calender";
+import Calendar from "./pages/Calender";
 // import LoginMobile from "./pages/LoginMobile";
 
 // Lazy-loaded components
@@ -100,6 +101,14 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <Category />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/calenders"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Calendar />
                 </PrivateRoute>
               }
             />

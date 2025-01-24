@@ -1,19 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "../slice/CartSlice";
-import authReducer from "../slice/authSlice";
+import persistStore from "redux-persist/es/persistStore";
 import loaderReducer from "../slice/LoaderSlice";
 import locationReducer from "../slice/locationSlice";
-import persistStore from "redux-persist/es/persistStore";
 import {
   persistedCartReducer,
   persistedAuthReducer,
+  persistedDateReducer, // Use persistedDateReducer
 } from "../persists/persistsReducer";
+
 const store = configureStore({
   reducer: {
     cart: persistedCartReducer,
     loader: loaderReducer,
     auth: persistedAuthReducer,
     location: locationReducer,
+    date: persistedDateReducer, // Use the correct reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

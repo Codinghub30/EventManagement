@@ -35,6 +35,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { numberOfDays } = useSelector((state) => state.date);
 
   const fetchProducts = async () => {
     dispatch(setLoading(true));
@@ -42,8 +43,6 @@ const Products = () => {
       const res = await authService.rentalProduct();
       setProducts(res.data.data);
       setFilteredItems(res.data.data);
-      console.log(res.data.data);
-
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -55,27 +54,7 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  const handleCategoryChange = (category) => {
-    setActiveCategory(category);
-
-    let filtered = products;
-
-    if (category !== "All") {
-      filtered = filtered.filter((item) => item.product_category === category);
-    }
-
-    if (minPrice || maxPrice) {
-      filtered = filtered.filter(
-        (item) =>
-          (!minPrice || item.product_price >= parseFloat(minPrice)) &&
-          (!maxPrice || item.product_price <= parseFloat(maxPrice))
-      );
-    }
-
-    setFilteredItems(filtered);
-  };
-
-  const handlePriceFilter = () => {
+  const filterProducts = () => {
     let filtered = products;
 
     if (activeCategory !== "All") {
@@ -84,6 +63,32 @@ const Products = () => {
       );
     }
 
+    if (numberOfDays) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter((item) =>
+        item.brand.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredItems(filtered);
+  };
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, activeCategory, minPrice, maxPrice, numberOfDays, searchQuery]);
+
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+  };
+
+  const handlePriceFilter = () => {
+    let filtered = products;
+    if (numberOfDays) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
+    }
     if (minPrice || maxPrice) {
       filtered = filtered.filter(
         (item) =>
@@ -91,7 +96,6 @@ const Products = () => {
           (!maxPrice || item.product_price <= parseFloat(maxPrice))
       );
     }
-
     setFilteredItems(filtered);
   };
 
@@ -121,7 +125,6 @@ const Products = () => {
 
   return (
     <Box className="products-page">
-      {/* Filters Sidebar */}
       <Box className="filters-sidebar">
         <Typography variant="h6" className="filters-title">
           Filters
@@ -189,7 +192,6 @@ const Products = () => {
         </Box>
       </Box>
 
-      {/* Main Content */}
       <Box className="main-content">
         <Box className="sorting-header">
           <Typography variant="h5">
@@ -218,6 +220,9 @@ const Products = () => {
                 </Typography>
                 <Typography className="product-discount">
                   {item.discount}% OFF
+                </Typography>
+                <Typography className="product-stock">
+                  Stock Available: {item.stock_in_hand}
                 </Typography>
               </CardContent>
             </Card>

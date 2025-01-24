@@ -9,7 +9,6 @@ import {
   TextField,
 } from "@mui/material";
 import CustomSort from "../../Category/components/CustomSort";
-// import "./styles.scss";
 import authService from "../../../api/ApiService";
 import { getErrorMessage } from "../../../utils/helperFunc";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,10 +29,11 @@ const FeaturedProduct = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortOption, setSortOption] = useState("default");
   const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState(""); 
+  const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { numberOfDays } = useSelector((state) => state.date);
 
   const fetchProducts = async () => {
     dispatch(setLoading(true));
@@ -41,8 +41,6 @@ const FeaturedProduct = () => {
       const res = await authService.allFeaturedProducts();
       setProducts(res.data.data);
       setFilteredItems(res.data.data);
-      console.log(res.data.data);
-      
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -54,31 +52,41 @@ const FeaturedProduct = () => {
     fetchProducts();
   }, []);
 
+  const filterProducts = () => {
+    let filtered = products;
+
+    if (activeCategory !== "All") {
+      filtered = filtered.filter(
+        (item) => item.product_category === activeCategory
+      );
+    }
+
+    if (numberOfDays) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter((item) =>
+        item.product_name?.toLowerCase().includes(searchQuery?.toLowerCase())
+      );
+    }
+
+    setFilteredItems(filtered);
+  };
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, activeCategory, minPrice, maxPrice, numberOfDays, searchQuery]);
 
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
-
-    let filtered = products;
-
-    if (category !== "All") {
-      filtered = filtered.filter((item) => item.product_category === category);
-    }
-
-    if (minPrice || maxPrice) {
-      filtered = filtered.filter(
-        (item) =>
-          (!minPrice || item.product_price >= parseFloat(minPrice)) &&
-          (!maxPrice || item.product_price <= parseFloat(maxPrice))
-      );
-    }
- 
   };
 
   const handlePriceFilter = () => {
     let filtered = products;
 
-    if (activeCategory !== "All") {
-      filtered = filtered.filter((item) => item.product_category === activeCategory);
+    if (numberOfDays) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
     }
 
     if (minPrice || maxPrice) {
@@ -88,7 +96,6 @@ const FeaturedProduct = () => {
           (!maxPrice || item.product_price <= parseFloat(maxPrice))
       );
     }
-
     setFilteredItems(filtered);
   };
 
@@ -128,7 +135,11 @@ const FeaturedProduct = () => {
           {categories.map((cat) => (
             <Button
               key={cat}
-            className={cat === activeCategory ? "filter-button-active" : "filter-button"}
+              className={
+                cat === activeCategory
+                  ? "filter-button-active"
+                  : "filter-button"
+              }
               onClick={() => handleCategoryChange(cat)}
             >
               {cat}
@@ -158,37 +169,39 @@ const FeaturedProduct = () => {
             variant="contained"
             color="primary"
             onClick={handlePriceFilter}
-            sx={{ marginTop: "1rem", background:'linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)' }}
+            sx={{
+              marginTop: "1rem",
+              background:
+                "linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)",
+            }}
           >
             Apply
           </Button>
         </Box>
         <Box className="filter-group">
-      <Typography variant="subtitle1">Brand</Typography>
-      <TextField
-        placeholder="Search Brand"
-        variant="outlined"
-        size="small"
-        className="search-brand"
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <Box sx={{marginTop:'3rem'}}>
-
-        <CustomSort onSortChange={handleSortChange} />
-      </Box>
-    </Box>
+          <Typography variant="subtitle1">Brand</Typography>
+          <TextField
+            placeholder="Search Brand"
+            variant="outlined"
+            size="small"
+            className="search-brand"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <Box sx={{ marginTop: "3rem" }}>
+            <CustomSort onSortChange={handleSortChange} />
+          </Box>
+        </Box>
       </Box>
 
       {/* Main Content */}
       <Box className="main-content">
         <Box className="sorting-header">
-        <Typography variant="h5" sx={{fontSize:'0.9rem', padding:'1rem'}}>
+          <Typography variant="h5" sx={{ fontSize: "0.9rem", padding: "1rem" }}>
             Showing {filteredItems.length} results of Featured Products
           </Typography>
         </Box>
 
         <Box className="products-grid">
-        
           {filteredItems.map((item) => (
             <Card
               key={item.id}
@@ -209,6 +222,9 @@ const FeaturedProduct = () => {
                 </Typography>
                 <Typography className="product-discount">
                   {item.discount}% OFF
+                </Typography>
+                <Typography className="product-stock">
+                  Stock Available: {item.stock_in_hand}
                 </Typography>
               </CardContent>
             </Card>

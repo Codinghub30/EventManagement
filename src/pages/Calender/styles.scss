@@ -1,13 +1,61 @@
-.MuiDateRangePickerDay-root.Mui-selected {
-    background-color: #7C4DFF;
-    color: white;
-  }
-  
-  .MuiDateRangePickerDay-root:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .MuiTypography-root {
-    font-weight: bold;
-  }
-  
+.react-datepicker {
+  border: none;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.react-datepicker__header {
+  background-color: white;
+  border-bottom: none;
+}
+
+.react-datepicker__current-month {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.react-datepicker__day-name {
+  color: #999;
+  font-weight: bold;
+}
+
+.react-datepicker__day {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin: 2px;
+  display: inline-block;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.react-datepicker__day--in-range {
+  background-color: #c4b5fd; /* Light purple */
+  color: white;
+}
+
+.react-datepicker__day--selected {
+  background-color: yellow;
+  color: black;
+}
+
+.react-datepicker__day--range-end {
+  background-color: #7c3aed; /* Dark purple */
+  color: white;
+}
+
+.confirm-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.confirm-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}

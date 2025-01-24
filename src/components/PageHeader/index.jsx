@@ -211,6 +211,18 @@ const PageHeader = () => {
               </Box>
             </Link>
 
+            <Link to={"/products"} style={{ textDecoration: "none" }}>
+              <Box
+                sx={{
+                  // color: location.pathname === "/booking" ? "black" : "white",
+                  color: "white",
+                }}
+                className="header-list"
+              >
+                Products
+              </Box>
+            </Link>
+
             <Link to={"/cart"} style={{ textDecoration: "none" }}>
               <Box
                 sx={{

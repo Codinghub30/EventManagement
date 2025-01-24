@@ -1,117 +1,51 @@
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-  Box,
-  Typography,
-} from "@mui/material";
-import {
-  LocalizationProvider,
-  StaticDateRangePicker,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./styles.scss"; // Custom styles for your design
+import { useDispatch } from "react-redux";
+import { setDates } from "../../redux/slice/dateSlice"; // Import the Redux action
 
-const CalendarModal = () => {
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedRange, setSelectedRange] = useState([null, null]);
+const Calendar = () => {
+  const [selectedDates, setSelectedDates] = useState([null, null]); // For range selection
+  const dispatch = useDispatch();
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const handleDateChange = (dates) => {
+    setSelectedDates(dates);
+
+    if (dates[0] && dates[1]) {
+      dispatch(setDates({ startDate: dates[0], endDate: dates[1] })); // Dispatch to Redux
+    }
   };
 
   const handleConfirm = () => {
-    console.log("Selected Dates:", selectedRange);
-    toggleModal();
+    if (selectedDates[0] && selectedDates[1]) {
+      alert("Dates confirmed!");
+    } else {
+      alert("Please select a date range first.");
+    }
   };
 
   return (
-    // <Box
-    //   display="flex"
-    //   justifyContent="center"
-    //   alignItems="center"
-    //   height="100vh"
-    //   bgcolor="#f9f9f9"
-    // >
-    //   <Button
-    //     variant="contained"
-    //     onClick={toggleModal}
-    //     sx={{
-    //       backgroundColor: "#7C4DFF",
-    //       color: "#FFFFFF",
-    //       padding: "10px 20px",
-    //       fontSize: "16px",
-    //       borderRadius: "8px",
-    //       fontWeight: "bold",
-    //       textTransform: "none",
-    //     }}
-    //   >
-    //     Select Event Dates
-    //   </Button>
-
-    //   <Dialog
-    //     open={isModalVisible}
-    //     onClose={toggleModal}
-    //     fullWidth
-    //     maxWidth="sm"
-    //     PaperProps={{
-    //       style: {
-    //         borderRadius: 10,
-    //         padding: 20,
-    //       },
-    //     }}
-    //   >
-    //     <DialogTitle
-    //       sx={{
-    //         textAlign: "center",
-    //         fontSize: "20px",
-    //         fontWeight: "bold",
-    //         marginBottom: "10px",
-    //       }}
-    //     >
-    //       Select Event Dates
-    //     </DialogTitle>
-    //     <DialogContent>
-    //       <LocalizationProvider dateAdapter={AdapterDayjs}>
-    //         <StaticDateRangePicker
-    //           displayStaticWrapperAs="desktop"
-    //           value={selectedRange}
-    //           onChange={(newValue) => setSelectedRange(newValue)}
-    //           calendars={1}
-    //           renderInput={() => null} // Hide the default input fields
-    //         />
-    //       </LocalizationProvider>
-    //       <Box
-    //         sx={{
-    //           display: "flex",
-    //           justifyContent: "center",
-    //           mt: 3,
-    //         }}
-    //       >
-    //         <Button
-    //           onClick={handleConfirm}
-    //           variant="contained"
-    //           sx={{
-    //             width: "90%",
-    //             backgroundColor: "#7C4DFF",
-    //             color: "#FFFFFF",
-    //             padding: "10px",
-    //             borderRadius: "8px",
-    //             fontWeight: "bold",
-    //             textTransform: "none",
-    //             fontSize: "16px",
-    //           }}
-    //         >
-    //           Confirm
-    //         </Button>
-    //       </Box>
-    //     </DialogContent>
-    //   </Dialog>
-    // </Box>
-    <></>
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      <h2>Select Event Dates</h2>
+      <DatePicker
+        selected={selectedDates[0]} // Start date
+        onChange={handleDateChange} // Triggered when the user selects dates
+        startDate={selectedDates[0]}
+        endDate={selectedDates[1]}
+        selectsRange
+        inline
+        monthsShown={1}
+      />
+      <button
+        onClick={handleConfirm}
+        className="confirm-button"
+        disabled={!selectedDates[0] || !selectedDates[1]}
+      >
+        Confirm
+      </button>
+    </div>
   );
 };
 
-export default CalendarModal;
+export default Calendar;

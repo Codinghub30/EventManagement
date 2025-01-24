@@ -1,9 +1,9 @@
-// React and react related imports
+// React and react related imports 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-// Third party library
+// Third party library 
 import {
   Box,
   Typography,
@@ -146,7 +146,7 @@ const Category = () => {
 
   return (
     <Box className="category-page">
-      <Box className="filters-sidebar-category">
+      <Box className="filters-sidebar">
         <Typography variant="h6" className="filters-title">
           Filters
         </Typography>

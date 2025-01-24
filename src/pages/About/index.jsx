@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 import Achievements from "./components/Achievements";
 import authService from "../../api/ApiService";
 
-
 const About = () => {
   const [banner, setBanner] = useState("");
   const location = useLocation();
@@ -94,22 +93,34 @@ const About = () => {
         <h2>Professional Team</h2>
         <div className="team-members">
           <div className="team-member">
-            <img src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fwww.gravatar.com%2Favatar%2F2c7d99fe281ecd3bcd65ab915bac6dd5%3Fs%3D250" alt="Alex Valentine" />
+            <img
+              src="https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fwww.gravatar.com%2Favatar%2F2c7d99fe281ecd3bcd65ab915bac6dd5%3Fs%3D250"
+              alt="Alex Valentine"
+            />
             <h3>Alex Valentine</h3>
             <p>Event Director</p>
           </div>
           <div className="team-member">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNlXZlMguDa-0yDfWZbxjbWqSu4TCEK8d-gEDkQWIUK3Ox1Sx2VnDyYy6oKpWjw0ALTXY&usqp=CAU" alt="John Harris" />
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNlXZlMguDa-0yDfWZbxjbWqSu4TCEK8d-gEDkQWIUK3Ox1Sx2VnDyYy6oKpWjw0ALTXY&usqp=CAU"
+              alt="John Harris"
+            />
             <h3>John Harris</h3>
             <p>Project Manager</p>
           </div>
           <div className="team-member">
-            <img src="https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg" alt="Jessica Jane" />
+            <img
+              src="https://www.shutterstock.com/image-photo/head-shot-portrait-close-smiling-600nw-1714666150.jpg"
+              alt="Jessica Jane"
+            />
             <h3>Jessica Jane</h3>
             <p>Creative Lead</p>
           </div>
           <div className="team-member">
-            <img src="https://t4.ftcdn.net/jpg/02/19/63/31/360_F_219633151_BW6TD8D1EA9OqZu4JgdmeJGg4JBaiAHj.jpg" alt="Alex Valtaz" />
+            <img
+              src="https://t4.ftcdn.net/jpg/02/19/63/31/360_F_219633151_BW6TD8D1EA9OqZu4JgdmeJGg4JBaiAHj.jpg"
+              alt="Alex Valtaz"
+            />
             <h3>Alex Valtaz</h3>
             <p>Logistics Manager</p>
           </div>

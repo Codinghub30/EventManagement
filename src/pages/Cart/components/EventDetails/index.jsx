@@ -63,6 +63,9 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
   const [addLocation, setAddLocation] = useState("");
+  const { startDate, endDate, numberOfDays } = useSelector(
+    (state) => state.date
+  );
 
   const dispatch = useDispatch();
 
@@ -90,14 +93,14 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const handleLocationContinue = (locationData) => {
     console.log(locationData);
 
-    setAddLocation(locationData.address); // Store the location name
+    setAddLocation(locationData.address);
     setEventDetails((prevDetails) => ({
       ...prevDetails,
       event_location: locationData.address,
-      location_lat: locationData.lat, // Latitude from LocationSection
-      location_long: locationData.lng, // Longitude from LocationSection
+      location_lat: locationData.lat,
+      location_long: locationData.lng,
     }));
-    setOpenLocation(false); // Close the location section
+    setOpenLocation(false);
   };
 
   const handleAddressChange = (value) => {
@@ -170,7 +173,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
       eventDetails.eventDate?.add(3, "days").format("YYYY-MM-DD") //static.....................
     );
     formData.append("event_name", eventDetails.eventName);
-    formData.append("number_of_days", "4"); // static.........................
+    formData.append("number_of_days", numberOfDays);
 
     formData.append("upload_invitation", eventDetails.upload_invitation);
 
@@ -376,6 +379,17 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 fullWidth
               />
             </Grid>
+            <Button
+              sx={{
+                width: "39rem",
+                marginTop: "2rem",
+                marginLeft: "2rem",
+                border: "1px solid",
+              }}
+              onClick={() => setOpenLocation(!openLocation)}
+            >
+              Location
+            </Button>
             <Grid item xs={6}>
               <Button
                 variant="outlined"
@@ -409,9 +423,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
               </Button>
             </Grid>
           </Grid>
-          <Button onClick={() => setOpenLocation(!openLocation)}>
-            Location
-          </Button>
+
           <Box mt={4} textAlign="center">
             {isCheckoutAllowed ? (
               <Button
