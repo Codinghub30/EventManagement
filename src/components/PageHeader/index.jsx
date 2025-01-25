@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.jpg";
 import "./styles.scss";
 import { useSelector } from "react-redux";
@@ -21,12 +21,17 @@ const PageHeader = () => {
   );
   const count = useSelector((state) => state.cart.cart.length);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-    console.log("Search term:", event.target.value);
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
+    }
   };
 
+  const handleOpenCalender = () => {
+    navigate("/calenders");
+  };
   useEffect(() => {
     const fetchCity = async () => {
       try {
@@ -60,7 +65,7 @@ const PageHeader = () => {
                 placeholder="Search events..."
                 size="small"
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(event) => setSearchTerm(event.target.value)}
                 sx={{
                   backgroundColor: "white",
                   borderRadius: "4px",
@@ -78,7 +83,18 @@ const PageHeader = () => {
                   },
                 }}
               />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSearch}
+                disabled={!searchTerm.trim()}
+              >
+                Search
+              </Button>
               <span className="header-list">Events in Bengaluru</span>
+              <span className="header-list" onClick={handleOpenCalender}>
+                Calender
+              </span>
 
               <span
                 className="header-list"

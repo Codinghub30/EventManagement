@@ -42,13 +42,13 @@ const ExploreService = () => {
     },
     {
       id: 5,
-      ServiceName: " Photographers",
+      ServiceName: "Photographers",
       image:
         "https://cdn.expertphotography.com/wp-content/uploads/2021/08/Become-Professional-Photographer-Colin-Lloyd.jpg",
     },
     {
       id: 6,
-      ServiceName: "Stage Designer",
+      ServiceName: "Stage Designers",
       image:
         "https://dean-www.s3.amazonaws.com/files/news/deancollegemarcom2018-218.jpg",
     },
@@ -56,6 +56,9 @@ const ExploreService = () => {
 
   const handleService = () => {
     navigate("/services");
+  };
+  const handleServiceClick = (serviceName) => {
+    navigate(`/service/${serviceName}`);
   };
   const colors = [
     // "#FFEBEE", // Light Red
@@ -92,6 +95,7 @@ const ExploreService = () => {
             sx={{
               backgroundColor: colors[index % colors.length],
             }}
+            onClick={() => handleServiceClick(item.ServiceName)}
           >
             <img src={item.image} alt={item.ServiceName} />
             <Typography variant="h6" className="service-name">

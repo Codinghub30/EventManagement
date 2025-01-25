@@ -49,6 +49,11 @@ const Products = () => {
       getErrorMessage(error);
     }
   };
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const search = params.get("search") || "";
+    setSearchQuery(search);
+  }, [location.search]);
 
   useEffect(() => {
     fetchProducts();
@@ -69,7 +74,7 @@ const Products = () => {
 
     if (searchQuery) {
       filtered = filtered.filter((item) =>
-        item.brand.toLowerCase().includes(searchQuery.toLowerCase())
+        item.product_name?.toLowerCase().includes(searchQuery?.toLowerCase())
       );
     }
 

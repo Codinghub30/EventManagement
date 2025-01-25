@@ -12,6 +12,7 @@ import {
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import authService from "../../api/ApiService";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CompanyDetails = () => {
   const [companyType, setCompanyType] = useState("");
@@ -25,6 +26,7 @@ const CompanyDetails = () => {
     pan_front_image: null,
     pan_back_image: null,
   });
+  const navigate = useNavigate();
   const userDetails = useSelector((state) => state.auth.userDetails);
 
   const handleChange = (e) => {
@@ -56,18 +58,16 @@ const CompanyDetails = () => {
   const handleSubmit = async () => {
     try {
       const payload = new FormData();
+
       Object.keys(formData).forEach((key) => {
         payload.append(key, formData[key]);
       });
-
-      console.log("Payload before sending to API:", payload);
-      console.log("Payload with files:", payload);
-
+      console.log(userDetails);
       const response = await authService.updateUserProfile(
         userDetails._id,
         payload
       );
-      console.log("API Response:", response);
+      navigate("/calenders");
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");

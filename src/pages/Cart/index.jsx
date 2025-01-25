@@ -84,7 +84,7 @@ const Cart = () => {
       <Grid container spacing={4}>
         {/* Product Section */}
         <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ padding: "1.5rem" }}>
+          <Paper elevation={3} sx={{ padding: "1.5rem", height: "315px" }}>
             <Typography
               variant="h5"
               sx={{ fontWeight: 600, marginBottom: "1rem" }}
@@ -169,7 +169,16 @@ const Cart = () => {
                 </Table>
               </TableContainer>
             ) : (
-              <Typography>Your cart is empty.</Typography>
+              <Typography
+                variant="p"
+                sx={{
+                  textAlign: "center",
+                  display: "block",
+                  marginTop: "3rem",
+                }}
+              >
+                Your cart is empty.
+              </Typography>
             )}
           </Paper>
         </Grid>
@@ -221,13 +230,6 @@ const Cart = () => {
                 ₹{(totalPrice * 1.18 - totalPrice * 0.02).toLocaleString()}
               </Typography>
             </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ width: "100%", marginTop: "1rem" }}
-            >
-              Proceed to Checkout
-            </Button>
           </Paper>
         </Grid>
       </Grid>

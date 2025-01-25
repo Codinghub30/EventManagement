@@ -1,9 +1,9 @@
-// React and react related imports 
+// React and react related imports
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-// Third party library 
+// Third party library
 import {
   Box,
   Typography,
@@ -40,6 +40,7 @@ const Category = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { numberOfDays } = useSelector((state) => state.date);
 
   const fetchCategories = async () => {
     try {
@@ -48,7 +49,7 @@ const Category = () => {
       if (res.data.data && res.data.data.length > 0) {
         setData(res.data.data);
         console.log(res.data.data);
-
+        setActiveCategory(category);
         dispatch(setLoading(false));
       } else {
         setData([]);
@@ -59,19 +60,31 @@ const Category = () => {
       getErrorMessage(error);
     }
   };
+  const filterProducts = () => {
+    let filtered = data;
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const filtered = category
-        ? data.filter(
-            (item) =>
-              item.product_category.toLowerCase() === category.toLowerCase()
-          )
-        : data;
-      setFilteredItems(filtered);
-      setActiveCategory(category || "All");
+    if (activeCategory !== "All") {
+      filtered = filtered.filter(
+        (item) =>
+          item.product_category.toLowerCase() === activeCategory.toLowerCase()
+      );
     }
-  }, [data, category]);
+
+    if (numberOfDays) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter((item) =>
+        item.product_name?.toLowerCase().includes(searchQuery?.toLowerCase())
+      );
+    }
+
+    setFilteredItems(filtered);
+  };
+  useEffect(() => {
+    filterProducts();
+  }, [data, activeCategory, minPrice, maxPrice, numberOfDays, searchQuery]);
 
   useEffect(() => {
     fetchCategories();
@@ -117,28 +130,28 @@ const Category = () => {
     setFilteredItems(sortedItems);
   };
 
-  const handleSearch = () => {
-    let filtered = data.filter((item) =>
-      item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  // const handleSearch = () => {
+  //   let filtered = data.filter((item) =>
+  //     item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
 
-    if (activeCategory !== "All") {
-      filtered = filtered.filter(
-        (item) =>
-          item.product_category.toLowerCase() === activeCategory.toLowerCase()
-      );
-    }
+  //   if (activeCategory !== "All") {
+  //     filtered = filtered.filter(
+  //       (item) =>
+  //         item.product_category.toLowerCase() === activeCategory.toLowerCase()
+  //     );
+  //   }
 
-    if (minPrice || maxPrice) {
-      filtered = filtered.filter(
-        (item) =>
-          (!minPrice || item.product_price >= parseFloat(minPrice)) &&
-          (!maxPrice || item.product_price <= parseFloat(maxPrice))
-      );
-    }
+  //   if (minPrice || maxPrice) {
+  //     filtered = filtered.filter(
+  //       (item) =>
+  //         (!minPrice || item.product_price >= parseFloat(minPrice)) &&
+  //         (!maxPrice || item.product_price <= parseFloat(maxPrice))
+  //     );
+  //   }
 
-    setFilteredItems(filtered);
-  };
+  //   setFilteredItems(filtered);
+  // };
 
   const handleOpen = (id) => {
     navigate(`/products/${id}`);

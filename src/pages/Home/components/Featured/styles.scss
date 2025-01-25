@@ -10,17 +10,17 @@
 
     .featured-heading {
       display: inline-block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 32px !important;
-  white-space: nowrap;
-  color: rgb(32, 34, 38)  !important;
-  font-family: "Bebas Neue" !important;
-  font-size: 28px;
-  font-weight: 500;
-  line-height: 100%;
-  margin-left: 2rem;
-  text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 32px !important;
+      white-space: nowrap;
+      color: rgb(32, 34, 38) !important;
+      font-family: "Bebas Neue" !important;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 100%;
+      margin-left: 2rem;
+      text-transform: uppercase;
     }
   }
 
@@ -28,7 +28,6 @@
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    gap: 20px;
     padding: 20px;
   }
 

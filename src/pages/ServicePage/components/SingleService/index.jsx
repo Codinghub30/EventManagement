@@ -51,63 +51,68 @@ const SingleService = () => {
   };
 
   if (!serviceData) return <Typography>Loading...</Typography>;
+  console.log(serviceData);
 
   return (
     <Box className="single-service">
-      <Box
-        className="header"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-      >
+      {/* Hero Section */}
+      <Box className="hero-section">
         <img
-          src={serviceData.shop_image_or_logo}
-          alt="Shop Logo"
-          className="shop-logo"
+          src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?fm=jpg&q=60&w=3000"
+          alt="Service"
+          className="hero-image"
         />
-        <Typography variant="h4">{serviceData.shop_name}</Typography>
-        <Typography variant="body1" color="textSecondary">
-          ₹ {serviceData.pricing} / Day
-        </Typography>
-        <Typography variant="subtitle1">{serviceData.profession}</Typography>
-        <Typography variant="body2">
-          {serviceData.experience_in_business} years in Business
-        </Typography>
-        <Typography variant="body2">
-          {serviceData.address[0]?.roadArea},{" "}
-          {serviceData.address[0]?.cityDownVillage},{" "}
-          {serviceData.address[0]?.state}, {serviceData.address[0].pincode}
-        </Typography>
-        <Typography variant="body2">
-          Business Hours: Until {serviceData.business_hours[0].end_time}{" "}
-          <Button variant="text" color="primary" onClick={toggleModal}>
-            Show More
+        <Box className="hero-overlay">
+          <Typography variant="h3">{serviceData.shop_name}</Typography>
+          <Typography variant="subtitle1">{serviceData.profession}</Typography>
+          <Typography variant="body1">₹ {serviceData.pricing} / Day</Typography>
+          <Typography variant="body2">
+            {serviceData.experience_in_business} years in Business
+          </Typography>
+          <Typography variant="body2">
+            {serviceData.address[0]?.roadArea},{" "}
+            {serviceData.address[0]?.cityDownVillage},{" "}
+            {serviceData.address[0]?.state}, {serviceData.address[0].pincode}
+          </Typography>
+          <Button variant="contained" color="primary" onClick={toggleModal}>
+            Show Business Hours
           </Button>
-        </Typography>
+          <img
+            style={{
+              width: "10rem",
+              borderRadius: "83%",
+              height: "10rem",
+              marginTop: "0.5rem",
+            }}
+            src={serviceData.shop_image_or_logo}
+            alt="Not Found"
+          />
+        </Box>
       </Box>
 
+      {/* Contact Buttons */}
       <Box className="contact-buttons">
         <IconButton
           href={`https://wa.me/${serviceData.mobile_number}`}
           target="_blank"
-          color="success"
+          className="whatsapp-button"
         >
           <WhatsAppIcon />
         </IconButton>
         <IconButton
           href={`tel:${serviceData.mobile_number}`}
           target="_blank"
-          color="primary"
+          className="phone-button"
         >
           <PhoneIcon />
         </IconButton>
       </Box>
 
+      {/* Tabs Section */}
       <Tabs
         value={tabValue}
+        sx={{ marginTop: "2rem" }}
         onChange={handleTabChange}
-        className="tabs"
         centered
       >
         <Tab label="Services" />
@@ -115,14 +120,39 @@ const SingleService = () => {
         <Tab label="Photos" />
       </Tabs>
 
+      {/* Tab Content */}
       {tabValue === 0 && (
         <Box className="services">
-          {serviceData?.additional_services?.map((service, index) => (
-            <Box key={index} className="service">
-              <Typography variant="subtitle1">{service.parameter}</Typography>
-              <Typography variant="body2">{service.value}</Typography>
-            </Box>
-          ))}
+          {serviceData?.additional_services?.length > 0 ? (
+            serviceData?.additional_services?.map((service, index) => (
+              <Box key={index} className="service-card">
+                <Box className="service-icon">
+                  {/* Add an icon or placeholder */}
+                  <img
+                    src="https://via.placeholder.com/50"
+                    alt="Service Icon"
+                    className="service-icon-image"
+                  />
+                </Box>
+                <Box className="service-content">
+                  <Typography variant="h6" className="service-title">
+                    {service.parameter}
+                  </Typography>
+                  <Typography variant="body1" className="service-description">
+                    {service.value}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Typography
+              variant="body1"
+              style={{ textAlign: "center" }}
+              className="no-services"
+            >
+              No Services Available.
+            </Typography>
+          )}
         </Box>
       )}
 
@@ -130,30 +160,46 @@ const SingleService = () => {
 
       {tabValue === 2 && (
         <Grid container spacing={2} className="photos">
-          {serviceData.additional_images?.map((image, index) => (
-            <Grid item xs={6} md={4} key={index}>
-              <img src={image} alt={`Service ${index}`} className="photo" />
-            </Grid>
-          ))}
+          {serviceData?.additional_services?.length > 0 ? (
+            serviceData.additional_services.map((service, index) => (
+              <Box key={index} className="service-card">
+                <Box className="service-icon">
+                  <img
+                    src="https://via.placeholder.com/50"
+                    alt="Service Icon"
+                    className="service-icon-image"
+                  />
+                </Box>
+                <Box className="service-content">
+                  <Typography variant="h6" className="service-title">
+                    {service.parameter}
+                  </Typography>
+                  <Typography variant="body1" className="service-description">
+                    {service.value}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          ) : (
+            <Typography
+              variant="body1"
+              style={{ textAlign: "center", margin: "51px auto" }}
+              className="no-services"
+            >
+              No Photos Available.
+            </Typography>
+          )}
         </Grid>
       )}
 
-      {/* Modal for Business Hours */}
+      {/* Modal */}
       <Modal open={openModal} onClose={toggleModal}>
         <Box className="modal-content">
-          <Typography variant="h6" className="modal-header">
-            Business Hours
-          </Typography>
+          <Typography variant="h6">Business Hours</Typography>
           {serviceData.business_hours?.map((hour, index) => (
             <Box key={index} className="business-hour">
-              <Typography variant="body1" component="span">
-                {hour.day}
-              </Typography>
-              <Typography
-                variant="body2"
-                component="span"
-                className={new Date().getDay() - 1 === index ? "highlight" : ""}
-              >
+              <Typography variant="body1">{hour.day}</Typography>
+              <Typography variant="body2">
                 {hour.start_time} - {hour.end_time}
               </Typography>
             </Box>

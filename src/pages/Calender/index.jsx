@@ -4,10 +4,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./styles.scss"; // Custom styles for your design
 import { useDispatch } from "react-redux";
 import { setDates } from "../../redux/slice/dateSlice"; // Import the Redux action
+import { useNavigate } from "react-router-dom";
 
 const Calendar = () => {
   const [selectedDates, setSelectedDates] = useState([null, null]); // For range selection
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleDateChange = (dates) => {
     setSelectedDates(dates);
@@ -20,6 +22,7 @@ const Calendar = () => {
   const handleConfirm = () => {
     if (selectedDates[0] && selectedDates[1]) {
       alert("Dates confirmed!");
+      navigate("/");
     } else {
       alert("Please select a date range first.");
     }

@@ -28,10 +28,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 // Custom Components
 import authService from "../../../../api/ApiService";
 import Terms from "../Terms";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../../../redux/slice/CartSlice";
 import CustomAlert from "../../../../components/CustomAlerts";
 import LocationSection from "./components/LocationSection";
+import CustomModal from "../../../../components/CustomModal";
+import OrderSummery from "./components/OrderSummery";
 
 const FieldLabel = ({ label }) => (
   <Typography component="span">
@@ -63,6 +65,9 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
   const [addLocation, setAddLocation] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
   const { startDate, endDate, numberOfDays } = useSelector(
     (state) => state.date
   );
@@ -91,8 +96,6 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     setIsCheckoutAllowed(true);
   };
   const handleLocationContinue = (locationData) => {
-    console.log(locationData);
-
     setAddLocation(locationData.address);
     setEventDetails((prevDetails) => ({
       ...prevDetails,
@@ -113,26 +116,19 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     setEventDetails({ ...eventDetails, [name]: value });
   };
 
-  const productData = cartItems?.map(
-    (item, index) => (
-      console.log("product data items", item),
-      {
-        orderId: item._id,
-        id: item._id || "undefined",
-        productName: item.product_name || "Unknown",
-        productPrice: item.product_price || 0,
-        totalPrice: (item.product_price || 0) * (item.quantity || 1),
-        quantity: item.quantity || 1,
-        context: "product",
-        sellerName: cartItems.vendor_name || "Unknown",
-        sellerId: cartItems.vendor_id || "Unknown",
-        eventStartDate: eventDetails.eventDate?.format("YYYY-MM-DD"),
-        eventEndDate: eventDetails.eventDate
-          ?.add(3, "days")
-          .format("YYYY-MM-DD"),
-      }
-    )
-  );
+  const productData = cartItems?.map((item, index) => ({
+    orderId: item._id,
+    id: item._id || "undefined",
+    productName: item.product_name || "Unknown",
+    productPrice: item.product_price || 0,
+    totalPrice: (item.product_price || 0) * (item.quantity || 1),
+    quantity: item.quantity || 1,
+    context: "product",
+    sellerName: cartItems.vendor_name || "Unknown",
+    sellerId: cartItems.vendor_id || "Unknown",
+    eventStartDate: eventDetails.eventDate?.format("YYYY-MM-DD"),
+    eventEndDate: eventDetails.eventDate?.add(3, "days").format("YYYY-MM-DD"),
+  }));
 
   const handleDateChange = (newDate) => {
     setEventDetails({ ...eventDetails, eventDate: newDate });
@@ -143,8 +139,6 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   };
 
   const handleFileChange = (e) => {
-    console.log("Function is running");
-
     const { name, files } = e.target;
     if (files && files[0]) {
       console.log(`File selected for ${name}:`, files[0]);
@@ -153,7 +147,6 @@ const EventDetails = ({ cartItems, billingDetails }) => {
         [name]: files[0],
       }));
     }
-    console.log(`${name} file selected:`, files[0]);
   };
 
   const handleConfirmOrder = async () => {
@@ -218,8 +211,8 @@ const EventDetails = ({ cartItems, billingDetails }) => {
 
     try {
       const response = await authService.createOrder(formData);
-      console.log("Order Created Successfully:", response.data);
-      <CustomAlert message={"Order Placed Successfully"} />;
+      setModalMessage("Order Created Successfully");
+      setModalType("success");
     } catch (error) {
       console.error(
         "Error creating order:",
@@ -479,106 +472,19 @@ const EventDetails = ({ cartItems, billingDetails }) => {
           aria-labelledby="order-summary-title"
           aria-describedby="order-summary-description"
         >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "90%",
-              maxWidth: 500,
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              borderRadius: 2,
-              p: 3,
-            }}
-          >
-            <Typography
-              id="order-summary-title"
-              variant="h6"
-              textAlign="center"
-              gutterBottom
-              sx={{ color: "#6c63ff", fontWeight: "bold" }}
-            >
-              Order Summary
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-
-            {/* Product Details */}
-            {cartItems?.map((item, index) => (
-              <Grid
-                container
-                spacing={2}
-                key={index}
-                sx={{ marginBottom: "1rem" }}
-              >
-                <Grid item xs={6}>
-                  <Typography>{item.product_name}</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography>X{item.quantity}</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography>₹{item.product_price}</Typography>
-                </Grid>
-              </Grid>
-            ))}
-
-            <Divider sx={{ mb: 2 }} />
-
-            {/* Billing Details */}
-            <Box>
-              <Typography>Cart Value: ₹{billingDetails.cartValue}</Typography>
-              <Typography>
-                Event Days: {billingDetails.eventDays} Days
-              </Typography>
-              <Typography>
-                Base Amount: ₹{billingDetails.baseAmount.toLocaleString()}
-              </Typography>
-              <Typography>
-                TDS Charges (2%): -₹{billingDetails.tdsCharges.toLocaleString()}
-              </Typography>
-              <Typography>
-                Amount After TDS Deduction: ₹
-                {billingDetails.amountAfterTds.toLocaleString()}
-              </Typography>
-              <Typography>
-                CGST (9%): ₹{billingDetails.cgst.toLocaleString()}
-              </Typography>
-              <Typography>
-                SGST (9%): ₹{billingDetails.sgst.toLocaleString()}
-              </Typography>
-              <Typography>
-                Total GST (CGST + SGST): ₹
-                {billingDetails.totalGst.toLocaleString()}
-              </Typography>
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h6" fontWeight="bold">
-                Grand Total: ₹{billingDetails.grandTotal.toLocaleString()}
-              </Typography>
-            </Box>
-
-            <Box mt={3} textAlign="center">
-              <Button
-                variant="contained"
-                color="success"
-                size="large"
-                onClick={handleConfirmOrder}
-                sx={{ marginRight: "1rem" }}
-              >
-                Confirm Order
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                size="large"
-                onClick={handleModalClose}
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Box>
+          <OrderSummery
+            cartItems={cartItems}
+            billingDetails={billingDetails}
+            handleConfirmOrder={handleConfirmOrder}
+            handleModalClose={handleModalClose}
+          />
         </Modal>
+        <CustomModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          message={modalMessage}
+          type={modalType}
+        />
         {/* <Modal
           open={openLocation}
           onClose={() => setOpenLocation(false)}
