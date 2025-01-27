@@ -13,6 +13,8 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import CloseIcon from "@mui/icons-material/Close";
+import authService from "../../../../../../api/ApiService";
+import { useSelector } from "react-redux";
 
 const LocationSection = ({ onContinue, setOpenLocation }) => {
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
@@ -23,15 +25,15 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     lat: null,
     lng: null,
   });
+  const userDetails = useSelector((state) => state.auth.userDetails);
 
   const GOOGLE_MAPS_API_KEY = "AIzaSyDLyeYKWC3vssuRVGXktAT_cY-8-qHEA_g";
 
   //   const savedLocations = useSelector((state) => state.location.savedLocations);
 
-  // Load the Google Maps API once
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: ["places"], // Include "places" for Autocomplete
+    libraries: ["places"],
   });
 
   const onLoadAutocomplete = (autocompleteInstance) => {
@@ -47,7 +49,7 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     setSearchedLocation(locationName);
     setLocationCoords({ lat: locationLat, lng: locationLng });
   };
-  const handleSaveLocation = () => {
+  const handleSaveLocation = async () => {
     if (searchedLocation) {
       const newLocation = {
         id: Date.now(),
@@ -55,8 +57,13 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
         checked: false,
       };
       setSavedLocations([...savedLocations, newLocation]);
-      setIsAddingNewAddress(false); // Close the inline form
-      setSearchedLocation(""); // Reset the searched location
+      const res = await authService.addAddress(
+        userDetails._id,
+        searchedLocation
+      );
+      console.log(res);
+      setIsAddingNewAddress(false);
+      setSearchedLocation("");
     }
   };
 

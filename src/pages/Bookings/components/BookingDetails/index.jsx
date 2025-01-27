@@ -7,7 +7,10 @@ import "jspdf-autotable";
 import "./styles.scss";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../../redux/slice/LoaderSlice";
-import { getErrorMessage } from "../../../../utils/helperFunc";
+import {
+  formatCurrencyIntl,
+  getErrorMessage,
+} from "../../../../utils/helperFunc";
 
 const BookingDetails = () => {
   const { id } = useParams();
@@ -166,7 +169,7 @@ const BookingDetails = () => {
             </Typography>
             <Box>
               <Typography variant="p">
-                Amount Paid: ₹{booking.paid_amount}
+                Amount Paid: {formatCurrencyIntl(booking.paid_amount)}
               </Typography>
               <Typography variant="p">
                 Payment Method: {booking.payment_method}
@@ -183,6 +186,48 @@ const BookingDetails = () => {
             >
               Download Invoice
             </Button>
+          </Paper>
+        </Grid>
+        <Grid>
+          <Paper
+            className="booking-box"
+            sx={{ marginLeft: "2rem" }}
+            elevation={3}
+          >
+            <Typography variant="h6" className="section-title">
+              Event Summary
+            </Typography>
+            <Divider className="divider" />
+            <Box className="event-info">
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Event Name:</strong> &nbsp;{" "}
+                <span>{booking.event_name}</span>
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Location:</strong> &nbsp;{" "}
+                {booking.event_location}
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Date:</strong> &nbsp;{" "}
+                {booking.event_date}
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Start Time:</strong> &nbsp;{" "}
+                {booking.event_start_time}
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">End Time:</strong> &nbsp;{" "}
+                {booking.event_end_time}
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Venue Name:</strong> &nbsp;{" "}
+                {booking.venue_name}
+              </Typography>
+              <Typography variant="p" className="event-info-details">
+                <strong className="event-info-title">Venue Open At:</strong>{" "}
+                &nbsp; {booking.venue_open_time}
+              </Typography>
+            </Box>
           </Paper>
         </Grid>
       </Grid>

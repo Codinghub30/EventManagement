@@ -160,15 +160,11 @@ const SingleService = () => {
 
       {tabValue === 2 && (
         <Grid container spacing={2} className="photos">
-          {serviceData?.additional_services?.length > 0 ? (
-            serviceData.additional_services.map((service, index) => (
-              <Box key={index} className="service-card">
-                <Box className="service-icon">
-                  <img
-                    src="https://via.placeholder.com/50"
-                    alt="Service Icon"
-                    className="service-icon-image"
-                  />
+          {serviceData?.additional_images?.length > 0 ? (
+            serviceData.additional_images.map((service, index) => (
+              <Box key={index} className="service-card-images">
+                <Box className="service-images">
+                  <img src={service} alt="Service Icon" />
                 </Box>
                 <Box className="service-content">
                   <Typography variant="h6" className="service-title">
@@ -192,19 +188,101 @@ const SingleService = () => {
         </Grid>
       )}
 
-      {/* Modal */}
       <Modal open={openModal} onClose={toggleModal}>
-        <Box className="modal-content">
-          <Typography variant="h6">Business Hours</Typography>
+        <Box
+          sx={{
+            width: "90%",
+            maxWidth: 500,
+            mx: "auto",
+            p: 4,
+            bgcolor: "background.paper",
+            boxShadow: 3,
+            borderRadius: 3,
+            overflowY: "auto",
+            maxHeight: "100vh",
+            textAlign: "center",
+            position: "relative",
+          }}
+          className="modal-content"
+        >
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bold",
+              color: "#4A90E2",
+              textAlign: "center",
+              marginBottom: "1rem",
+              textTransform: "uppercase",
+            }}
+          >
+            Business Hours
+          </Typography>
+          <Box
+            sx={{
+              width: "50px",
+              height: "3px",
+              bgcolor: "#4A90E2",
+              margin: "0 auto 2rem auto",
+              borderRadius: "5px",
+            }}
+          />
+
           {serviceData.business_hours?.map((hour, index) => (
-            <Box key={index} className="business-hour">
-              <Typography variant="body1">{hour.day}</Typography>
-              <Typography variant="body2">
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                p: 2,
+                bgcolor:
+                  new Date().getDay() - 1 === index ? "#F0F8FF" : "transparent",
+                borderRadius: "5px",
+                boxShadow:
+                  new Date().getDay() - 1 === index
+                    ? "0 0 10px rgba(74,144,226,0.2)"
+                    : "none",
+                mb: 2,
+              }}
+              className="business-hour"
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: "bold",
+                  color: new Date().getDay() - 1 === index ? "#4A90E2" : "#333",
+                }}
+              >
+                {hour.day}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: "medium",
+                  color: new Date().getDay() - 1 === index ? "#4A90E2" : "#555",
+                }}
+              >
                 {hour.start_time} - {hour.end_time}
               </Typography>
             </Box>
           ))}
-          <Button variant="contained" color="secondary" onClick={toggleModal}>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={toggleModal}
+            sx={{
+              mt: 3,
+              px: 4,
+              textTransform: "uppercase",
+              fontWeight: "bold",
+              fontSize: "0.875rem",
+              bgcolor: "#4A90E2",
+              ":hover": {
+                bgcolor: "#357ABD",
+              },
+            }}
+          >
             Close
           </Button>
         </Box>

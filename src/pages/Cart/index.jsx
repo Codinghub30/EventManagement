@@ -41,6 +41,9 @@ const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cart);
   const [technicians, setTechnicians] = useState([]);
   const dispatch = useDispatch();
+  const { startDate, endDate, numberOfDays } = useSelector(
+    (state) => state.date
+  );
 
   console.log("Carttesss", cartItems);
 
@@ -199,7 +202,7 @@ const Cart = () => {
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography>Event Days:</Typography>
-              <Typography>2 Days</Typography>
+              <Typography>{totalPrice > 0 ? numberOfDays : 0}</Typography>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography>Base Amount:</Typography>

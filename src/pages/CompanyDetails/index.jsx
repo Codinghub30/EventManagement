@@ -8,11 +8,13 @@ import {
   Button,
   Paper,
   IconButton,
+  Modal,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import authService from "../../api/ApiService";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Calendar from "../Calender";
 
 const CompanyDetails = () => {
   const [companyType, setCompanyType] = useState("");
@@ -27,6 +29,7 @@ const CompanyDetails = () => {
     pan_back_image: null,
   });
   const navigate = useNavigate();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const userDetails = useSelector((state) => state.auth.userDetails);
 
   const handleChange = (e) => {
@@ -62,16 +65,20 @@ const CompanyDetails = () => {
       Object.keys(formData).forEach((key) => {
         payload.append(key, formData[key]);
       });
-      console.log(userDetails);
       const response = await authService.updateUserProfile(
         userDetails._id,
         payload
       );
-      navigate("/calenders");
+      // navigate("/calenders");
+      setIsCalendarOpen(true);
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");
     }
+  };
+
+  const handleCalendarClose = () => {
+    setIsCalendarOpen(false);
   };
 
   return (
@@ -99,7 +106,6 @@ const CompanyDetails = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Company Type Dropdown */}
         <Grid item xs={12}>
           <TextField
             select
@@ -119,7 +125,6 @@ const CompanyDetails = () => {
           </TextField>
         </Grid>
 
-        {/* Common Fields */}
         <Grid item xs={12}>
           <TextField
             fullWidth
@@ -151,7 +156,7 @@ const CompanyDetails = () => {
               fullWidth
               label="TDS"
               name="tds"
-              value={"2%"} // Presuming TDS should always be "2%"
+              value={"2%"}
               onChange={handleChange}
               variant="outlined"
               disabled
@@ -159,7 +164,6 @@ const CompanyDetails = () => {
           </Grid>
         )}
 
-        {/* Conditional Fields Based on Company Type */}
         {[
           "Private Limited & Limited",
           "Partnership & LLP",
@@ -274,7 +278,6 @@ const CompanyDetails = () => {
         )}
       </Grid>
 
-      {/* Submit Button */}
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 4 }}>
         <Button
           variant="contained"
@@ -290,6 +293,74 @@ const CompanyDetails = () => {
           Submit
         </Button>
       </Box>
+      <Modal open={isCalendarOpen} onClose={handleCalendarClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: "background.paper",
+            borderRadius: "16px",
+            boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.3)",
+            p: 4,
+            width: "450px",
+            maxWidth: "95%",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              color: "#6c63ff",
+              marginBottom: "15px",
+              textTransform: "uppercase",
+            }}
+          >
+            Select Event Dates
+          </Typography>
+
+          <Box
+            sx={{
+              marginBottom: "20px",
+              borderRadius: "8px",
+              padding: "10px",
+            }}
+          >
+            <Calendar />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "10px",
+              marginTop: "20px",
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={handleCalendarClose}
+              sx={{
+                flex: 1,
+                background: "linear-gradient(90deg, #ff6f61, #ff8a73)",
+                color: "#fff",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                padding: "10px",
+                borderRadius: "8px",
+                boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
+                "&:hover": {
+                  background: "linear-gradient(90deg, #ff8a73, #ff6f61)",
+                },
+              }}
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };

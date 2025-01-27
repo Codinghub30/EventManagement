@@ -38,6 +38,9 @@ const OrderSummary = ({
         bgcolor: "background.paper",
         boxShadow: 3,
         borderRadius: 2,
+        overflowY: "auto",
+        height: "570px",
+        marginTop: "5rem",
       }}
     >
       <Typography
