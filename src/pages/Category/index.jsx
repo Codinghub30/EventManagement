@@ -11,7 +11,17 @@ import {
   CardContent,
   Button,
   TextField,
+  Pagination,
+  IconButton,
+  Collapse,
+  FormControlLabel,
+  Checkbox,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 // Custom Components
 import CustomSort from "./components/CustomSort";
@@ -19,6 +29,9 @@ import "./styles.scss";
 import authService from "../../api/ApiService";
 import { setLoading } from "../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../utils/helperFunc";
+import Sliders from "../../components/Sliders";
+import BreadCrumb from "../../components/BreadCrumb";
+import StarRating from "../../components/StarRating";
 
 const Category = () => {
   const { category } = useParams();
@@ -40,7 +53,16 @@ const Category = () => {
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [openSections, setOpenSections] = useState({
+    categories: true,
+    priceRange: false,
+    discount: false,
+  });
   const { numberOfDays } = useSelector((state) => state.date);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const breadcrumbPaths = [{ label: "Home", link: "/" }, { label: "Products" }];
 
   const fetchCategories = async () => {
     try {
@@ -152,112 +174,310 @@ const Category = () => {
 
   //   setFilteredItems(filtered);
   // };
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+  const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filteredItems.slice(startIndex, startIndex + itemsPerPage);
+  };
+  const calculateAverageRating = (review) => {
+    console.log("The review", review);
+    const total = review.reduce((sum, curr) => sum + curr.ratings, 0);
 
+    return review.length ? (total / review.length).toFixed(1) : 0;
+  };
   const handleOpen = (id) => {
     navigate(`/products/${id}`);
   };
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
-    <Box className="category-page">
-      <Box className="filters-sidebar">
-        <Typography variant="h6" className="filters-title">
-          Filters
-        </Typography>
+    <>
+      <Sliders />
+      <BreadCrumb paths={breadcrumbPaths} />
 
-        <Box className="filter-group">
-          <Typography variant="subtitle1">Price</Typography>
-          <TextField
-            type="number"
-            placeholder="Min"
-            size="small"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="price-input"
-          />
-          <TextField
-            type="number"
-            placeholder="Max"
-            size="small"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="price-input"
-          />
-          <Button
-            variant="contained"
-            className="category-apply"
-            onClick={handlePriceFilter}
-            sx={{ marginTop: "1rem" }}
-          >
-            Apply
-          </Button>
-        </Box>
+      <Box className="category-page">
+        <Box className="products-page">
+          <Box className="filters-sidebar">
+            {/* Categories Section */}
+            <Box className="filter-group">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => toggleSection("categories")}
+              >
+                <Typography variant="subtitle1">Categories</Typography>
+                <IconButton size="small">
+                  {openSections.categories ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={openSections.categories}>
+                <Box sx={{ marginTop: "0.5rem" }}>
+                  {categories.map((category) => (
+                    <FormControlLabel
+                      key={category}
+                      control={
+                        <Checkbox
+                          checked={category === activeCategory}
+                          onChange={() => setActiveCategory(category)}
+                        />
+                      }
+                      label={category}
+                      sx={{ display: "block", color: "#555" }}
+                    />
+                  ))}
+                </Box>
+              </Collapse>
+            </Box>
 
-        <Box className="filter-group">
-          <Typography variant="subtitle1">Search</Typography>
-          <TextField
-            placeholder="Search by name"
-            variant="outlined"
-            size="small"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-        </Box>
+            {/* Price Range Section */}
+            <Box className="filter-group">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => toggleSection("priceRange")}
+              >
+                <Typography variant="subtitle1">Price Range</Typography>
+                <IconButton size="small">
+                  {openSections.priceRange ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={openSections.priceRange}>
+                <Box>
+                  <Typography variant="subtitle1">Price</Typography>
+                  <TextField
+                    type="number"
+                    placeholder="Min"
+                    size="small"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="price-input"
+                  />
+                  <TextField
+                    type="number"
+                    placeholder="Max"
+                    size="small"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="price-input"
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handlePriceFilter}
+                    sx={{
+                      marginTop: "1rem",
+                      background:
+                        "linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)",
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </Box>
+              </Collapse>
+            </Box>
 
-        <CustomSort onSortChange={handleSortChange} />
-      </Box>
+            {/* Discount Section */}
+            <Box className="filter-group">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => toggleSection("discount")}
+              >
+                <Typography variant="subtitle1">Discount</Typography>
+                <IconButton size="small">
+                  {openSections.discount ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={openSections.discount}>
+                <Box sx={{ marginTop: "0.5rem" }}>
+                  <Typography variant="body2" color="textSecondary">
+                    Apply discount filters here.
+                  </Typography>
+                </Box>
+              </Collapse>
+            </Box>
 
-      {/* Main Content */}
-      <Box className="main-content">
-        <Typography variant="h6">
-          Showing {filteredItems.length} results
-        </Typography>
+            {/* Availability Section */}
+            <Box className="filter-group">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={() => toggleSection("availability")}
+              >
+                <Typography variant="subtitle1">Availability</Typography>
+                <IconButton size="small">
+                  {openSections.availability ? (
+                    <ExpandLessIcon />
+                  ) : (
+                    <ExpandMoreIcon />
+                  )}
+                </IconButton>
+              </Box>
+              <Collapse in={openSections.availability}>
+                <Box sx={{ marginTop: "0.5rem" }}>
+                  <Typography variant="body2" color="textSecondary">
+                    Check availability filters here.
+                  </Typography>
+                </Box>
+              </Collapse>
+            </Box>
+          </Box>
 
-        <Box className="products-grid">
-          {filteredItems.map((item) => (
-            <Card
-              key={item.id}
-              className="product-card"
-              onClick={() => handleOpen(item._id)}
-            >
-              <img
-                src={item.product_image[0]}
-                alt={item.product_name}
-                className="product-image"
-              />
-              <CardContent>
-                <Typography variant="h6">{item.product_name}</Typography>
+          <Box className="main-content">
+            <Box className="sorting-header">
+              <Typography variant="h5">
+                Showing {filteredItems.length} results
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "1rem",
+                }}
+              >
+                {/* Left Title */}
                 <Typography
-                  className="rating"
-                  variant="body2"
-                  sx={{ color: "text.secondary" }}
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#1E2A38",
+                    fontSize: "1rem",
+                  }}
                 >
-                  <Box className="Rating-point">
-                    <Typography variant="p" className="Rating-container">
-                      {item.Reviews?.length > 0
-                        ? (
-                            item.Reviews.reduce(
-                              (acc, review) => acc + review.ratings,
-                              0
-                            ) / item.Reviews.length
-                          ).toFixed(1)
-                        : 0}{" "}
-                      ⭐
+                  Sort By:
+                </Typography>
+
+                <FormControl
+                  sx={{
+                    minWidth: 220,
+                    backgroundColor: "#F5F5F5",
+                    borderRadius: "10px",
+                    padding: "0.5rem",
+                  }}
+                >
+                  <Select
+                    value={sortOption}
+                    onChange={(e) => handleSortChange(e.target.value)}
+                    displayEmpty
+                    sx={{
+                      borderRadius: "10px",
+                      backgroundColor: "#F5F5F5",
+                      color: "#000",
+                      fontWeight: "bold",
+                      height: "45px",
+                      boxShadow: "none",
+                      outline: "none",
+                      border: "1px solid #ddd",
+                      "&:hover": {
+                        backgroundColor: "#e0e0e0",
+                      },
+                    }}
+                  >
+                    <MenuItem value="default">Default</MenuItem>
+                    <MenuItem value="priceLowToHigh">
+                      Price: Low to High
+                    </MenuItem>
+                    <MenuItem value="priceHighToLow">
+                      Price: High to Low
+                    </MenuItem>
+                    <MenuItem value="newest">Newest</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+            </Box>
+
+            <Box className="products-grid">
+              {getPaginatedData().map((item) => (
+                <Card
+                  key={item.id}
+                  className="product-card"
+                  onClick={() => handleOpen(item._id)}
+                >
+                  <img
+                    src={item.product_image[0]}
+                    alt={item.product_name}
+                    className="product-image"
+                  />
+                  <CardContent>
+                    <Typography variant="h6" className="product-title">
+                      {item.product_name}
                     </Typography>
 
-                    <Typography className="Rating-num">
-                      {item.Reviews?.length || 0} Rating
-                      {item.Reviews?.length === 1 ? "" : "s"}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        gap: "0.5rem",
+                        marginLeft: "-6px",
+                      }}
+                    >
+                      <StarRating
+                        rating={parseFloat(
+                          calculateAverageRating(item.Reviews)
+                        )}
+                      />
+                      <Typography>
+                        {item.Reviews.length > 0 ? item.Reviews.length : 0}{" "}
+                        Reviews
+                        {/* {item.Reviews && item.Reviews.length > 0
+                      ? calculateAverageRating(item.Reviews)
+                      : "No Ratings"} */}
+                      </Typography>
+                    </Box>
+                    <Typography className="product-price">
+                      ₹{item.product_price}
                     </Typography>
-                  </Box>
-                </Typography>
-                <Typography>₹{item.product_price}</Typography>
-              </CardContent>
-            </Card>
-          ))}
+                    <Typography className="product-discount">
+                      {item.discount}% OFF
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(filteredItems.length / itemsPerPage)}
+              onPageChange={handlePageChange}
+            />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

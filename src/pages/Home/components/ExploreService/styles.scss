@@ -1,74 +1,12 @@
-.Explore-container {
-  padding: 20px;
-  background-color: #f9f9f9;
-
-  .Service-header {
-    text-align: center;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    .Service-header-content{
-      text-align: center;
-    }
-    .header-title {
-      display: inline-block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-height: 32px !important;
-      white-space: nowrap;
-      color: rgb(32, 34, 38)  !important;
-      font-family: "Bebas Neue" !important;
-      font-size: 28px;
-      font-weight: 500;
-      line-height: 100%;
-      text-transform: uppercase;
-    }
-
-    .header-subtitle {
-      font-size: 1rem;
-      color: #6c757d;
-    }
-  }
-
-  .service-container {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    gap: 20px;
-
-  }
-
-  .service-card {
-    width: 200px;
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease-in-out;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-
-    img {
-      width: 51%;
-      height: 97px;
-      object-fit: cover;
-      position: absolute;
-      border-radius: 4rem;
-      top: 3rem;
-    }
-
-    .service-name {
-      margin-top: 20px;
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #eee8e8;
-      margin-right: 5rem;
-    }
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.15);
-    }
-  }
+.icon-container {
+  background-color: #ccdcf9;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1rem;
+  font-size: 1.5rem;
+  color: #4967ff;
 }

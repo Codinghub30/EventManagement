@@ -1,14 +1,26 @@
 import { Box, Button, Typography } from "@mui/material";
-import "./styles.scss";
-import authService from "../../../../api/ApiService";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import HotelIcon from "@mui/icons-material/Hotel";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import {
+  BuildOutlined,
+  DesignServicesOutlined,
+  CodeOutlined,
+  VideoLibraryOutlined,
+  BrushOutlined,
+  AppsOutlined,
+} from "@mui/icons-material";
+import "./styles.scss";
 
 const ExploreService = () => {
   const navigate = useNavigate();
+
   const fetchApi = async () => {
-    const res = await authService.getServices();
-    console.log(res);
+    // Placeholder for API integration
+    // const res = await authService.getServices();
+    // console.log(res);
   };
 
   useEffect(() => {
@@ -19,91 +31,148 @@ const ExploreService = () => {
     {
       id: 1,
       ServiceName: "Resort",
-      image:
-        "https://www.aquays.com/images/neil-island/outside/andaman-holiday-inn-resort.webp",
+      image: <HomeWorkIcon style={{ width: "4rem", height: "37px" }} />,
     },
     {
       id: 2,
       ServiceName: "Rooms",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKydMZxPp7ZSz-qBBTeD3WT4nh_yDb_Am2ng&s",
+      image: <PeopleAltIcon style={{ width: "4rem", height: "37px" }} />,
     },
     {
       id: 3,
       ServiceName: "Hotels",
-      image:
-        "https://www.gingerhotels.com/resourcefiles/hotelprofile/udaipur-0.jpg?version=1152025053419",
+      image: <HotelIcon style={{ width: "4rem", height: "37px" }} />,
     },
     {
       id: 4,
       ServiceName: " Freelancer",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcCtv6bLcZPc_Ux301aMphk5fHYMvAG9JNnw&s",
+      image: <PeopleAltIcon style={{ width: "4rem", height: "37px" }} />,
     },
     {
       id: 5,
       ServiceName: "Photographers",
-      image:
-        "https://cdn.expertphotography.com/wp-content/uploads/2021/08/Become-Professional-Photographer-Colin-Lloyd.jpg",
+      image: <VideoLibraryOutlined style={{ width: "4rem", height: "37px" }} />,
     },
     {
       id: 6,
       ServiceName: "Stage Designers",
-      image:
-        "https://dean-www.s3.amazonaws.com/files/news/deancollegemarcom2018-218.jpg",
+      image: (
+        <DesignServicesOutlined style={{ width: "4rem", height: "37px" }} />
+      ),
     },
   ];
 
   const handleService = () => {
     navigate("/services");
   };
+
   const handleServiceClick = (serviceName) => {
     navigate(`/service/${serviceName}`);
   };
-  const colors = [
-    // "#FFEBEE", // Light Red
-    // "#E3F2FD", // Light Blue
-    // "#E8F5E9", // Light Green
-    // "#FFF3E0", // Light Orange
-    // "#F3E5F5", // Light Purple
-    // "#FBE9E7", // Light Pink
-    "#32c0f0", // Light Red
-    "#ff0064", // Light Blue
-    "#00a89a", // Light Green
-    "#0d162d", // Light Orange
-    "#f44705", // Light Purple
-    "#00a698", // Light Pink
-  ];
 
   return (
-    <Box className="Explore-container">
-      <Box className="Service-header">
-        <Box className="Service-header-content">
-          <Typography variant="h5" className="header-title">
-            Explore Services
-          </Typography>
-        </Box>
+    <Box sx={{ padding: "2rem", textAlign: "center" }}>
+      <Typography
+        sx={{
+          color: "#17a2b8",
+          fontSize: "1rem",
+          fontWeight: "bold",
+        }}
+      >
+        Future
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: "2rem",
+          fontWeight: "bold",
+          color: "#343a40",
+          marginBottom: "2rem",
+        }}
+      >
+        Services
+      </Typography>
 
-        <Button onClick={handleService}>view all</Button>
-      </Box>
-      <Box></Box>
-      <Box className="service-container">
-        {services.map((item, index) => (
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "1fr 1fr",
+            md: "repeat(3, 1fr)",
+          },
+          gap: "1.5rem",
+        }}
+      >
+        {services.map((item) => (
           <Box
-            className="service-card"
             key={item.id}
             sx={{
-              backgroundColor: colors[index % colors.length],
+              backgroundColor: "#f1f8ff",
+              borderRadius: "10px",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              padding: "1.5rem",
+              textAlign: "center",
+              cursor: "pointer",
+              transition: "transform 0.3s ease",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
             }}
             onClick={() => handleServiceClick(item.ServiceName)}
           >
-            <img src={item.image} alt={item.ServiceName} />
-            <Typography variant="h6" className="service-name">
+            <Box
+              src={item.image}
+              alt={item.ServiceName}
+              style={{
+                width: "115px",
+                height: "87px",
+                objectFit: "contain",
+                marginBottom: "1rem",
+                borderRadius: "1rem",
+              }}
+              className="icon-container"
+            >
+              {item.image}
+            </Box>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                marginBottom: "0.5rem",
+                color: "#343a40",
+              }}
+            >
               {item.ServiceName}
+            </Typography>
+            <Typography
+              sx={{
+                color: "#6c757d",
+                fontSize: "0.9rem",
+              }}
+            >
+              {item.description}
             </Typography>
           </Box>
         ))}
       </Box>
+
+      <Button
+        variant="contained"
+        onClick={handleService}
+        sx={{
+          marginTop: "2rem",
+          padding: "0.5rem 2rem",
+          textTransform: "capitalize",
+          fontWeight: "bold",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          "&:hover": {
+            backgroundColor: "#0056b3",
+          },
+        }}
+      >
+        View All
+      </Button>
     </Box>
   );
 };

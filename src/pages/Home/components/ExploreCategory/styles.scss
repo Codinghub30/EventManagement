@@ -14,8 +14,8 @@
 
 .card-header .small-title {
   color: #555;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .card-header .title {
@@ -24,13 +24,12 @@
   text-overflow: ellipsis;
   max-height: 32px !important;
   white-space: nowrap;
-  color: rgb(32, 34, 38)  !important;
+  color: rgb(32, 34, 38) !important;
   font-family: "Bebas Neue" !important;
   font-size: 28px;
   font-weight: 500;
   line-height: 100%;
   text-transform: uppercase;
-
 }
 
 .scroll-container-category {
@@ -56,8 +55,6 @@
     cursor: pointer;
     transition: transform 0.2s;
 
-
-
     .image-container {
       width: 100%;
       height: 150px;
@@ -70,7 +67,7 @@
         height: 100%;
         border-radius: 10rem;
         object-fit: cover;
-        &:hover{
+        &:hover {
           transform: scale(1.1);
         }
       }

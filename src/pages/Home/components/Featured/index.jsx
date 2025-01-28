@@ -1,20 +1,16 @@
-import { Box, Button, CardContent, Typography } from "@mui/material";
-import Speaker from "../../../../assets/Speakerss.jpg";
-import "./styles.scss";
-import { Link, useNavigate } from "react-router-dom";
-import authService from "../../../../api/ApiService";
-import Money from "../../../../assets/money.png";
-import CategoryIcon from "../../../../assets/categoryIcon.png";
-import StarIcon from "../../../../assets/star.png";
+import { Box, Button, Typography, Card, CardContent } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import authService from "../../../../api/ApiService";
+import "./styles.scss";
 
 const Featured = () => {
-  const [featuredProduct, setFeatureProduct] = useState([]);
+  const [featuredProduct, setFeaturedProduct] = useState([]);
   const navigate = useNavigate();
- 
+
   const fetchFeaturedProducts = async () => {
     const res = await authService.featuredProducts();
-    setFeatureProduct(res.data.data);    
+    setFeaturedProduct(res.data.data);
   };
 
   useEffect(() => {
@@ -24,53 +20,137 @@ const Featured = () => {
   const handleProductClick = (id) => {
     navigate(`/products/${id}`);
   };
+
   const handleViewAll = () => {
     window.scrollTo(0, 0);
     navigate(`/Featuredproducts`);
   };
+
   return (
-    <Box className="container-featured">
-      <Box className="featured-header">
-      {/* <img className="heading-icon" src={StarIcon} alt="Not found" /> */}
-        <Typography className="featured-heading">Featured Products</Typography>
+    <Box sx={{ padding: "2rem" }}>
+      {/* Header Section */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "2rem",
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: "bold", color: "#343a40" }}>
+          New Arrivals
+        </Typography>
         <Button
-          className="featured-viewAll"
           variant="outlined"
           onClick={handleViewAll}
+          sx={{
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            borderColor: "#007bff",
+            color: "#007bff",
+            "&:hover": {
+              backgroundColor: "#007bff",
+              color: "#fff",
+            },
+          }}
         >
-          View all
+          View All
         </Button>
       </Box>
-      <Box className="featured-main">
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "1fr 1fr",
+            md: "repeat(4, 1fr)",
+          },
+          gap: "1.5rem",
+        }}
+      >
         {featuredProduct.map((item) => (
-          <Box
+          <Card
             key={item.id}
-            className="product-card"
+            sx={{
+              cursor: "pointer",
+              transition: "transform 0.3s ease",
+              "&:hover": { transform: "scale(1.05)" },
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px",
+            }}
             onClick={() => handleProductClick(item._id)}
           >
-            <img src={item.product_image} alt="Not found" />
+            <Box
+              component="img"
+              src={item.product_image}
+              alt={item.product_name}
+              sx={{
+                width: "100%",
+                height: "270px",
+                objectFit: "cover",
+                borderTopLeftRadius: "10px",
+                borderTopRightRadius: "10px",
+              }}
+            />
             <CardContent>
-              <Typography variant="h6" className="product-name">
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  color: "#343a40",
+                  marginBottom: "0.5rem",
+                }}
+              >
                 {item.product_name}
               </Typography>
-              <Box sx={{display:'flex',alignItems:'center', gap:'1rem'}}>
-              <Typography variant="h6" className="product-price">
-                <img className="money-icon" src={Money} alt="Not found" />
-                <strong> {item.product_price}</strong>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#6c757d",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {item.product_category}
               </Typography>
-              <Typography variant="h6" className="product-category">
-                <img
-                  className="category-icon"
-                  src={CategoryIcon}
-                  alt="Not found"
-                />
-
-                <strong> {item.product_category}</strong>
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  ${item.product_price}
+                </Typography>
               </Box>
-        
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  width: "19rem",
+                  textTransform: "capitalize",
+                  fontWeight: "bold",
+                  marginTop: "1rem",
+                  borderColor: "#007bff",
+                  color: "black",
+                  border: "2px solid black",
+                  "&:hover": {
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                  },
+                }}
+              >
+                Add to Bag
+              </Button>
             </CardContent>
-          </Box>
+          </Card>
         ))}
       </Box>
     </Box>

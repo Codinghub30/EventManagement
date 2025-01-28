@@ -1,61 +1,65 @@
 import React from "react";
-import "./styles.scss"; 
+import "./styles.scss";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  YouTube,
+  LocationOn,
+} from "@mui/icons-material";
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer-main">
       <div className="footer-container">
-        {/* Column 1 */}
         <div className="footer-column">
-          <h3>Nithya</h3>
-          <p>
-            Are you planning an important party or event? When it comes to
-            making an occasion as special as possible, you want every detail to
-            be perfect.
-          </p>
-        </div>
-
-        {/* Column 2 */}
-        <div className="footer-column">
-          <h3>Address</h3>
-          <p>
-            <strong>Address:</strong> 52 Great Av, New York
-          </p>
-          <p>
-            <strong>Phone:</strong> 0541 669 333
-          </p>
-          <p>
-            <strong>Email:</strong> contact@example.com
-          </p>
-          <p>
-            <strong>Social Media:</strong> Facebook, Twitter
-          </p>
-        </div>
-
-        {/* Column 3 */}
-        <div className="footer-column">
-          <h3>Links</h3>
+          <h3>Shop by Category</h3>
           <ul>
-            <li>ONLINE PAYMENTS</li>
-            <li>GIFT CARDS</li>
-            <li>RETURN POLICY</li>
-            <li>FURNITURE ASSEMBLING</li>
+            <li>Sounds</li>
+            <li>Lights</li>
+            <li>Fabrications</li>
+            <li>Shamiana</li>
+            <li>Fabrication</li>
+            <li>Video</li>
+            <li>Genset</li>
           </ul>
         </div>
 
-        {/* Column 4 */}
         <div className="footer-column">
-          <h3>Shopping</h3>
+          <h3>About</h3>
           <ul>
-            <li>ONLINE PAYMENTS</li>
-            <li>GIFT CARDS</li>
-            <li>RETURN POLICY</li>
-            <li>FURNITURE ASSEMBLING</li>
+            <li>Contact Us</li>
+            <li>About Us</li>
+            <li>Careers</li>
+            <li>Press</li>
           </ul>
         </div>
-      </div>
-      <div className="footer-bottom">
-        <p>Copyright © 2025 Nithya.com</p>
+
+        <div className="footer-column">
+          <h3>Policy</h3>
+          <ul>
+            <li>Return Policy</li>
+            <li>Terms of Use</li>
+            <li>Sitemap</li>
+            <li>Security</li>
+            <li>Privacy</li>
+            <li>EPR Compliance</li>
+          </ul>
+        </div>
+
+        <div className="footer-column">
+          <div className="social-media">
+            <Facebook className="icon" />
+            <Instagram className="icon" />
+            <Twitter className="icon" />
+            <YouTube className="icon" />
+          </div>
+          <div className="location">
+            <LocationOn />
+            <span>United States</span>
+          </div>
+          <p>© 2025 | Nithya All Rights Reserved</p>
+        </div>
       </div>
     </footer>
   );

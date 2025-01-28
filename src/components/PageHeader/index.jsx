@@ -16,14 +16,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.jpg";
+import Logo from "../../assets/logo2.png";
 import "./styles.scss";
 import { useSelector } from "react-redux";
 import { getCurrentCity } from "../../utils/helperFunc";
 import MenuIcon from "@mui/icons-material/Menu";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import Calenders from "../../assets/Calenders.png";
+import HomePage from "../../assets/homepage.png";
+import AnalyticsImg from "../../assets/pieChart.png";
+import Delivery from "../../assets/deliveryHome.png";
 import Calendar from "../../pages/Calender";
+import Settings from "../../assets/Settings.png";
+import ShoppingCart from "../../assets/shoppingCart.png";
+import Bell from "../../assets/bell.png";
 
 const PageHeader = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,204 +72,151 @@ const PageHeader = () => {
   return (
     <>
       <Box className="header-main">
-        <Toolbar disableGutters className="header-container">
-          <span className="header-lists">Nithya</span>
-
-          <Toolbar disableGutters className="header-container">
-            <Box
-              className="header-nav"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                marginBottom: "0.6rem",
-              }}
-            >
-              <TextField
-                variant="outlined"
-                placeholder="Search for services..."
-                size="small"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "50px",
-                  width: { xs: "200px", sm: "300px", md: "400px" },
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.3s ease-in-out",
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "50px",
-                    "& fieldset": {
-                      borderColor: "rgba(0, 0, 0, 0.2)",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#4caf50",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#4caf50",
-                      borderWidth: "2px",
-                    },
-                  },
-                }}
-              />
-              <Button
-                variant="contained"
-                onClick={handleSearch}
-                disabled={!searchTerm.trim()}
-                sx={{
-                  marginLeft: "0.5rem",
-                  background:
-                    "linear-gradient(90deg, rgb(62, 0, 130) 98.88%), rgb(120, 1, 251) 38.59%, rgb(196, 70, 255) -14.33%",
-                  color: "#fff",
-                  padding: "0.5rem 1.5rem",
-                  borderRadius: "30px",
-                  fontWeight: "bold",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                  textTransform: "none",
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    background:
-                      "linear-gradient(90deg, rgb(196, 70, 255) -14.33%, rgb(120, 1, 251) 38.59%, rgb(62, 0, 130) 98.88%)",
-                    boxShadow: "0 6px 10px rgba(0, 0, 0, 0.2)",
-                  },
-                  "&:disabled": {
-                    background: "#ccc",
-                    cursor: "not-allowed",
-                  },
-                }}
-              >
-                Search
-              </Button>
-
-              {/* <span className="header-list">Events in Bengaluru</span> */}
-              <div
-                className="header-listing"
-                style={{ display: "flex", alignItems: "center" }}
-                onClick={handleOpenCalender}
-              >
-                <img
-                  style={{ width: "4rem", height: "60px" }}
-                  src="https://static.vecteezy.com/system/resources/previews/048/116/176/non_2x/deadline-timetable-schedule-meeting-appointment-outline-icon-free-png.png"
-                  alt="Not Found"
-                />
-              </div>
-
-              <span
-                className="header-list"
-                style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
-              >
-                <FmdGoodOutlinedIcon />
-                {currLocation.town}, {currLocation.city}
-              </span>
-            </Box>
-          </Toolbar>
-        </Toolbar>
-
         <AppBar
           position="static"
           sx={{
-            background:
-              "linear-gradient(90deg, rgb(196, 70, 255), rgb(62, 0, 130))",
+            background: "#eaf7fe",
             width: "100% !important",
+            borderRadius: "10px",
           }}
         >
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography
-              variant="h5"
-              component={Link}
-              to="/"
-              sx={{
-                color: "white",
-                textDecoration: "none",
-                fontWeight: "bold",
-              }}
-            >
-              Nithya
-            </Typography>
+          <Toolbar
+            sx={{
+              display: "flex",
+              gap: "3rem",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ display: "flex", gap: "3rem" }}>
+              {/* <Typography
+                variant="h5"
+                component={Link}
+                to="/"
+                sx={{
+                  color: "white",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                }}
+              > */}
+              <img src={Logo} alt="Logo" />
+              {/* </Typography> */}
 
-            <Box
-              sx={{
-                display: { xs: "none", md: "flex" },
-                gap: "1.5rem",
-                alignItems: "center",
-              }}
-            >
-              <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-                Home
-              </Link>
-              <Link
-                to="/about"
-                style={{ textDecoration: "none", color: "white" }}
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  gap: "1.5rem",
+                  alignItems: "center",
+                }}
               >
-                About
-              </Link>
-              <Link
-                to="/categories"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Categories
-              </Link>
-              <Link to={"/booking"} style={{ textDecoration: "none" }}>
-                <Box
-                  sx={{
-                    color: "white",
+                <Link
+                  to="/"
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
                   }}
                 >
-                  My Booking
-                </Box>
-              </Link>
-
-              <Link
-                to="/services"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Services
-              </Link>
-              <Link to={"/products"} style={{ textDecoration: "none" }}>
-                <Box
-                  sx={{
-                    color: "white",
+                  <img
+                    src={HomePage}
+                    alt="Not found"
+                    style={{ width: "18px", marginTop: "1px" }}
+                  />
+                  <Typography variant="p">Home</Typography>
+                </Link>
+                <Link
+                  to="/about"
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
                   }}
                 >
+                  <img
+                    src={AnalyticsImg}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                  Analytics
+                </Link>
+                <Link
+                  to="/products"
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={Delivery}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
                   Products
-                </Box>
-              </Link>
-              <Link to={"/cart"} style={{ textDecoration: "none" }}>
-                <Box
-                  sx={{
-                    color: "white",
+                </Link>
+                <Link
+                  to={"/booking"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
                   }}
-                  className="header-list"
                 >
-                  Cart
-                  <Box
-                    sx={{
-                      width: "20px",
-                      height: "20px",
-                      backgroundColor: "red",
-                      borderRadius: "50%",
-                      color: "white",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      position: "absolute",
-                      top: "-10px",
-                      right: "-18px",
-                      fontSize: "12px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {count}
-                  </Box>
-                </Box>
-              </Link>
-              <Link
-                to="/account"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Account
-              </Link>
+                  <img
+                    src={Settings}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                  Setting
+                </Link>
+              </Box>
+            </Box>
+            <Box>
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Link
+                  to={"/cart"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={ShoppingCart}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                </Link>
+
+                <Link
+                  to={"/cart"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={Bell}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                </Link>
+                <Button color="primary" variant="contained">
+                  Signin
+                </Button>
+              </Box>
             </Box>
 
             <IconButton

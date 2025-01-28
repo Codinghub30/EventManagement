@@ -78,42 +78,91 @@ const Faq = () => {
 
   return (
     <section id="faq">
-      <Box sx={{ textAlign: "center", marginBottom: "3rem" }}>
-        <HelpOutlineIcon sx={{ fontSize: "4rem", color: "#c026d3" }} />
-        <Typography className="faq-heading" sx={{fontFamily:'Bebas Neue', fontSize:'35px', fontWeight:'500', textTransform:'uppercase', color:'#202226'}}>
-          Frequently Asked Questions
-        </Typography>
-        <Typography variant="subtitle1" sx={{ color: "#555" }}>
-          All your queries answered in one place
-        </Typography>
-      </Box>
       <Box
         sx={{
-          maxWidth: "800px",
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
+          gap: "2rem",
+          maxWidth: "1200px",
           margin: "auto",
-          padding: "0 1rem",
+          padding: "2rem",
         }}
       >
-        {faqList.map((item) => (
-          <Accordion
-            expanded={expanded === `panel${item.id}`}
-            onChange={handleChange(`panel${item.id}`)}
-            key={item.id}
+        {/* FAQ Section */}
+        <Box sx={{ flex: 1 }}>
+          <Typography
+            sx={{
+              color: "#17a2b8",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+              textTransform: "uppercase",
+            }}
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon sx={{ color: "#c026d3" }} />}
-              aria-controls={`panel${item.id}-content`}
-              id={`panel${item.id}-header`}
+            FAQ
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "2rem",
+              fontWeight: "bold",
+              marginBottom: "1rem",
+              color: "#343a40",
+            }}
+          >
+            Frequently Asked Question
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: "1rem",
+              color: "#6c757d",
+              marginBottom: "2rem",
+            }}
+          >
+            Make your event planning stress-free. Streamline every detail with
+            ease. Focus on what truly matters—celebrating!
+          </Typography>
+          {faqList.map((item) => (
+            <Accordion
+              expanded={expanded === `panel${item.id}`}
+              onChange={handleChange(`panel${item.id}`)}
+              key={item.id}
             >
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {item.Title}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{item.description}</Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: "#17a2b8" }} />}
+                aria-controls={`panel${item.id}-content`}
+                id={`panel${item.id}-header`}
+              >
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                  {item.Title}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{item.description}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Box>
+
+        {/* Image Section */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src="https://www.eventsindustryforum.co.uk/images/articles/about_the_eif.jpg"
+            alt="FAQ"
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: "10px",
+              objectFit: "cover",
+            }}
+          />
+        </Box>
       </Box>
     </section>
   );

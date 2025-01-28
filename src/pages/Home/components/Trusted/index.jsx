@@ -1,74 +1,135 @@
-import { Box, Button, Typography } from "@mui/material";
-import Book from "../../../../assets/book.png";
-import Receive from "../../../../assets/receive.png";
-import Events from "../../../../assets/events.png";
-import Pickup from "../../../../assets/pickup.png";
+import { Box, Typography } from "@mui/material";
 import "./styles.scss";
 
 const Trusted = () => {
+  const features = [
+    {
+      number: "01",
+      title: "Your Trust Our Commitment",
+      description:
+        "Make your event planning stress-free. Streamline every detail with ease.",
+    },
+    {
+      number: "02",
+      title: "Creating Joy for Our Clients",
+      description:
+        "Crafting events that leave lasting impressions for our valued clients.",
+    },
+    {
+      number: "03",
+      title: "When Trust Meets Excellence",
+      description:
+        "Delivering outstanding experiences every time for our clients.",
+    },
+    {
+      number: "04",
+      title: "Your Event, Our Expertise Delivered",
+      description:
+        "Our experienced team ensures every event is planned and executed with creativity.",
+    },
+  ];
+
   return (
-    <Box className="trusted-container">
-      <Box className="header-section">
-        <Typography variant="h4" className="header-title">
-          Trusted by Over 1200+ Clients
+    <Box
+      sx={{ padding: { xs: "1rem", md: "2rem" }, backgroundColor: "#f8f9fa" }}
+    >
+      {/* Header Section */}
+      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
+        <Typography
+          sx={{
+            color: "#17a2b8",
+            fontSize: { xs: "1rem", md: "1.2rem" },
+            fontWeight: "bold",
+          }}
+        >
+          Trusted
         </Typography>
-        <Typography variant="subtitle1" className="header-subtitle">
-          Delivering memorable experiences for your events.
+        <Typography
+          sx={{
+            fontSize: { xs: "1.5rem", md: "2rem" },
+            fontWeight: "bold",
+            color: "#343a40",
+            marginBottom: "1rem",
+          }}
+        >
+          Trusted by over 140+ clients
         </Typography>
-        <Button href="#contact" variant="contained" color="primary">
-          Get in Touch
-        </Button>
+        <Typography
+          sx={{
+            color: "#6c757d",
+            fontSize: { xs: "0.9rem", md: "1rem" },
+            maxWidth: "600px",
+            margin: "0 auto",
+          }}
+        >
+          Make your event planning stress-free. Streamline every detail with
+          ease. Focus on what truly matters—celebrating!
+        </Typography>
       </Box>
 
-      <Box className="features-section">
-        <Box className="feature-card">
-          <Box className="image-wrapper">
-            <img src="https://png.pngtree.com/thumb_back/fh260/background/20230416/pngtree-business-cooperation-handshake-city-background-image_2412210.jpg" alt="Book" />
-          </Box>
-          <Typography variant="h6" className="feature-title">
-          Your Trust, Our Commitment
-          </Typography>
-          <Typography variant="p" className="feature-description">
-          Over 1200 clients rely on us to bring their visions to life with seamless execution.
-          </Typography>
+      {/* Feature Section */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: "#4299e1",
+          borderRadius: "10px",
+          padding: { xs: "1rem", md: "3rem" },
+          color: "#fff",
+          gap: { xs: "1.5rem", md: "0" },
+        }}
+      >
+        {/* Feature List */}
+        <Box sx={{ flex: "1" }}>
+          {features.map((feature, index) => (
+            <Box
+              key={index}
+              sx={{
+                marginBottom: "1.5rem",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: { xs: "1.2rem", md: "1.5rem" },
+                  fontWeight: "bold",
+                  color: "#fff",
+                }}
+              >
+                {feature.number} {feature.title}
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#dbe9ff",
+                  fontSize: { xs: "0.9rem", md: "1rem" },
+                  marginTop: "0.5rem",
+                  paddingBottom: "0.5rem",
+                  borderBottom: "1px solid #dbe9ff",
+                }}
+              >
+                {feature.description}
+              </Typography>
+            </Box>
+          ))}
         </Box>
 
-        <Box className="feature-card">
-          <Box className="image-wrapper">
-            <img src="https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?cs=srgb&dl=pexels-wolfgang-1002140-2747449.jpg&fm=jpg" alt="Receive" />
-          </Box>
-          <Typography variant="h6" className="feature-title">
-          Creating Joy for our Clients
-          </Typography>
-          <Typography variant="p" className="feature-description">
-          We are honored to craft events that leave lasting impressions for our valued clients.
-
-
-          </Typography>
-        </Box>
-
-        <Box className="feature-card">
-          <Box className="image-wrapper">
-            <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGV2ZW50JTIwd2FsbHBhcGVyfGVufDB8fDB8fHww" alt="Events" />
-          </Box>
-          <Typography variant="h6" className="feature-title">
-          Where Trust Meets Excellence
-          </Typography>
-          <Typography variant="p" className="feature-description">
-          Over clients trust us to deliver outstanding experiences every time.
-          </Typography>
-        </Box>
-
-        <Box className="feature-card">
-          <Box className="image-wrapper">
-            <img src="https://thumbs.dreamstime.com/b/close-up-courier-handing-over-package-to-customer-highlighting-fast-satisfactory-e-commerce-service-close-up-330656366.jpg" alt="Pickup" />
-          </Box>
-          <Typography variant="h6" className="feature-title">
-          Your Event, Our Expertise Delivered
-          </Typography>
-          <Typography variant="p" className="feature-description">
-          Our experienced team ensures every event is planned and executed with creativity
-          </Typography>
+        <Box
+          sx={{
+            flex: "1",
+            textAlign: "center",
+          }}
+        >
+          <img
+            src="https://images.pexels.com/photos/534164/pexels-photo-534164.jpeg"
+            alt="Trusted Clients"
+            style={{
+              width: "82%",
+              height: "auto",
+              borderRadius: "10px",
+              objectFit: "cover",
+            }}
+          />
         </Box>
       </Box>
     </Box>

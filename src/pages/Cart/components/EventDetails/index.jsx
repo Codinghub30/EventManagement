@@ -34,6 +34,8 @@ import CustomAlert from "../../../../components/CustomAlerts";
 import LocationSection from "./components/LocationSection";
 import CustomModal from "../../../../components/CustomModal";
 import OrderSummery from "./components/OrderSummery";
+import { config } from "../../../../api/config";
+import axios from "axios";
 
 const FieldLabel = ({ label }) => (
   <Typography component="span">
@@ -175,17 +177,17 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     formData.append("receiver_name", eventDetails.receiverName);
     formData.append("receiver_mobilenumber", eventDetails.receiverMobile);
     formData.append("product_data", JSON.stringify(productData));
-    formData.append("user_id", userData?._id);
-    formData.append("user_name", userData?.username);
-    formData.append("user_mailid", userData?.email);
+    formData.append("user_id", "8776768798"); //userData._id
+    formData.append("user_name", "kirutho"); //userData.username
+    formData.append("user_mailid", "kiruthika@gmail.com"); //userData.email
     formData.append("venue_name", eventDetails.eventVenue);
     formData.append(
       "venue_open_time",
       eventDetails.startTime?.format("hh:mm A")
     );
-    formData.append("location_lat", eventDetails.location_lat);
-    formData.append("location_long", eventDetails.location_long);
-    formData.append("event_location", eventDetails.event_location);
+    formData.append("location_lat", 65545.4); //hardcoded
+    formData.append("location_long", 12.553434); //hardcoded
+    formData.append("event_location", "mysuru"); //hardcoded
     formData.append(
       "event_start_time",
       eventDetails.startTime?.format("hh:mm A")
@@ -210,7 +212,17 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     formData.append("vendors_message", "Test");
 
     try {
-      const response = await authService.createOrder(formData);
+      // const response = await authService.createOrder(formData);
+      const response = await axios.post(
+        `${config.BASEURL}${config.CREATE_ORDER}`,
+        formData,
+        {
+          headers: {
+            content: "multipart/form-data",
+          },
+        }
+      );
+
       setModalMessage("Order Created Successfully");
       setModalType("success");
     } catch (error) {
