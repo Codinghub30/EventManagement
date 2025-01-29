@@ -4,6 +4,7 @@ import authService from "../../api/ApiService";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/slice/authSlice";
+import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -40,67 +41,105 @@ const Signup = () => {
   useEffect(() => {}, []);
 
   return (
-    <div className="signup-page">
-      <div className="container">
-        <h1>Welcome!</h1>
-        <p>
-          Sign up to start your shopping journey and get awesome deals today!
-        </p>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="username">User Name</label>
-          <input
-            type="text"
-            id="name"
-            placeholder="Enter your UserName"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
+    <Grid container className="signup-container">
+      <Grid item xs={12} md={6} className="signup-form">
+        <Box component={Paper} elevation={4} className="form-box">
+          <Typography variant="h5" className="title">
+            Create Your Account
+          </Typography>
+          <Typography variant="body2" className="subtitle">
+            Sign up to start planning your events seamlessly.
+          </Typography>
 
-          <label htmlFor="mobile">Mobile Number</label>
-          <input
-            type="text"
-            id="mobile"
-            placeholder="Mobile Number"
-            name="mobilenumber"
-            value={formData.mobilenumber}
-            onChange={handleChange}
-          />
+          <form onSubmit={handleSubmit} className="signup-form-content">
+            <TextField
+              label="User Name"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              fullWidth
+              required
+              className="input-field"
+            />
+            <TextField
+              label="Mobile Number"
+              name="mobilenumber"
+              type="tel"
+              value={formData.mobilenumber}
+              onChange={handleChange}
+              fullWidth
+              required
+              className="input-field"
+            />
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              fullWidth
+              required
+              className="input-field"
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              fullWidth
+              required
+              className="input-field"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className="primary-btn"
+            >
+              Sign Up
+            </Button>
+          </form>
 
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
+          <Typography variant="body2" className="or-text">
+            OR
+          </Typography>
 
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="********"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+          <Button
+            fullWidth
+            variant="outlined"
+            className="social-btn google-btn"
+          >
+            Sign Up with Google
+          </Button>
+          <Button
+            fullWidth
+            variant="outlined"
+            className="social-btn facebook-btn"
+          >
+            Sign Up with Facebook
+          </Button>
 
-          <button type="submit" className="primary-btn">
-            Sign Up
-          </button>
-        </form>
-        <div className="social-login">
-          <p>OR</p>
-          <button className="google-btn">Sign Up with Google</button>
-          <button className="facebook-btn">Sign Up with Facebook</button>
-        </div>
-        <p>
-          Already have an account? <a href="/login">Log in</a>
-        </p>
-      </div>
-    </div>
+          <Typography variant="body2" className="login-text">
+            Already have an account?{" "}
+            <span className="login-link" onClick={() => navigate("/login")}>
+              Log in
+            </span>
+          </Typography>
+        </Box>
+      </Grid>
+
+      <Grid item xs={12} md={6} className="signup-banner">
+        <Box className="banner-overlay">
+          <Typography variant="h4" className="banner-title">
+            Plan Your Events Effortlessly
+          </Typography>
+          <Typography variant="body1" className="banner-subtext">
+            Sign up today and make your event planning a seamless experience!
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

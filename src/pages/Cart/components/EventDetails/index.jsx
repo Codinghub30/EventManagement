@@ -257,17 +257,20 @@ const EventDetails = ({ cartItems, billingDetails }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
-        sx={{
-          padding: "2rem",
-          backgroundColor: "#f9f9f9",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Paper
+      <Box sx={{ display: "flex", justifyContent: "end" }}>
+        <Box
+          sx={{
+            padding: "2rem",
+            backgroundColor: "#f9f9f9",
+            minHeight: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "29rem",
+            marginTop: "1rem",
+          }}
+        >
+          {/* <Paper
           elevation={4}
           sx={{
             p: 4,
@@ -276,20 +279,20 @@ const EventDetails = ({ cartItems, billingDetails }) => {
             borderRadius: 2,
             backgroundColor: "#fff",
           }}
-        >
-          <Typography
-            variant="h5"
-            textAlign="center"
-            fontWeight="bold"
-            sx={{
-              padding: "2rem",
-            }}
-            gutterBottom
-          >
-            Event Details
-          </Typography>
+        > */}
 
           <Grid container spacing={3}>
+            <Typography
+              variant="h5"
+              textAlign="center"
+              fontWeight="600"
+              sx={{
+                padding: "1.5rem",
+              }}
+            >
+              Event Details
+            </Typography>
+
             <Grid item xs={12}>
               <DatePicker
                 label={<FieldLabel label="Event Date" />}
@@ -427,115 +430,116 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 />
               </Button>
             </Grid>
+            <Box mt={4} textAlign="center">
+              {isCheckoutAllowed ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={handleCheckout}
+                >
+                  Checkout
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={handleProceedToTerms}
+                >
+                  Terms
+                </Button>
+              )}
+            </Box>
           </Grid>
 
-          <Box mt={4} textAlign="center">
-            {isCheckoutAllowed ? (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={handleCheckout}
-              >
-                Checkout
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={handleProceedToTerms}
-              >
-                Terms
-              </Button>
-            )}
-          </Box>
-        </Paper>
-        <Modal
-          open={showTerms}
-          onClose={() => setShowTerms(false)}
-          aria-labelledby="terms-modal-title"
-          aria-describedby="terms-modal-description"
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "80%",
-              maxWidth: 600,
-              bgcolor: "background.paper",
-              border: "1px solid #000",
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 2,
-              height: "80vh",
-              maxHeight: "80vh",
-              overflowY: "auto",
-            }}
+          {/* </Paper> */}
+          <Modal
+            open={showTerms}
+            onClose={() => setShowTerms(false)}
+            aria-labelledby="terms-modal-title"
+            aria-describedby="terms-modal-description"
           >
-            <Terms onContinue={handleAcceptTerms} />
-          </Box>
-        </Modal>
-        <Modal
-          open={isOrderSummaryOpen}
-          onClose={handleModalClose}
-          aria-labelledby="order-summary-title"
-          aria-describedby="order-summary-description"
-        >
-          <OrderSummery
-            cartItems={cartItems}
-            billingDetails={billingDetails}
-            handleConfirmOrder={handleConfirmOrder}
-            handleModalClose={handleModalClose}
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "80%",
+                maxWidth: 600,
+                bgcolor: "background.paper",
+                border: "1px solid #000",
+                boxShadow: 24,
+                p: 4,
+                borderRadius: 2,
+                height: "80vh",
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              <Terms onContinue={handleAcceptTerms} />
+            </Box>
+          </Modal>
+          <Modal
+            open={isOrderSummaryOpen}
+            onClose={handleModalClose}
+            aria-labelledby="order-summary-title"
+            aria-describedby="order-summary-description"
+          >
+            <OrderSummery
+              cartItems={cartItems}
+              billingDetails={billingDetails}
+              handleConfirmOrder={handleConfirmOrder}
+              handleModalClose={handleModalClose}
+            />
+          </Modal>
+          <CustomModal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            message={modalMessage}
+            type={modalType}
           />
-        </Modal>
-        <CustomModal
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          message={modalMessage}
-          type={modalType}
-        />
-        {/* <Modal
+          {/* <Modal
           open={openLocation}
           onClose={() => setOpenLocation(false)}
           aria-labelledby="order-summary-title"
           aria-describedby="order-summary-description"
         > */}
-        <Box sx={{ position: "relative" }}>
-          {openLocation && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: "90%",
-                transform: "translate(-120%, -50%)",
-                width: "50rem",
-                height: "600px",
-                maxWidth: 500,
-                bgcolor: "background.paper",
-                boxShadow: 24,
-                borderRadius: 2,
-                p: 3,
-                zIndex: "20",
-              }}
-            >
-              <LocationSection
-                onContinue={handleLocationContinue}
-                setOpenLocation={setOpenLocation}
-              />
-            </Box>
-          )}
+          <Box sx={{ position: "relative" }}>
+            {openLocation && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "90%",
+                  transform: "translate(-120%, -50%)",
+                  width: "50rem",
+                  height: "600px",
+                  maxWidth: 500,
+                  bgcolor: "background.paper",
+                  boxShadow: 24,
+                  borderRadius: 2,
+                  p: 3,
+                  zIndex: "20",
+                }}
+              >
+                <LocationSection
+                  onContinue={handleLocationContinue}
+                  setOpenLocation={setOpenLocation}
+                />
+              </Box>
+            )}
+          </Box>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={4000}
+            onClose={() => setSnackbarOpen(false)}
+          >
+            <Alert severity="error" sx={{ width: "100%" }}>
+              Please fill in all mandatory fields!
+            </Alert>
+          </Snackbar>
         </Box>
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={4000}
-          onClose={() => setSnackbarOpen(false)}
-        >
-          <Alert severity="error" sx={{ width: "100%" }}>
-            Please fill in all mandatory fields!
-          </Alert>
-        </Snackbar>
       </Box>
     </LocalizationProvider>
   );

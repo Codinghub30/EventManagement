@@ -9,7 +9,6 @@ import ExploreCategory from "../../pages/Home/components/ExploreCategory/index";
 import Gallery from "./components/Gallery";
 import Faq from "./components/Faq";
 import "./styles.scss";
-import Party from "../../assets/party.png";
 import MainImage from "../../assets/AboutMain.jpg";
 import Trusted from "./components/Trusted";
 const cardsData = [

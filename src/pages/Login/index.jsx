@@ -1,30 +1,37 @@
-import React, { useEffect, useState } from "react";
-import "./styles.scss";
-import authService from "../../api/ApiService";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Grid,
+  Paper,
+  Divider,
+} from "@mui/material";
+import authService from "../../api/ApiService";
 import { setLoading } from "../../redux/slice/LoaderSlice";
-import { useNavigate } from "react-router-dom";
 import { login } from "../../redux/slice/authSlice";
+import "./styles.scss";
+import LoginLogo from "../../assets/logo2.png";
 
 const Login = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       dispatch(setLoading(true));
       const res = await authService.loginUser(data);
-      // if(res?.data?.res){
-      // dispatch(login());
       dispatch(login(res.data.user));
       navigate("/");
-      console.log(res.data.user._id);
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       alert("Failed to login. Please try again.");
@@ -32,70 +39,93 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
-  const handleChange = (e) => {
-    e.preventDefault();
 
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
   };
 
-  const handleLoginWithMobile = () => {
-    navigate("/loginMobile");
-  };
-
   return (
-    <div className="login-page">
-      <div className="container">
-        <h1>Welcome Back!</h1>
-        <p>Enter your email to start shopping and get awesome deals today!</p>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={data.email}
-            onChange={(e) => handleChange(e)}
-            id="email"
-            placeholder="Username / Email"
-          />
+    <Grid container className="login-container">
+      {/* Left Side - Sign in Form */}
+      <Grid item xs={12} md={6} className="login-form-container">
+        <Box className="login-form">
+          <Box className="login-header">
+            <img src={LoginLogo} alt="Logo" className="logo" />
+            <Typography variant="h5" className="title">
+              Sign in to Nithya Event
+            </Typography>
+            <Typography variant="body2" className="subtitle">
+              Get access to your orders, wishlist, and recommendations.
+            </Typography>
+          </Box>
 
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={data.password}
-            onChange={(e) => handleChange(e)}
-            id="password"
-            placeholder="********"
-          />
-
-          <div className="forgot-password">
-            <a href="#!">Forgot your password?</a>
-          </div>
-
-          <button className="primary-btn" type="submit">
-            Login
-          </button>
-        </form>
-        <div className="or-section">
-          <span>OR</span>
-        </div>
-        <div className="social-login">
-          <button className="google-btn" onClick={handleLoginWithMobile}>
-            <img
-              src="https://img.icons8.com/color/16/000000/google-logo.png"
-              alt="Google"
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Email"
+              name="email"
+              value={data.email}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
             />
-            Log In with Mobile
-          </button>
-        </div>
-        <div className="register">
-          <p>
-            Don't have an account? <a href="/signup">Register</a>
-          </p>
-        </div>
-      </div>
-    </div>
+            <TextField
+              label="Password"
+              type="password"
+              name="password"
+              value={data.password}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <Typography variant="body2" className="forgot-password">
+              Forgot Password?
+            </Typography>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              className="login-btn"
+            >
+              Login
+            </Button>
+          </form>
+
+          <Divider className="divider">OR</Divider>
+          <Link to={"/loginMobile"}>
+            <Button fullWidth variant="outlined" className="social-btn">
+              Sign in with OTP
+            </Button>
+          </Link>
+
+          <Typography variant="body2" className="register-text">
+            You have already an account?{" "}
+            <Typography
+              component="span"
+              className="register-link"
+              onClick={() => navigate("/signup")}
+            >
+              Back to Login
+            </Typography>
+          </Typography>
+        </Box>
+      </Grid>
+
+      {/* Right Side - Marketing Image & Text */}
+      <Grid item xs={12} md={6} className="login-banner">
+        {/* <img src={LoginImg} className="login-banner-image" alt="Not found" /> */}
+        <Box className="banner-content">
+          <Typography variant="h4" className="banner-title">
+            Make Your Event Simple Now
+          </Typography>
+          <Typography variant="body1" className="banner-text">
+            Make your event planning stress-free. Streamline every detail with
+            ease. Focus on what truly matters—celebrating!
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

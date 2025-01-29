@@ -4,7 +4,20 @@ import { useDispatch } from "react-redux";
 import { replace, useNavigate, useParams } from "react-router-dom";
 
 // Third party library
-import { Box, Button, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Modal,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import ReplayIcon from "@mui/icons-material/Replay";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Assests
 import Success from "../../../assets/successGif.gif";
@@ -21,14 +34,16 @@ import authService from "../../../api/ApiService";
 import { setLoading } from "../../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../../utils/helperFunc";
 import Review from "./components/Review";
+import Technician from "./components/Technician";
+import ImageSlider from "./components/SliderImage";
 
 // styles
 import "./styles.scss";
-import Technician from "./components/Technician";
 
 const SingleProducts = () => {
   const [cart, setCart] = useState([]);
   const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
   const [technicianModalOpen, setTechnicianModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [technicians, setTechnicians] = useState([]);
@@ -37,6 +52,7 @@ const SingleProducts = () => {
   const [mainImage, setMainImage] = useState("");
   const [relatedProduct, setRelatedProduct] = useState([]);
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
@@ -95,7 +111,6 @@ const SingleProducts = () => {
 
   useEffect(() => {
     fetchSingleProduct();
-    console.log(product.product_category);
   }, [params.id]);
 
   useEffect(() => {
@@ -114,6 +129,8 @@ const SingleProducts = () => {
   const handleCloseSuccessModal = () => {
     setSuccessModalOpen(false);
   };
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   let TimeoutId;
 
@@ -126,8 +143,6 @@ const SingleProducts = () => {
       const filteredTechnicians = res.data.tech.filter(
         (tech) => tech.category === product.product_category
       );
-
-      console.log(filteredTechnicians);
 
       setTechnicians(filteredTechnicians);
     } catch (error) {
@@ -143,7 +158,7 @@ const SingleProducts = () => {
           product_image: product.product_image,
           product_name: product.product_name,
           product_price: product.product_price,
-          quantity: 1,
+          quantity: quantity,
         })
       );
     }
@@ -170,6 +185,10 @@ const SingleProducts = () => {
     setTimeout(() => {
       setOpen(false);
     }, 1500);
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
 
   const handleTechnicianSelect = (selectedTechnician) => {
@@ -203,9 +222,9 @@ const SingleProducts = () => {
           <Box
             sx={{
               display: "flex",
-              marginTop: "7rem",
-              gap: "6rem",
-              marginLeft: "8rem",
+              marginTop: "2rem",
+              gap: "10rem",
+              marginLeft: "4rem",
             }}
           >
             <Box className="product-content">
@@ -214,7 +233,7 @@ const SingleProducts = () => {
                 src={mainImage}
                 alt="Main Product Image"
               />
-              <Box className="thumbnails-container">
+              {/* <Box className="thumbnails-container">
                 {product.product_image?.map((img, index) => (
                   <img
                     key={index}
@@ -224,15 +243,12 @@ const SingleProducts = () => {
                     onClick={() => setMainImage(img)}
                   />
                 ))}
-              </Box>
-              <Button
-                variant="outlined"
-                color="red"
-                className="addToCart"
-                onClick={handleAddToCart}
-              >
-                Add to Cart
-              </Button>
+              </Box> */}
+              <ImageSlider
+                productImages={product.product_image || []}
+                setMainImage={setMainImage}
+                mainImage={mainImage}
+              />
             </Box>
             <Box>
               <Box
@@ -240,53 +256,95 @@ const SingleProducts = () => {
                   width: "30rem",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "1.4rem",
+                  gap: "0.6rem",
                 }}
               >
-                <Typography variant="p" sx={{ fontSize: "1.8rem" }}>
+                <Typography variant="p" sx={{ fontSize: "2rem" }}>
                   {product.product_name}
-                </Typography>
-                <Typography variant="p" sx={{ fontSize: "1rem" }}>
-                  Brand: {product.brand}
                 </Typography>
                 <Typography
                   className="rating"
                   variant="body2"
                   sx={{ color: "text.secondary" }}
                 >
-                  <Box className="Rating-point">
-                    <Typography variant="p" className="Rating-container">
-                      {product.Reviews?.length > 0
-                        ? (
-                            product.Reviews.reduce(
-                              (acc, review) => acc + review.ratings,
-                              0
-                            ) / product.Reviews.length
-                          ).toFixed(1)
-                        : 0}{" "}
-                      ⭐
-                    </Typography>
-
-                    <Typography className="Rating-num">
-                      {product.Reviews?.length || 0} Rating
-                      {product.Reviews?.length === 1 ? "" : "s"}
-                    </Typography>
-                  </Box>
+                  <Typography variant="p" sx={{ fontSize: "1.2rem" }}>
+                    Brand: {product.brand}
+                  </Typography>
                 </Typography>
                 <Box className="Price-point">
-                  <Typography sx={{ fontSize: "1.3rem" }}>
+                  <Typography sx={{ fontSize: "1.6rem" }}>
                     <strong>RS {product.product_price} / day</strong>
                   </Typography>
                   <Typography className="Offer">
                     {product.discount}% OFF
                   </Typography>
                 </Box>
-                <Box className="Product-description">
-                  <Typography sx={{ fontSize: "1rem" }}>
-                    {product.product_type === "rental"
-                      ? product.product_type
-                      : ""}
+                <Box className="Rating-point">
+                  <Typography variant="p" className="Rating-container">
+                    {product.Reviews?.length > 0
+                      ? (
+                          product.Reviews.reduce(
+                            (acc, review) => acc + review.ratings,
+                            0
+                          ) / product.Reviews.length
+                        ).toFixed(1)
+                      : 0}{" "}
+                    ⭐
                   </Typography>
+
+                  <Typography className="Rating-num">
+                    {product.Reviews?.length || 0} Rating
+                    {product.Reviews?.length === 1 ? "" : "s"}
+                  </Typography>
+                </Box>
+                <Divider sx={{ width: "50rem", marginBottom: "0.8rem" }} />
+                <Box className="Product-descriptions">
+                  <Box className="Product-desc-header">
+                    <CheckCircleIcon
+                      sx={{ color: "#4caf50", fontSize: "24px" }}
+                    />
+                    <Typography
+                      variant="p"
+                      sx={{ fontWeight: "600", fontSize: "1.1rem" }}
+                    >
+                      Availability Details
+                    </Typography>
+                  </Box>
+                  <Box className="product-desc-content">
+                    <Typography variant="p">
+                      {" "}
+                      The Current Available Products are {
+                        product.stock_in_hand
+                      }{" "}
+                      Units
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box display="flex" alignItems="center" gap={1} mt={2}>
+                  <Typography variant="p">Quantity:</Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      padding: "5px 10px",
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      onClick={handleDecrease}
+                      disabled={quantity === 1}
+                    >
+                      <RemoveIcon fontSize="small" />
+                    </IconButton>
+                    <Typography variant="h6" sx={{ margin: "0 10px" }}>
+                      {quantity}
+                    </Typography>
+                    <IconButton size="small" onClick={handleIncrease}>
+                      <AddIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
               </Box>
               <Box className="product-features">
@@ -327,47 +385,119 @@ const SingleProducts = () => {
                   </Typography>
                 </Box>
               </Box>
-
-              <Box className="specification-detail-container">
+              <Box
+                sx={{
+                  textAlign: "center",
+                  padding: "1.2rem",
+                  backgroundColor: "#f5f5f5",
+                  borderRadius: "12px",
+                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                  maxWidth: "800px",
+                  margin: "auto",
+                  border: "2px solid #ff6f61",
+                }}
+              >
                 <Typography
                   variant="h6"
-                  className="specification-detail-heading"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#333",
+                    marginBottom: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
                 >
-                  About this item
+                  <ReplayIcon sx={{ fontSize: "1.2rem", color: "#ff6f61" }} />
+                  10 Days Return Policy
                 </Typography>
-                <Box className="specification-detail">
-                  <ul>
-                    <li>
-                      Multiple purification by RO+UF+TDS Control process which
-                      removes even dissolved impurities such as arsenic, rust,
-                      pesticides & fluorides, and kills bacteria & viruses to
-                      make water 100% pure and safe for drinking
-                    </li>
-                    <li>
-                      TDS control system allows adjustment of TDS level of
-                      purified water which retains essential natural minerals in
-                      drinking water
-                    </li>
-                    <li>
-                      UV LED in the storage tank to keep purified water pure for
-                      longer periods
-                    </li>
-                    <li>
-                      Wall-mountable design to be suited for domestic purposes
-                    </li>
-                    <li>Country of Origin: India</li>
-                    <li>
-                      Water level indicator to keep a track of purified water in
-                      the storage tank
-                    </li>
-                    <li>
-                      20 litres per hour purification capacity, 8 litres storage
-                      capacity
-                    </li>
-                  </ul>
+                <Typography
+                  variant="p"
+                  sx={{
+                    color: "#555",
+                    maxWidth: "600px",
+                    margin: "0 auto",
+                    fontSize: "0.8rem",
+                    lineHeight: "1.6",
+                  }}
+                >
+                  Enjoy worry-free shopping with our{" "}
+                  <strong>10-day return policy</strong>! If you're not
+                  completely satisfied, we ensure a{" "}
+                  <strong>smooth, quick, and hassle-free return process</strong>{" "}
+                  for your convenience.
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="outlined"
+                  color="red"
+                  className="addToCart"
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </Button>
+              </Box>
+            </Box>
+          </Box>
+          <Tabs
+            value={activeTab}
+            onChange={handleTabChange}
+            className="tabs-container"
+            sx={{ backgroundColor: "#f1f6fc", padding: "0.8rem" }}
+          >
+            <Tab label="About" />
+            <Tab label="Product Details" />
+            <Tab label="Other Details" />
+            <Tab label="Reviews" />
+          </Tabs>
+
+          <Box className="tab-content" sx={{ padding: "0rem 4rem" }}>
+            {activeTab === 0 && (
+              <Box className="about-section">
+                <Box className="specification-detail-container">
+                  <Typography
+                    variant="h6"
+                    className="specification-detail-heading"
+                  >
+                    About this item
+                  </Typography>
+                  <Box className="specification-detail">
+                    <ul>
+                      <li>
+                        This product comes from {product.brand}, a trusted name
+                        known for high-quality standards and durability.
+                      </li>
+                      <li>
+                        Designed for {product.product_category}, this item is
+                        perfect for those looking for reliable and efficient
+                        performance in its category.
+                      </li>
+                      <li>
+                        With dimensions of {product.product_dimension}, it’s
+                        designed to be space-efficient and portable, weighing
+                        only {product.product_weight} kg
+                      </li>
+                      <li>
+                        Crafted from {product.material_type}, this product
+                        ensures long-lasting durability and resilience.
+                      </li>
+                      <li>
+                        Proudly made in {product.country_of_orgin}, this product
+                        meets global standards of quality and performance.
+                      </li>
+                      <li>
+                        We currently have {product.stock_in_hand} units in
+                        stock, so grab yours before it's gone!
+                      </li>
+                    </ul>
+                  </Box>
                 </Box>
               </Box>
+            )}
 
+            {activeTab === 1 && (
               <Box className="Product-detail-container">
                 <Typography variant="h6" className="Product-detail-heading">
                   Product Details
@@ -401,7 +531,9 @@ const SingleProducts = () => {
                   </Box>
                 </Box>
               </Box>
+            )}
 
+            {activeTab === 2 && (
               <Box className="Spec-container">
                 <Typography variant="h6" className="Spec-detail-heading">
                   Other Details
@@ -430,9 +562,14 @@ const SingleProducts = () => {
                   </Box>
                 </Box>
               </Box>
-            </Box>
-          </Box>
+            )}
 
+            {activeTab === 3 && (
+              <Box>
+                <Review onSubmit={handleReviewSubmit} productId={productId} />
+              </Box>
+            )}
+          </Box>
           <Box className="related-products">
             <Typography variant="h4">Related Products</Typography>
             <Box className="related-product-container">
@@ -483,7 +620,7 @@ const SingleProducts = () => {
               ))}
             </Box>
           </Box>
-          <Review onSubmit={handleReviewSubmit} productId={productId} />
+
           <Modal
             open={technicianModalOpen}
             onClose={handleCloseTechnicianModal}

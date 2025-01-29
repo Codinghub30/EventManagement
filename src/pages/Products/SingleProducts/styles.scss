@@ -11,6 +11,7 @@
   display: flex;
   gap: 1rem;
   align-items: center;
+  margin-bottom: 1rem;
   .Rating-container {
     background-color: #fffad0;
     padding: 0.1rem;
@@ -33,29 +34,27 @@
     margin-top: 0.2rem;
   }
 }
-.Product-description {
+.Product-descriptions {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
-  align-items: center;
   width: 42rem;
+  .Product-desc-header {
+    display: flex;
+  }
 }
 .product-container {
   margin-left: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 2.6rem;
   .product-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 3rem;
+    gap: 0rem;
     height: 34rem;
-    .addToCart {
-      width: 20rem;
-      border-radius: 20px;
-      color: #c026d3;
-    }
   }
   .specification-detail-container {
     margin: -20px;
@@ -72,16 +71,16 @@
         flex-direction: column;
         line-height: 1.8;
         .specification-detail ul {
-            margin: 0;
-            padding: 0 1rem;
-            list-style: disc;
-          }
-          
-          .specification-detail li {
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-          }
+          margin: 0;
+          padding: 0 1rem;
+          list-style: disc;
+        }
+
+        .specification-detail li {
+          margin-bottom: 0.8rem;
+          font-size: 0.9rem;
+          line-height: 1.6;
+        }
       }
     }
   }
@@ -150,7 +149,9 @@
   align-items: center;
 }
 .addToCart {
-  color: red;
+  color: #1976d2;
+  width: 20rem;
+  margin-top: 2.5rem;
 }
 
 .product-content {
@@ -184,7 +185,7 @@
 
 .related-products {
   padding: 3rem;
-  h4{
+  h4 {
     font-size: 1.8rem;
   }
   .related-product-container {

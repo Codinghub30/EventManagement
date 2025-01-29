@@ -13,16 +13,16 @@ const cartSlice = createSlice({
         (item) => item._id === action.payload._id
       );
       if (existingItem) {
-        existingItem.quantity += 1;
+        existingItem.quantity += action.payload.quantity;
       } else {
-        state.cart.push({ ...action.payload, quantity: 1 });
+        state.cart.push({
+          ...action.payload,
+          quantity: action.payload.quantity,
+        });
       }
     },
 
     quantityIncrement: (state, action) => {
-      console.log("State of cart before increment:", state.cart); // Debugging current cart state
-      console.log("Payload received for increment:", action.payload);
-
       const item = state.cart.find((item) => item._id === action.payload);
       if (item) {
         item.quantity += 1;

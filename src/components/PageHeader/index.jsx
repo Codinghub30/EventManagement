@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   Container,
@@ -10,6 +11,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
   Modal,
   TextField,
   Toolbar,
@@ -18,9 +21,10 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo2.png";
 import "./styles.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCurrentCity } from "../../utils/helperFunc";
 import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import Calenders from "../../assets/Calenders.png";
 import HomePage from "../../assets/homepage.png";
@@ -30,15 +34,23 @@ import Calendar from "../../pages/Calender";
 import Settings from "../../assets/Settings.png";
 import ShoppingCart from "../../assets/shoppingCart.png";
 import Bell from "../../assets/bell.png";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { logout } from "../../redux/slice/authSlice";
 
 const PageHeader = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currLocation, setCurrLocation] = useState({ city: "", town: "" });
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const userDetails = useSelector((state) => state.auth.userDetails);
   const count = useSelector((state) => state.cart.cart.length);
+  const cartItems = useSelector((state) => state.cart.cart);
   const location = useLocation();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -69,6 +81,21 @@ const PageHeader = () => {
 
     fetchCity();
   }, []);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  // Close Profile Dropdown
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Logout User
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
   return (
     <>
       <Box className="header-main">
@@ -213,9 +240,115 @@ const PageHeader = () => {
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
                 </Link>
-                <Button color="primary" variant="contained">
-                  Signin
-                </Button>
+                {isAuthenticated ? (
+                  <>
+                    <IconButton onClick={handleMenuOpen}>
+                      {userDetails.profileImage ? (
+                        <Avatar src={userDetails.profileImage} />
+                      ) : (
+                        <AccountCircleIcon fontSize="large" />
+                      )}
+                    </IconButton>
+
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleMenuClose}
+                      PaperProps={{
+                        sx: {
+                          width: 350,
+                          padding: "10px",
+                          boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
+                        },
+                      }}
+                    >
+                      {/* Profile Details */}
+                      <Box className="profile-section">
+                        <Typography variant="h6">
+                          {userDetails.username}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {userDetails.email}
+                        </Typography>
+                      </Box>
+                      <Divider />
+
+                      {/* Cart Details inside Profile Menu */}
+                      <Box className="cart-dropdown">
+                        <Typography variant="h6" sx={{ padding: "10px" }}>
+                          Cart Items
+                        </Typography>
+                        {cartItems.length > 0 ? (
+                          <List>
+                            {cartItems.map((item) => (
+                              <ListItem
+                                key={item._id}
+                                className="cart-item"
+                                sx={{ display: "flex", gap: "2rem" }}
+                              >
+                                <img
+                                  src={item.product_image[0]}
+                                  alt={item.product_name}
+                                  style={{
+                                    width: "41px",
+                                    borderRadius: "2rem",
+                                  }}
+                                  className="cart-item-image"
+                                />
+                                <ListItemText
+                                  primary={item.product_name}
+                                  secondary={`$${item.product_price} x ${item.quantity}`}
+                                />
+                                <IconButton>
+                                  <DeleteIcon color="error" />
+                                </IconButton>
+                              </ListItem>
+                            ))}
+                          </List>
+                        ) : (
+                          <Typography
+                            textAlign="center"
+                            sx={{ padding: "10px" }}
+                          >
+                            Your cart is empty.
+                          </Typography>
+                        )}
+                      </Box>
+
+                      <Divider />
+
+                      {/* Buttons */}
+                      <Box className="profile-buttons">
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          component={Link}
+                          to="/cart"
+                          onClick={handleMenuClose}
+                        >
+                          View Cart
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="error"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </Button>
+                      </Box>
+                    </Menu>
+                  </>
+                ) : (
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => navigate("/signin")}
+                  >
+                    Signin
+                  </Button>
+                )}
               </Box>
             </Box>
 
