@@ -256,9 +256,10 @@ const PageHeader = () => {
                       onClose={handleMenuClose}
                       PaperProps={{
                         sx: {
-                          width: 350,
                           padding: "10px",
                           boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
+                          left: "1019px",
+                          width: "31rem",
                         },
                       }}
                     >
@@ -318,7 +319,15 @@ const PageHeader = () => {
                       <Divider />
 
                       {/* Buttons */}
-                      <Box className="profile-buttons">
+                      <Box
+                        className="profile-buttons"
+                        sx={{
+                          display: "flex",
+                          width: "29rem",
+                          gap: "4rem",
+                          margin: "1rem",
+                        }}
+                      >
                         <Button
                           fullWidth
                           variant="contained"
