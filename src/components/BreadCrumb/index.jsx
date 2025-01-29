@@ -9,7 +9,7 @@ const BreadCrumb = ({ paths }) => {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        margin: "1.5rem 3rem",
+        margin: "2.5rem 2rem",
         color: "#555",
       }}
     >

@@ -1,8 +1,12 @@
 .category-page {
   display: flex;
   gap: 2rem;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
+  .products-page {
+    padding: 1rem;
+    width: 100%;
+  }
   @media (max-width: 1200px) {
     padding: 0rem;
     padding-top: 2rem;
@@ -20,6 +24,11 @@
   .main-content {
     h6 {
       padding: 0.3rem;
+    }
+    .number-results {
+      @media (max-width: 600px) {
+        display: none;
+      }
     }
   }
 }

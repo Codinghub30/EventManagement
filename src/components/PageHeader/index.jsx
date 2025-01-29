@@ -221,12 +221,11 @@ const PageHeader = () => {
 
             <IconButton
               edge="end"
-              color="inherit"
               aria-label="menu"
               sx={{ display: { xs: "block", md: "none" } }}
               onClick={toggleDrawer(true)}
             >
-              <MenuIcon />
+              <MenuIcon fill="black" />
             </IconButton>
           </Toolbar>
 

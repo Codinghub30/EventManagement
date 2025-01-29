@@ -30,6 +30,7 @@ import Slider from "../../components/Sliders";
 import BreadCrumb from "../../components/BreadCrumb";
 import StarRating from "../../components/StarRating";
 import Pagination from "../../components/Pagination";
+import DiscountSlider from "./components/DiscountSlider";
 
 const Products = () => {
   const { category } = useParams();
@@ -60,6 +61,10 @@ const Products = () => {
     priceRange: false,
     discount: false,
   });
+  const [showFilters, setShowFilters] = useState(false);
+  const [lowStockChecked, setLowStockChecked] = useState(false);
+  const [highStockChecked, setHighStockChecked] = useState(false);
+  const [selectedDiscount, setSelectedDiscount] = useState([0, 100]);
   const breadcrumbPaths = [{ label: "Home", link: "/" }, { label: "Products" }];
 
   const toggleSection = (section) => {
@@ -109,6 +114,18 @@ const Products = () => {
         item.product_name?.toLowerCase().includes(searchQuery?.toLowerCase())
       );
     }
+    if (lowStockChecked) {
+      filtered = filtered.filter((item) => item.stock_in_hand < 50);
+    }
+
+    if (highStockChecked) {
+      filtered = filtered.filter((item) => item.stock_in_hand >= 50);
+    }
+    filtered = filtered.filter(
+      (item) =>
+        item.discount >= selectedDiscount[0] &&
+        item.discount <= selectedDiscount[1]
+    );
 
     setFilteredItems(filtered);
     setCurrentPage(1);
@@ -116,7 +133,17 @@ const Products = () => {
 
   useEffect(() => {
     filterProducts();
-  }, [products, activeCategory, minPrice, maxPrice, numberOfDays, searchQuery]);
+  }, [
+    products,
+    activeCategory,
+    minPrice,
+    maxPrice,
+    numberOfDays,
+    searchQuery,
+    lowStockChecked,
+    highStockChecked,
+    selectedDiscount,
+  ]);
 
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
@@ -177,6 +204,14 @@ const Products = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  const handleLowStockChange = (event) => {
+    setLowStockChecked(event.target.checked);
+  };
+
+  const handleHighStockChange = (event) => {
+    setHighStockChecked(event.target.checked);
+  };
+
   return (
     <>
       <Slider />
@@ -195,7 +230,7 @@ const Products = () => {
               }}
               onClick={() => toggleSection("categories")}
             >
-              <Typography variant="subtitle1">Categories</Typography>
+              <Typography variant="p">Categories</Typography>
               <IconButton size="small">
                 {openSections.categories ? (
                   <ExpandLessIcon />
@@ -223,7 +258,6 @@ const Products = () => {
             </Collapse>
           </Box>
 
-          {/* Price Range Section */}
           <Box className="filter-group">
             <Box
               sx={{
@@ -234,7 +268,7 @@ const Products = () => {
               }}
               onClick={() => toggleSection("priceRange")}
             >
-              <Typography variant="subtitle1">Price Range</Typography>
+              <Typography variant="p">Price Range</Typography>
               <IconButton size="small">
                 {openSections.priceRange ? (
                   <ExpandLessIcon />
@@ -278,7 +312,6 @@ const Products = () => {
             </Collapse>
           </Box>
 
-          {/* Discount Section */}
           <Box className="filter-group">
             <Box
               sx={{
@@ -289,7 +322,7 @@ const Products = () => {
               }}
               onClick={() => toggleSection("discount")}
             >
-              <Typography variant="subtitle1">Discount</Typography>
+              <Typography variant="p">Discount</Typography>
               <IconButton size="small">
                 {openSections.discount ? (
                   <ExpandLessIcon />
@@ -300,14 +333,13 @@ const Products = () => {
             </Box>
             <Collapse in={openSections.discount}>
               <Box sx={{ marginTop: "0.5rem" }}>
-                <Typography variant="body2" color="textSecondary">
-                  Apply discount filters here.
-                </Typography>
+                <Box className="p-6 bg-white shadow-lg rounded-lg max-w-md mx-auto">
+                  <DiscountSlider onChange={setSelectedDiscount} />
+                </Box>
               </Box>
             </Collapse>
           </Box>
 
-          {/* Availability Section */}
           <Box className="filter-group">
             <Box
               sx={{
@@ -318,7 +350,7 @@ const Products = () => {
               }}
               onClick={() => toggleSection("availability")}
             >
-              <Typography variant="subtitle1">Availability</Typography>
+              <Typography variant="p">Availability</Typography>
               <IconButton size="small">
                 {openSections.availability ? (
                   <ExpandLessIcon />
@@ -328,10 +360,29 @@ const Products = () => {
               </IconButton>
             </Box>
             <Collapse in={openSections.availability}>
-              <Box sx={{ marginTop: "0.5rem" }}>
-                <Typography variant="body2" color="textSecondary">
-                  Check availability filters here.
-                </Typography>
+              <Box sx={{ marginTop: "0.5rem", width: "15rem" }}>
+                <Box className={`filters-sidebar ${showFilters ? "open" : ""}`}>
+                  <FormControlLabel
+                    sx={{ width: "15rem" }}
+                    control={
+                      <Checkbox
+                        checked={lowStockChecked}
+                        onChange={handleLowStockChange}
+                      />
+                    }
+                    label="Quantity less than 50"
+                  />
+                  <FormControlLabel
+                    sx={{ width: "15rem" }}
+                    control={
+                      <Checkbox
+                        checked={highStockChecked}
+                        onChange={handleHighStockChange}
+                      />
+                    }
+                    label="Quantity more than 50"
+                  />
+                </Box>
               </Box>
             </Collapse>
           </Box>
@@ -339,7 +390,7 @@ const Products = () => {
 
         <Box className="main-content">
           <Box className="sorting-header">
-            <Typography variant="h5">
+            <Typography variant="p">
               Showing {filteredItems.length} results
             </Typography>
             <Box
@@ -350,7 +401,6 @@ const Products = () => {
                 marginBottom: "1rem",
               }}
             >
-              {/* Left Title */}
               <Typography
                 variant="h4"
                 sx={{

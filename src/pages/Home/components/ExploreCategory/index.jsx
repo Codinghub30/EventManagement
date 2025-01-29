@@ -23,12 +23,17 @@ const ExploreCategory = () => {
 
   const categories = [
     {
-      name: "Speaker",
+      name: "Sound",
       icon: Sound,
       bgColor: "#f8f9fa",
       textColor: "#444444",
     },
-    { name: "Lights", icon: Lights, bgColor: "#e3f2fd", textColor: "#2381ab" },
+    {
+      name: "Lighting",
+      icon: Lights,
+      bgColor: "#e3f2fd",
+      textColor: "#2381ab",
+    },
     {
       name: "Shamiana",
       icon: Shamiana,

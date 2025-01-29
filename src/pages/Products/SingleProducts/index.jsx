@@ -32,7 +32,6 @@ const SingleProducts = () => {
   const [technicianModalOpen, setTechnicianModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [technicians, setTechnicians] = useState([]);
-
   const [showProduct, setShowProduct] = useState(false);
   const [productId, setProductId] = useState("");
   const [mainImage, setMainImage] = useState("");
@@ -120,20 +119,16 @@ const SingleProducts = () => {
 
   const handleAddToCart = async () => {
     try {
-      // Open technician modal
       setTechnicianModalOpen(true);
 
-      // Fetch all technicians
       const res = await authService.getAllTechnicians();
 
-      // Filter technicians based on the current product's category
       const filteredTechnicians = res.data.tech.filter(
         (tech) => tech.category === product.product_category
       );
 
       console.log(filteredTechnicians);
 
-      // Update the technicians state with filtered technicians
       setTechnicians(filteredTechnicians);
     } catch (error) {
       getErrorMessage(error);
@@ -141,7 +136,6 @@ const SingleProducts = () => {
   };
 
   const handleContinue = () => {
-    // Add the product to the cart
     if (product) {
       dispatch(
         addToCart({
@@ -154,15 +148,14 @@ const SingleProducts = () => {
       );
     }
 
-    // Add each selected technician as a separate item in the cart
     if (technicians && technicians.length > 0) {
       technicians.forEach((technician) => {
         dispatch(
           addToCart({
-            _id: `tech_${technician._id}`, // Ensure a unique ID for each technician
+            _id: `tech_${technician._id}`,
             product_image:
               technician.image ||
-              "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg", // Placeholder image if none exists
+              "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
             product_name: `${technician.service_name} (${technician.category})`,
             product_price: technician.price,
             quantity: 1,
@@ -171,29 +164,26 @@ const SingleProducts = () => {
       });
     }
 
-    // Close technician modal and show success modal
     setTechnicianModalOpen(false);
     setOpen(true);
 
-    // Auto-close success modal after 1.5 seconds
     setTimeout(() => {
       setOpen(false);
     }, 1500);
   };
 
   const handleTechnicianSelect = (selectedTechnician) => {
-    // Check if the technician is already selected
     if (technicians.find((tech) => tech._id === selectedTechnician._id)) {
       setTechnicians(
         technicians.filter((tech) => tech._id !== selectedTechnician._id)
       );
     } else {
-      setTechnicians([...technicians, selectedTechnician]); // Add the technician to the list
+      setTechnicians([...technicians, selectedTechnician]);
     }
   };
 
   const handleCloseTechnicianModal = () => {
-    setTechnicianModalOpen(false); // Close modal without adding
+    setTechnicianModalOpen(false);
   };
 
   const handleClose = () => {
@@ -493,7 +483,6 @@ const SingleProducts = () => {
               ))}
             </Box>
           </Box>
-          {/* <Technician /> */}
           <Review onSubmit={handleReviewSubmit} productId={productId} />
           <Modal
             open={technicianModalOpen}
@@ -518,7 +507,7 @@ const SingleProducts = () => {
                 Select a Technician
               </Typography>
               <Technician
-                onSelectTechnician={handleTechnicianSelect} // Pass the function correctly
+                onSelectTechnician={handleTechnicianSelect}
                 selectedTechnicians={technicians}
                 productCategory={product.product_category}
               />
