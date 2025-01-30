@@ -3,7 +3,12 @@ import { Box, IconButton, Typography } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-const SliderImage = ({ productImages, setMainImage, mainImage }) => {
+const SliderImage = ({
+  productImages,
+  setMainImage,
+  mainImage,
+  productVideo,
+}) => {
   const scrollRef = useRef(null);
 
   const scrollThumbnails = (direction) => {
@@ -68,7 +73,36 @@ const SliderImage = ({ productImages, setMainImage, mainImage }) => {
             }}
           />
         ))}
-        {/* <Typography>Hellod</Typography> */}
+        {productVideo && (
+          <Box
+            sx={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "8px",
+              border:
+                mainImage === productVideo
+                  ? "3px solid #1976d2"
+                  : "1px solid #ddd",
+              overflow: "hidden",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "border 0.3s ease-in-out",
+            }}
+            onClick={() => setMainImage(productVideo)}
+          >
+            <video
+              width="60px"
+              height="60px"
+              style={{ objectFit: "cover" }}
+              muted
+            >
+              <source src={productVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </Box>
+        )}
       </Box>
 
       {/* Right Arrow */}

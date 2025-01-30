@@ -248,6 +248,7 @@ const SingleProducts = () => {
                 productImages={product.product_image || []}
                 setMainImage={setMainImage}
                 mainImage={mainImage}
+                productVideo={product.product_video}
               />
             </Box>
             <Box>

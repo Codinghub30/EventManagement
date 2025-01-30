@@ -531,7 +531,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                   top: "90%",
                   transform: "translate(-120%, -50%)",
                   width: "50rem",
-                  height: "600px",
+                  height: "auto",
                   maxWidth: 500,
                   bgcolor: "background.paper",
                   boxShadow: 24,

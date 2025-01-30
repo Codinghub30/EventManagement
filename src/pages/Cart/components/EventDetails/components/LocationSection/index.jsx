@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,9 @@ import {
 } from "@react-google-maps/api";
 import CloseIcon from "@mui/icons-material/Close";
 import authService from "../../../../../../api/ApiService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../../../../../redux/slice/LoaderSlice";
+import { getErrorMessage } from "../../../../../../utils/helperFunc";
 
 const LocationSection = ({ onContinue, setOpenLocation }) => {
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
@@ -25,11 +27,11 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     lat: null,
     lng: null,
   });
+  const [addressDetails, setAddressDetails] = useState([]);
   const userDetails = useSelector((state) => state.auth.userDetails);
+  const dispatch = useDispatch();
 
   const GOOGLE_MAPS_API_KEY = "AIzaSyDLyeYKWC3vssuRVGXktAT_cY-8-qHEA_g";
-
-  //   const savedLocations = useSelector((state) => state.location.savedLocations);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -49,6 +51,20 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     setSearchedLocation(locationName);
     setLocationCoords({ lat: locationLat, lng: locationLng });
   };
+  const getAddress = async () => {
+    try {
+      dispatch(setLoading(true));
+      const res = await authService.getUserProfile(userDetails._id);
+      console.log("Getting user Address", res.data);
+
+      setAddressDetails(res.data.saved_address);
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      getErrorMessage(error);
+    }
+  };
+
   const handleSaveLocation = async () => {
     if (searchedLocation) {
       const newLocation = {
@@ -56,12 +72,18 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
         name: searchedLocation,
         checked: false,
       };
-      setSavedLocations([...savedLocations, newLocation]);
-      const res = await authService.addAddress(
-        userDetails._id,
-        searchedLocation
-      );
-      console.log(res);
+      // setSavedLocations([...addressDetails, newLocation]);
+      const res = await authService.addAddress(userDetails._id, {
+        saved_address: {
+          id: userDetails._id,
+          selected_region: searchedLocation,
+          latitude: locationCoords.lat,
+          longitude: locationCoords.lng,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
+        },
+      });
+      getAddress();
       setIsAddingNewAddress(false);
       setSearchedLocation("");
     }
@@ -90,9 +112,11 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
       lng: locationCoords.lng,
     });
   };
-
+  useEffect(() => {
+    getAddress();
+  }, []);
   if (!isLoaded) {
-    return <Typography>Loading...</Typography>; // Show a loading state while the API is loading
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -114,7 +138,7 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
         />
       </Box>
 
-      {savedLocations.map((location) => (
+      {addressDetails.map((location) => (
         <FormControlLabel
           key={location.id}
           control={
@@ -123,7 +147,7 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
               onChange={() => handleCheckboxChange(location.id)}
             />
           }
-          label={location.name}
+          label={location.selected_region}
         />
       ))}
       {!isAddingNewAddress ? (

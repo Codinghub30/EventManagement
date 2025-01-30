@@ -6,8 +6,7 @@ const authService = {
   registerUser: (payload) => api.post(config.USER_REGISTER, payload),
   loginUser: (payload) => api.post(config.USER_LOGIN, payload),
   getUserProfile: (userId) => api.get(`${config.GET_USER_PROFILE}${userId}`),
-  addAddress: (userId, data) =>
-    api.post(`${config.ADD_ADDRESS}${userId}`, data),
+  addAddress: (userId, data) => api.put(`${config.ADD_ADDRESS}${userId}`, data),
   loginWithMobile: (payload) => api.post(config.LOGIN_WITH_MOBILE, payload),
 
   // Company Details

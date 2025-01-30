@@ -113,7 +113,7 @@ const ExploreCategory = () => {
                     color: category.textColor,
                   }}
                 >
-                  Dummy Texts
+                  Nithya's {`${category.name}`}
                 </Typography>
                 <Typography
                   sx={{
