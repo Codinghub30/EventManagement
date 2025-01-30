@@ -22,7 +22,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo2.png";
 import "./styles.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentCity } from "../../utils/helperFunc";
+import { formatCurrencyIntl, getCurrentCity } from "../../utils/helperFunc";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
@@ -90,7 +90,11 @@ const PageHeader = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
+  const totalPrice = cartItems.reduce((total, item) => {
+    if (!item.product_price) return total;
+    const price = item.product_price;
+    return total + (price * item.quantity || 0);
+  }, 0);
   // Logout User
   const handleLogout = () => {
     dispatch(logout());
@@ -307,10 +311,10 @@ const PageHeader = () => {
                       onClose={handleMenuClose}
                       PaperProps={{
                         sx: {
-                          padding: "10px",
+                          padding: "20px",
                           boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
-                          left: "1019px",
-                          width: "31rem",
+                          left: "1103px",
+                          width: "26rem",
                         },
                       }}
                     >
@@ -333,29 +337,51 @@ const PageHeader = () => {
                         {cartItems.length > 0 ? (
                           <List>
                             {cartItems.map((item) => (
-                              <ListItem
-                                key={item._id}
-                                className="cart-item"
-                                sx={{ display: "flex", gap: "2rem" }}
-                              >
-                                <img
-                                  src={item.product_image[0]}
-                                  alt={item.product_name}
-                                  style={{
-                                    width: "41px",
-                                    borderRadius: "2rem",
-                                  }}
-                                  className="cart-item-image"
-                                />
-                                <ListItemText
-                                  primary={item.product_name}
-                                  secondary={`$${item.product_price} x ${item.quantity}`}
-                                />
-                                <IconButton>
-                                  <DeleteIcon color="error" />
-                                </IconButton>
-                              </ListItem>
+                              <>
+                                <ListItem
+                                  key={item._id}
+                                  className="cart-item"
+                                  sx={{ display: "flex", gap: "2rem" }}
+                                >
+                                  <img
+                                    src={item.product_image[0]}
+                                    alt={item.product_name}
+                                    style={{
+                                      width: "41px",
+                                      borderRadius: "2rem",
+                                    }}
+                                    className="cart-item-image"
+                                  />
+                                  <ListItemText
+                                    primary={item.product_name}
+                                    secondary={`$${item.product_price} x ${item.quantity}`}
+                                  />
+                                  <IconButton>
+                                    <DeleteIcon color="error" />
+                                  </IconButton>
+                                </ListItem>
+                                <Divider />
+                              </>
                             ))}
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "1rem",
+                                marginTop: "1rem",
+                              }}
+                            >
+                              <Typography variant="p">
+                                Total Tax:{" "}
+                                {formatCurrencyIntl(totalPrice * 0.18)}
+                              </Typography>
+                              <Typography variant="p">
+                                Total Price:{" "}
+                                {formatCurrencyIntl(
+                                  totalPrice * 1.18 - totalPrice * 0.02
+                                )}
+                              </Typography>
+                            </Box>
                           </List>
                         ) : (
                           <Typography
@@ -374,7 +400,7 @@ const PageHeader = () => {
                         className="profile-buttons"
                         sx={{
                           display: "flex",
-                          width: "29rem",
+                          width: "22rem",
                           gap: "4rem",
                           margin: "1rem",
                         }}
