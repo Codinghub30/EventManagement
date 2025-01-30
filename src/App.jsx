@@ -62,7 +62,7 @@ function App() {
       <Loading loading={loading} />
       <ScrollToTop />
 
-      <Box style={{ paddingTop: "5.5rem" }}>
+      <Box style={{ paddingTop: "2rem" }}>
         <Suspense fallback={<Loading />}>
           <PageHeader />
           <Routes>

@@ -203,6 +203,57 @@ const PageHeader = () => {
                   />
                   Setting
                 </Link>
+                <Link
+                  to={"/booking"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={Settings}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                  Setting
+                </Link>
+                <Link
+                  to={"/services"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={Settings}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                  Services
+                </Link>
+                <Link
+                  to={"/booking"}
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <img
+                    src={Settings}
+                    alt="Not found"
+                    style={{ width: "17px", marginTop: "1.5px" }}
+                  />
+                  Booking
+                </Link>
               </Box>
             </Box>
             <Box>
