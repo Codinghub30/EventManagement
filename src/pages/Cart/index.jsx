@@ -33,6 +33,9 @@ import {
 import { getErrorMessage } from "../../utils/helperFunc";
 import EventDetails from "./components/EventDetails";
 
+// Assests
+import Check from "../../assets/check.png";
+
 // Styles
 import "./styles.scss";
 import { setLoading } from "../../redux/slice/LoaderSlice";
@@ -45,6 +48,7 @@ const Cart = () => {
   const { startDate, endDate, numberOfDays } = useSelector(
     (state) => state.date
   );
+  const userDetails = useSelector((state) => state.auth.userDetails);
 
   const breadcrumbPaths = [
     { label: "Home", link: "/" },
@@ -219,6 +223,32 @@ const Cart = () => {
           >
             Order Summery
           </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "1rem",
+              alignItems: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            {userDetails.company_profile[0].pan_number !== "" ? (
+              <img
+                style={{
+                  width: "2rem",
+                }}
+                src={Check}
+                alt="Not Found"
+              />
+            ) : (
+              ""
+            )}
+            <Typography sx={{ color: "green" }}>
+              {userDetails.company_profile[0].pan_number === ""
+                ? ""
+                : "Your Pan details is uploaded successfully"}
+            </Typography>
+          </Box>
+
           <Divider sx={{ marginBottom: "1rem" }} />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="p" sx={{ color: "#626262" }}>
