@@ -90,32 +90,30 @@ const Details = () => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+  //     setShowLeftArrow(scrollLeft > 0);
+  //     setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
+  //   };
 
-    handleScroll();
+  //   handleScroll();
 
-    scrollRef.current.addEventListener("scroll", handleScroll);
-  }, []);
+  //   scrollRef.current.addEventListener("scroll", handleScroll);
+  // }, []);
 
-  const handleScrollLeft = () => {
-    scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
-  };
+  // const handleScrollLeft = () => {
+  //   scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
+  // };
 
-  const handleScrollRight = () => {
-    scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
-  };
+  // const handleScrollRight = () => {
+  //   scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
+  // };
 
   // const fetchYoutubeLink = async() => {
   //   const res = await  authService.getYoutube();
   //   setVideoData(res.data.data)
   //   console.log(res.data.data);
-    
-    
 
   // }
 
@@ -148,7 +146,7 @@ const Details = () => {
           </p>
         </Box>
       </Box> */}
-{/* 
+      {/* 
       <Box className="event-service-detail">
         <Box className="service-detail-contents">
           <p className="quality">Quality and Efficience</p>
@@ -176,45 +174,7 @@ const Details = () => {
           alt="Event"
         />
       </Box> */}
-      <Typography variant="h4" className="Related-videos-heading">
-        Related Videos
-      </Typography>
-      <Box className="details-container">
-        <Box display="flex" alignItems="center" className="scroll-buttons">
-          <Button
-            onClick={handleScrollLeft}
-            className={`left-arrow ${showLeftArrow ? "active" : "inActive"}`}
-            disabled={!showLeftArrow}
-          >
-            <ArrowBackOutlinedIcon />
-          </Button>
 
-          <Box ref={scrollRef} className="video-scroll-container">
-            {videoData.map((video) => (
-              <Box key={video.id} className={`video-item video-${video.id}`}>
-                <Typography variant="h6">{video.title}</Typography>
-                <iframe
-                  width="300"
-                  height="200"
-                  src={video.video_link}
-                  title={video.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </Box>
-            ))}
-          </Box>
-
-          <Button
-            onClick={handleScrollRight}
-            className={`right-arrow ${showRightArrow ? "active" : "inActive"}`}
-            disabled={!showRightArrow}
-          >
-            <ArrowForwardOutlinedIcon />
-          </Button>
-        </Box>
-      </Box>
       <Box className="Different-section">
         <Typography variant="h6">What Makes Us Different</Typography>
         <Box className="Different-content">

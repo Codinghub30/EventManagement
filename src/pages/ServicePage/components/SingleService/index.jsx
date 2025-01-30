@@ -18,12 +18,17 @@ import authService from "../../../../api/ApiService";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../../../utils/helperFunc";
+import { addToCart } from "../../../../redux/slice/CartSlice";
+import CustomModal from "../../../../components/CustomModal";
 
 const SingleService = () => {
   const { id } = useParams();
   const [serviceData, setServiceData] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const [openModals, setOpenModals] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState("success");
   const dispatch = useDispatch();
 
   const fetchServiceData = async () => {
@@ -48,6 +53,20 @@ const SingleService = () => {
 
   const toggleModal = () => {
     setOpenModal(!openModal);
+  };
+
+  const handleAddService = () => {
+    dispatch(
+      addToCart({
+        _id: Date.now(),
+        product_image: serviceData.shop_image_or_logo,
+        product_name: serviceData.shop_name,
+        product_price: serviceData.pricing,
+      })
+    );
+    setOpenModals(true);
+    setModalMessage("Service is added to the cart");
+    setModalType("success");
   };
 
   if (!serviceData) return <Typography>Loading...</Typography>;
@@ -107,7 +126,9 @@ const SingleService = () => {
           <PhoneIcon />
         </IconButton>
       </Box>
-
+      <Button variant="contained" onClick={handleAddService} sx={{ mt: 4 }}>
+        Add to cart
+      </Button>
       {/* Tabs Section */}
       <Tabs
         value={tabValue}
@@ -159,7 +180,12 @@ const SingleService = () => {
       {tabValue === 1 && <ReviewSection id={id} />}
 
       {tabValue === 2 && (
-        <Grid container spacing={2} className="photos">
+        <Grid
+          container
+          spacing={2}
+          className="photos"
+          sx={{ width: "96%", gap: "3rem", marginLeft: "3rem" }}
+        >
           {serviceData?.additional_images?.length > 0 ? (
             serviceData.additional_images.map((service, index) => (
               <Box key={index} className="service-card-images">
@@ -287,6 +313,12 @@ const SingleService = () => {
           </Button>
         </Box>
       </Modal>
+      <CustomModal
+        open={openModals}
+        onClose={() => setOpenModals(false)}
+        message={modalMessage}
+        type={modalType}
+      />
     </Box>
   );
 };

@@ -177,9 +177,9 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     formData.append("receiver_name", eventDetails.receiverName);
     formData.append("receiver_mobilenumber", eventDetails.receiverMobile);
     formData.append("product_data", JSON.stringify(productData));
-    formData.append("user_id", "8776768798"); //userData._id
-    formData.append("user_name", "kirutho"); //userData.username
-    formData.append("user_mailid", "kiruthika@gmail.com"); //userData.email
+    formData.append("user_id", userData._id); //userData._id
+    formData.append("user_name", userData.username); //userData.username
+    formData.append("user_mailid", userData.email); //userData.email
     formData.append("venue_name", eventDetails.eventVenue);
     formData.append(
       "venue_open_time",
@@ -222,9 +222,10 @@ const EventDetails = ({ cartItems, billingDetails }) => {
           },
         }
       );
-
+      setOpenModal(true);
       setModalMessage("Order Created Successfully");
       setModalType("success");
+      isOrderSummaryOpen(false);
     } catch (error) {
       console.error(
         "Error creating order:",
@@ -281,7 +282,16 @@ const EventDetails = ({ cartItems, billingDetails }) => {
           }}
         > */}
 
-          <Grid container spacing={3}>
+          <Grid
+            container
+            spacing={3}
+            sx={{
+              "@media(max-width:600px)": {
+                marginLeft: "6rem",
+                width: "21rem",
+              },
+            }}
+          >
             <Typography
               variant="h5"
               textAlign="center"
@@ -430,7 +440,14 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 />
               </Button>
             </Grid>
-            <Box mt={4} textAlign="center">
+            <Box
+              mt={4}
+              textAlign="center"
+              sx={{
+                display: "flex",
+                margin: "20px auto",
+              }}
+            >
               {isCheckoutAllowed ? (
                 <Button
                   variant="contained"

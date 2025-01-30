@@ -127,7 +127,11 @@ const Cart = () => {
                         }}
                       >
                         <img
-                          src={item.product_image[0]}
+                          src={
+                            Array.isArray(item.product_image)
+                              ? item.product_image[0]
+                              : item.product_image
+                          }
                           alt={item.product_name}
                           style={{
                             width: 50,
@@ -162,25 +166,28 @@ const Cart = () => {
                             onClick={() =>
                               dispatch(quantityDecrement(item._id))
                             }
-                            disabled={item.quantity === 1}
+                            disabled={item.quantity === 1 || !item.quantity}
                           >
                             <RemoveIcon />
                           </IconButton>
                           <Typography sx={{ margin: "0 10px" }}>
-                            {item.quantity}
+                            {item.quantity || 1}
                           </Typography>
                           <IconButton
                             size="small"
                             onClick={() =>
                               dispatch(quantityIncrement(item._id))
                             }
+                            disabled={!item.quantity}
                           >
                             <AddIcon />
                           </IconButton>
                         </Box>
                       </TableCell>
                       <TableCell>
-                        ${(item.product_price * item.quantity).toFixed(2)}
+                        {item.product_price && item.quantity !== undefined
+                          ? (item.product_price * item.quantity).toFixed(2)
+                          : item.product_price.toFixed(2)}
                       </TableCell>
                       <TableCell>
                         <IconButton

@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import { setLoading } from "../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../utils/helperFunc";
 import EventImg from "../../assets/bookingImg.jpg";
+import SliderImage from "../Products/SingleProducts/components/SliderImage";
+import Sliders from "../../components/Sliders";
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -42,9 +44,10 @@ const Bookings = () => {
 
   return (
     <Box className="my-bookings-page" sx={{ padding: "2rem" }}>
+      <Sliders />
       <Typography
         variant="h4"
-        sx={{ textAlign: "center", marginBottom: "2rem" }}
+        sx={{ textAlign: "center", marginBottom: "2rem", marginTop: "2rem" }}
       >
         My Bookings
       </Typography>
@@ -107,7 +110,7 @@ const Bookings = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    marginBottom: "1rem",
+                    marginBottom: "0.4rem",
                   }}
                 >
                   <AccessTimeIcon fontSize="small" color="action" />
@@ -124,13 +127,23 @@ const Bookings = () => {
                       ? "warning"
                       : "error"
                   }
-                  sx={{ fontWeight: "bold", width: "0.9rem", height: "15px" }}
+                  sx={{
+                    fontWeight: "bold",
+                    width: "0.9rem",
+                    height: "15px",
+                    marginLeft: "0.2rem",
+                  }}
                 />
                 <Typography variant="p" sx={{ marginLeft: "0.6rem" }}>
                   {booking.payment_status}
                 </Typography>
                 <Link to={`/booking/${booking._id}`}>
-                  <Button variant="outlined" color="primary" fullWidth>
+                  <Button
+                    variant="outlined"
+                    sx={{ marginTop: "1rem" }}
+                    color="primary"
+                    fullWidth
+                  >
                     View Details
                   </Button>
                 </Link>

@@ -48,7 +48,14 @@ const Sliders = () => {
   };
   return (
     <>
-      <Box>
+      <Box
+        sx={{
+          width: "98.6%",
+          "@media(max-width:600px)": {
+            width: "23.2rem",
+          },
+        }}
+      >
         <Slider {...sliderSettings}>
           {cardsData.map((card, index) => (
             <Box
@@ -58,6 +65,10 @@ const Sliders = () => {
                 borderRadius: "2rem",
                 overflow: "hidden",
                 height: "450px",
+                width: "98.5%",
+                "@media(max-width:600px)": {
+                  width: "23.2rem",
+                },
               }}
             >
               {/* Image */}

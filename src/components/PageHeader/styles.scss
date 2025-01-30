@@ -2,9 +2,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 99.5%;
   z-index: 111;
   padding: 0rem 1rem;
+
+  @media (max-width: 600px) {
+    width: 98%;
+  }
 
   .header-container {
     display: flex;
@@ -113,7 +117,6 @@
   }
 
   .user-icon {
-    background: url("path_to_icon_image") no-repeat center center;
     width: 24px;
     height: 24px;
     display: inline-block;
@@ -129,7 +132,7 @@
   transition: transform 0.3s ease;
   font-size: 1rem;
   &:active {
-    color: #c026d3;
+    // color: #c026d3;
   }
   &:hover {
     transform: translateY(-5px);

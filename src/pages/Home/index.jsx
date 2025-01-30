@@ -66,9 +66,14 @@ const Home = () => {
   return (
     <>
       <Box sx={{ minHeight: "55vh", padding: "0px 10px" }}>
-        {/* Header */}
-
-        <Box>
+        <Box
+          sx={{
+            width: "99.5%",
+            "@media(max-width:600px)": {
+              width: "23.2rem",
+            },
+          }}
+        >
           <Slider {...sliderSettings}>
             {cardsData.map((card, index) => (
               <Box
@@ -78,6 +83,7 @@ const Home = () => {
                   borderRadius: "2rem",
                   overflow: "hidden",
                   height: "450px",
+                  width: "20rem",
                 }}
               >
                 {/* Image */}

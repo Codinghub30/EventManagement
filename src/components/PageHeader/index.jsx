@@ -1,7 +1,13 @@
+// React Related imports
 import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Logo from "../../assets/logo2.png";
+
+// Third party library
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   Button,
   Container,
@@ -18,14 +24,19 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo2.png";
-import "./styles.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { formatCurrencyIntl, getCurrentCity } from "../../utils/helperFunc";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import CloseIcon from "@mui/icons-material/Close";
+import { Add } from "@mui/icons-material";
+import RemoveIcon from "@mui/icons-material/Remove";
+
+// Custom Components
+import { useDispatch, useSelector } from "react-redux";
+import { formatCurrencyIntl, getCurrentCity } from "../../utils/helperFunc";
+import { logout } from "../../redux/slice/authSlice";
+// Assests
 import Calenders from "../../assets/Calenders.png";
 import HomePage from "../../assets/homepage.png";
 import AnalyticsImg from "../../assets/pieChart.png";
@@ -34,8 +45,16 @@ import Calendar from "../../pages/Calender";
 import Settings from "../../assets/Settings.png";
 import ShoppingCart from "../../assets/shoppingCart.png";
 import Bell from "../../assets/bell.png";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { logout } from "../../redux/slice/authSlice";
+import Bookings from "../../assets/bookingss.png";
+import DigiService from "../../assets/digitalService.png";
+
+// styles
+import "./styles.scss";
+import {
+  quantityDecrement,
+  quantityIncrement,
+  removeFromCart,
+} from "../../redux/slice/CartSlice";
 
 const PageHeader = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -95,6 +114,16 @@ const PageHeader = () => {
     const price = item.product_price;
     return total + (price * item.quantity || 0);
   }, 0);
+
+  const DecrementItem = (id) => {
+    dispatch(quantityDecrement(id));
+  };
+  const IncrementItem = (id) => {
+    dispatch(quantityIncrement(id));
+  };
+  const RemoveItem = (id) => {
+    dispatch(removeFromCart(id));
+  };
   // Logout User
   const handleLogout = () => {
     dispatch(logout());
@@ -208,23 +237,6 @@ const PageHeader = () => {
                   Setting
                 </Link>
                 <Link
-                  to={"/booking"}
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <img
-                    src={Settings}
-                    alt="Not found"
-                    style={{ width: "17px", marginTop: "1.5px" }}
-                  />
-                  Setting
-                </Link>
-                <Link
                   to={"/services"}
                   style={{
                     textDecoration: "none",
@@ -235,7 +247,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={Settings}
+                    src={DigiService}
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
@@ -252,7 +264,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={Settings}
+                    src={Bookings}
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
@@ -270,13 +282,28 @@ const PageHeader = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.5rem",
+                    position: "relative",
                   }}
                 >
-                  <img
-                    src={ShoppingCart}
-                    alt="Not found"
-                    style={{ width: "17px", marginTop: "1.5px" }}
-                  />
+                  <Badge
+                    badgeContent={cartItems.length} // Shows item count
+                    color="error" // Red color
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        fontSize: "10px",
+                        fontWeight: "bold",
+                        minWidth: "16px",
+                        height: "16px",
+                        padding: "4px",
+                      },
+                    }}
+                  >
+                    <img
+                      src={ShoppingCart}
+                      alt="Not found"
+                      style={{ width: "20px", marginTop: "1.5px" }}
+                    />
+                  </Badge>
                 </Link>
 
                 <Link
@@ -318,22 +345,26 @@ const PageHeader = () => {
                         },
                       }}
                     >
-                      {/* Profile Details */}
-                      <Box className="profile-section">
-                        <Typography variant="h6">
-                          {userDetails.username}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {userDetails.email}
-                        </Typography>
-                      </Box>
-                      <Divider />
-
-                      {/* Cart Details inside Profile Menu */}
                       <Box className="cart-dropdown">
-                        <Typography variant="h6" sx={{ padding: "10px" }}>
-                          Cart Items
-                        </Typography>
+                        <Box
+                          className="icon-header"
+                          sx={{
+                            display: "flex",
+                            gap: "0.8rem",
+                            cursor: "pointer",
+                          }}
+                          onClick={handleMenuClose}
+                        >
+                          <KeyboardBackspaceIcon sx={{ color: "#1b4b66" }} />
+
+                          <Typography
+                            color="#1b4b66"
+                            sx={{ fontWeight: "600" }}
+                            onClick={handleMenuClose}
+                          >
+                            Back
+                          </Typography>
+                        </Box>
                         {cartItems.length > 0 ? (
                           <List>
                             {cartItems.map((item) => (
@@ -341,24 +372,112 @@ const PageHeader = () => {
                                 <ListItem
                                   key={item._id}
                                   className="cart-item"
-                                  sx={{ display: "flex", gap: "2rem" }}
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "1rem",
+                                    paddingBottom: "2rem",
+                                  }}
                                 >
-                                  <img
+                                  <Box
+                                    component="img"
                                     src={item.product_image[0]}
                                     alt={item.product_name}
-                                    style={{
-                                      width: "41px",
-                                      borderRadius: "2rem",
+                                    sx={{
+                                      width: 60,
+                                      height: 60,
+                                      borderRadius: "8px",
+                                      objectFit: "cover",
                                     }}
                                     className="cart-item-image"
                                   />
+
                                   <ListItemText
-                                    primary={item.product_name}
-                                    secondary={`$${item.product_price} x ${item.quantity}`}
+                                    primary={
+                                      <Box
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        alignItems="center"
+                                      >
+                                        {console.log(item)}
+                                        <Box>
+                                          <Typography
+                                            variant="body1"
+                                            fontWeight="bold"
+                                          >
+                                            {item.product_name}
+                                          </Typography>
+                                          <Typography
+                                            variant="body2"
+                                            color="textSecondary"
+                                          >
+                                            {item.product_category}
+                                          </Typography>
+
+                                          {/* Quantity Selector */}
+                                          <Box
+                                            display="flex"
+                                            alignItems="center"
+                                            border="1px solid #ccc"
+                                            borderRadius="8px"
+                                            width="fit-content"
+                                            mt={1}
+                                            px={1}
+                                          >
+                                            <IconButton
+                                              size="small"
+                                              sx={{ p: "4px" }}
+                                              onClick={() =>
+                                                DecrementItem(item._id)
+                                              }
+                                            >
+                                              <RemoveIcon fontSize="1rem" />
+                                            </IconButton>
+
+                                            <Typography
+                                              sx={{
+                                                minWidth: 24,
+                                                textAlign: "center",
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              {item.quantity}
+                                            </Typography>
+
+                                            <IconButton
+                                              size="small"
+                                              sx={{ p: "4px" }}
+                                              onClick={() =>
+                                                IncrementItem(item._id)
+                                              }
+                                            >
+                                              <Add fontSize="small" />
+                                            </IconButton>
+                                          </Box>
+                                        </Box>
+
+                                        <Box
+                                          display="flex"
+                                          flexDirection="column"
+                                          alignItems="flex-end"
+                                        >
+                                          <IconButton
+                                            size="small"
+                                            onClick={() => RemoveItem(item._id)}
+                                          >
+                                            <CloseIcon />
+                                          </IconButton>
+                                          <Typography
+                                            variant="body1"
+                                            fontWeight="bold"
+                                            sx={{ paddingTop: "1rem" }}
+                                          >
+                                            ${item.product_price.toFixed(2)}
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    }
                                   />
-                                  <IconButton>
-                                    <DeleteIcon color="error" />
-                                  </IconButton>
                                 </ListItem>
                                 <Divider />
                               </>
@@ -367,19 +486,42 @@ const PageHeader = () => {
                               sx={{
                                 display: "flex",
                                 flexDirection: "column",
-                                gap: "1rem",
+                                justifyContent: "space-between",
+                                gap: "1.1rem",
                                 marginTop: "1rem",
+                                padding: "1rem 0rem",
                               }}
                             >
-                              <Typography variant="p">
-                                Total Tax:{" "}
-                                {formatCurrencyIntl(totalPrice * 0.18)}
+                              <Typography
+                                variant="p"
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <Box>Total Tax: </Box>
+
+                                <Box>
+                                  {formatCurrencyIntl(totalPrice * 0.18)}
+                                </Box>
                               </Typography>
-                              <Typography variant="p">
-                                Total Price:{" "}
-                                {formatCurrencyIntl(
-                                  totalPrice * 1.18 - totalPrice * 0.02
-                                )}
+                              <Typography
+                                variant="p"
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <Box sx={{ fontWeight: 500 }}>
+                                  {" "}
+                                  Total Price:{" "}
+                                </Box>
+
+                                <Box>
+                                  {formatCurrencyIntl(
+                                    totalPrice * 1.18 - totalPrice * 0.02
+                                  )}
+                                </Box>
                               </Typography>
                             </Box>
                           </List>
@@ -403,12 +545,15 @@ const PageHeader = () => {
                           width: "22rem",
                           gap: "4rem",
                           margin: "1rem",
+                          "@media(max-width:600px)": {
+                            margin: "0.5rem",
+                          },
                         }}
                       >
                         <Button
                           fullWidth
                           variant="contained"
-                          color="primary"
+                          sx={{ backgroundColor: "#1b4b66" }}
                           component={Link}
                           to="/cart"
                           onClick={handleMenuClose}
@@ -430,7 +575,7 @@ const PageHeader = () => {
                   <Button
                     color="primary"
                     variant="contained"
-                    onClick={() => navigate("/signin")}
+                    onClick={() => navigate("/login")}
                   >
                     Signin
                   </Button>
@@ -468,7 +613,6 @@ const PageHeader = () => {
                   textAlign: "center",
                   marginBottom: "1rem",
                   fontWeight: "bold",
-                  color: "rgb(196, 70, 255)",
                 }}
               >
                 Menu
@@ -478,9 +622,9 @@ const PageHeader = () => {
                 <ListItem button component={Link} to="/">
                   <ListItemText primary="Home" />
                 </ListItem>
-                <ListItem button component={Link} to="/about">
+                {/* <ListItem button component={Link} to="/about">
                   <ListItemText primary="About" />
-                </ListItem>
+                </ListItem> */}
                 <ListItem button component={Link} to="/categories">
                   <ListItemText primary="Categories" />
                 </ListItem>

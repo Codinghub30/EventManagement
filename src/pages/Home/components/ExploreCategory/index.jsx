@@ -92,6 +92,9 @@ const ExploreCategory = () => {
               "&:hover": {
                 transform: "scale(1.05)",
               },
+              "@media(max-width:600px)": {
+                width: "24rem",
+              },
             }}
             onClick={() => handleNavigation(category.name.toLowerCase())}
           >
@@ -136,11 +139,7 @@ const ExploreCategory = () => {
                 <img
                   src={category.icon}
                   alt={category.name}
-                  style={{
-                    width: "183px",
-                    height: "131px",
-                    objectFit: "contain",
-                  }}
+                  className="image-category-container"
                 />
               </Box>
             </Box>
