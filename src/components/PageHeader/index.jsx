@@ -186,7 +186,7 @@ const PageHeader = () => {
                   <Typography variant="p">Home</Typography>
                 </Link>
                 <Link
-                  to="/about"
+                  to="/aboutUs"
                   style={{
                     textDecoration: "none",
                     color: "black",
@@ -200,7 +200,7 @@ const PageHeader = () => {
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
-                  Analytics
+                  About
                 </Link>
                 <Link
                   to="/products"
@@ -219,7 +219,7 @@ const PageHeader = () => {
                   />
                   Products
                 </Link>
-                <Link
+                {/* <Link
                   to={"/booking"}
                   style={{
                     textDecoration: "none",
@@ -235,7 +235,7 @@ const PageHeader = () => {
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
                   Setting
-                </Link>
+                </Link> */}
                 <Link
                   to={"/services"}
                   style={{
@@ -286,8 +286,8 @@ const PageHeader = () => {
                   }}
                 >
                   <Badge
-                    badgeContent={cartItems.length} // Shows item count
-                    color="error" // Red color
+                    badgeContent={cartItems.length}
+                    color="error"
                     sx={{
                       "& .MuiBadge-badge": {
                         fontSize: "10px",
@@ -350,23 +350,43 @@ const PageHeader = () => {
                           className="icon-header"
                           sx={{
                             display: "flex",
+                            justifyContent: "space-between",
                             gap: "0.8rem",
                             cursor: "pointer",
                           }}
                           onClick={handleMenuClose}
                         >
-                          <KeyboardBackspaceIcon sx={{ color: "#1b4b66" }} />
-
-                          <Typography
-                            color="#1b4b66"
-                            sx={{ fontWeight: "600" }}
-                            onClick={handleMenuClose}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: "0.8rem",
+                              cursor: "pointer",
+                            }}
                           >
-                            Back
-                          </Typography>
+                            <KeyboardBackspaceIcon sx={{ color: "#1b4b66" }} />
+
+                            <Typography
+                              color="#1b4b66"
+                              sx={{ fontWeight: "600" }}
+                              onClick={handleMenuClose}
+                            >
+                              Back
+                            </Typography>
+                          </Box>
+                          <Button
+                            sx={{ marginRight: "2rem" }}
+                            onClick={() => navigate("/account")}
+                          >
+                            Accounts
+                          </Button>
                         </Box>
                         {cartItems.length > 0 ? (
-                          <List>
+                          <List
+                            sx={{
+                              maxHeight: "352px",
+                              overflowY: "auto",
+                            }}
+                          >
                             {cartItems.map((item) => (
                               <>
                                 <ListItem
@@ -381,7 +401,11 @@ const PageHeader = () => {
                                 >
                                   <Box
                                     component="img"
-                                    src={item.product_image[0]}
+                                    src={
+                                      Array.isArray(item.product_image)
+                                        ? item.product_image[0]
+                                        : item.product_image
+                                    }
                                     alt={item.product_name}
                                     sx={{
                                       width: 60,
@@ -399,7 +423,6 @@ const PageHeader = () => {
                                         justifyContent="space-between"
                                         alignItems="center"
                                       >
-                                        {console.log(item)}
                                         <Box>
                                           <Typography
                                             variant="body1"
@@ -414,7 +437,6 @@ const PageHeader = () => {
                                             {item.product_category}
                                           </Typography>
 
-                                          {/* Quantity Selector */}
                                           <Box
                                             display="flex"
                                             alignItems="center"
@@ -537,7 +559,6 @@ const PageHeader = () => {
 
                       <Divider />
 
-                      {/* Buttons */}
                       <Box
                         className="profile-buttons"
                         sx={{

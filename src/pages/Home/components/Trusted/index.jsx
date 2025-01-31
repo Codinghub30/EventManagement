@@ -1,4 +1,8 @@
 import { Box, Typography } from "@mui/material";
+
+import EventImg from "../../../../assets/TrustedImg.png";
+
+// Styles
 import "./styles.scss";
 
 const Trusted = () => {
@@ -121,7 +125,7 @@ const Trusted = () => {
           }}
         >
           <img
-            src="https://images.pexels.com/photos/534164/pexels-photo-534164.jpeg"
+            src={EventImg}
             alt="Trusted Clients"
             style={{
               width: "82%",

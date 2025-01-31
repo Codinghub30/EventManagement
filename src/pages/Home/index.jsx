@@ -17,7 +17,8 @@ const cardsData = [
     subtitle:
       "Make your event planing stress-free. Streamline every detail with ease. Focus on what truly matters - Celebrating !",
     buttonText: "Book Now",
-    image: MainImage,
+    image:
+      "https://www.tourismsaskatchewan.com/-/media/things-to-do/events/sasktel-centre-concert-events.ashx",
   },
   {
     title: "Plan with Ease, Celebrate in Style",
@@ -40,7 +41,7 @@ const cardsData = [
       "From concept to execution, experience flawless event management for an unforgettable celebration.",
     buttonText: "Book Now",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwaA8j3JXCUJK6s0E139bWxzBDGcLkBaAaZBUycCpQo-9_9JZf99E2r7QQrTKS7qyNNmk&usqp=CAU",
+      "https://media.licdn.com/dms/image/v2/C561BAQE-51J-8KkMZg/company-background_10000/company-background_10000/0/1584559866970/eventscom_cover?e=2147483647&v=beta&t=3bktbE7ts5aNwH8XEUM5rW0G2aMbuQ1b2dHBVQgZqmA",
   },
 ];
 {
@@ -86,7 +87,6 @@ const Home = () => {
                   width: "20rem",
                 }}
               >
-                {/* Image */}
                 <img
                   src={card.image}
                   alt={card.title}

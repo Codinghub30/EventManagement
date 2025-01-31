@@ -117,6 +117,10 @@ const Review = ({ onSubmit, productId }) => {
           borderRadius: "8px",
           // boxShadow: 3,
           display: "flex",
+
+          "@media(min-width:400px) and (max-width:900px)": {
+            flexDirection: "column",
+          },
         }}
       >
         {/* Ratings Summary */}
@@ -180,6 +184,9 @@ const Review = ({ onSubmit, productId }) => {
                   borderBottom: "1px solid #e0e0e0",
                   width: "52rem",
                   marginLeft: "50px",
+                  "@media(min-width:400px) and (max-width:900px)": {
+                    width: "23rem",
+                  },
                 }}
                 className="hello"
               >

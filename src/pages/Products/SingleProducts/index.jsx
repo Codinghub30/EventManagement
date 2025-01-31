@@ -225,6 +225,18 @@ const SingleProducts = () => {
               marginTop: "2rem",
               gap: "10rem",
               marginLeft: "4rem",
+              "@media(max-width:620px)": {
+                flexDirection: "column",
+                marginLeft: "0rem",
+              },
+              " @media(max-width:1100px)": {
+                gap: "0rem",
+                flexDirection: "column",
+              },
+              "@media(min-width:1800px)": {
+                gap: "23rem",
+                marginLeft: "26rem",
+              },
             }}
           >
             <Box className="product-content">
@@ -253,11 +265,14 @@ const SingleProducts = () => {
             </Box>
             <Box>
               <Box
-                style={{
+                sx={{
                   width: "30rem",
                   display: "flex",
                   flexDirection: "column",
                   gap: "0.6rem",
+                  "@media(max-width:620px)": {
+                    width: "25rem",
+                  },
                 }}
               >
                 <Typography variant="p" sx={{ fontSize: "2rem" }}>
@@ -298,7 +313,7 @@ const SingleProducts = () => {
                     {product.Reviews?.length === 1 ? "" : "s"}
                   </Typography>
                 </Box>
-                <Divider sx={{ width: "50rem", marginBottom: "0.8rem" }} />
+                {/* <Divider sx={{ width: "50rem", marginBottom: "0.8rem" }} /> */}
                 <Box className="Product-descriptions">
                   <Box className="Product-desc-header">
                     <CheckCircleIcon
@@ -396,6 +411,9 @@ const SingleProducts = () => {
                   maxWidth: "800px",
                   margin: "auto",
                   border: "2px solid #ff6f61",
+                  "@media(min-width:1800px)": {
+                    maxWidth: "700px",
+                  },
                 }}
               >
                 <Typography
@@ -408,6 +426,8 @@ const SingleProducts = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: "0.5rem",
+                    // max-width: 400px;
+                    // /* margin: auto;
                   }}
                 >
                   <ReplayIcon sx={{ fontSize: "1.2rem", color: "#ff6f61" }} />
@@ -632,18 +652,17 @@ const SingleProducts = () => {
               sx={{
                 position: "absolute",
                 top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
+                right: "2%",
+                transform: "translateY(-50%)",
                 bgcolor: "background.paper",
                 boxShadow: 24,
                 p: 4,
                 borderRadius: "8px",
-                width: "70rem",
+                width: "32rem",
+                maxHeight: "100vh",
+                overflowY: "auto",
               }}
             >
-              <Typography id="technician-modal-title" variant="h6">
-                Select a Technician
-              </Typography>
               <Technician
                 onSelectTechnician={handleTechnicianSelect}
                 selectedTechnicians={technicians}

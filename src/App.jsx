@@ -37,7 +37,7 @@ const SingleVendor = lazy(() =>
 const Signup = lazy(() => import("./pages/Signup"));
 const Login = lazy(() => import("./pages/Login"));
 const Bookings = lazy(() => import("./pages/Bookings"));
-const AboutUs = lazy(() => import("./pages/About"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
 
 // PrivateRoute Component
 const PrivateRoute = ({ isAuthenticated, children }) => {
@@ -93,7 +93,7 @@ function App() {
                 // </PublicRoute>
               }
             />
-            <Route path="/about" element={<AboutUs />} />
+            <Route path="/aboutUs" element={<AboutUs />} />
             {/* Protected Routes */}
             <Route
               path="/category/:category"

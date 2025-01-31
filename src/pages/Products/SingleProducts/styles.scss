@@ -39,6 +39,9 @@
   flex-direction: column;
   gap: 1rem;
   width: 42rem;
+  @media (max-width: 800px) {
+    width: 25rem;
+  }
   .Product-desc-header {
     display: flex;
   }
@@ -63,6 +66,12 @@
     border-radius: 8px;
     margin-top: 1rem;
     width: 51rem;
+    @media (max-width: 650px) {
+      width: 21rem;
+    }
+    @media (max-width: 950px) and (min-width: 700px) {
+      width: 42rem;
+    }
     .specification-detail-heading {
       font-weight: bold;
       margin-bottom: 10px;
@@ -70,6 +79,9 @@
         display: flex;
         flex-direction: column;
         line-height: 1.8;
+        @media (max-width: 850px) {
+          width: 42rem;
+        }
         .specification-detail ul {
           margin: 0;
           padding: 0 1rem;
@@ -180,17 +192,32 @@
 }
 
 .thumbnail.active {
-  border-color: #ff5722; // Highlight active thumbnail
+  border-color: #ff5722;
 }
 
 .related-products {
   padding: 3rem;
+  display: flex;
+  margin: 10 auto;
+  @media (max-width: 800px) {
+    flex-direction: column;
+    gap: 0rem;
+  }
   h4 {
     font-size: 1.8rem;
   }
   .related-product-container {
     display: flex;
     gap: 6rem;
+    @media (max-width: 800px) {
+      flex-direction: column;
+      gap: 0rem;
+      display: flex;
+      margin: 0 auto;
+    }
+    @media (min-width: 900px) and (max-width: 1100px) {
+      gap: 2.5rem;
+    }
     .related-product-image {
       margin-top: 2rem;
       width: 15rem;
@@ -205,6 +232,11 @@
   gap: 1.5rem;
   align-items: center;
   padding: 1rem 1rem;
+  @media (min-width: 900px) and (max-width: 1100px) {
+    display: flex;
+    flex-wrap: wrap;
+    width: 21rem;
+  }
 
   .feature {
     display: flex;

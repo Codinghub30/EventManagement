@@ -1,12 +1,13 @@
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import sessionStorage from "redux-persist/lib/storage/session";
 import authReducer from "../slice/authSlice";
 import cartReducer from "../slice/CartSlice";
 import dateReducer from "../slice/dateSlice";
 
 const authPersistConfig = {
   key: "auth",
-  storage,
+  storage: sessionStorage,
 };
 
 const cartPersistConfig = {
