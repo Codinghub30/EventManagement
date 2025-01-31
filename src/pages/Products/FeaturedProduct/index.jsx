@@ -125,7 +125,6 @@ const FeaturedProduct = () => {
 
   return (
     <Box className="products-page">
-      {/* Filters Sidebar */}
       <Box className="filters-sidebar">
         <Typography variant="h6" className="filters-title">
           Filters
@@ -193,7 +192,6 @@ const FeaturedProduct = () => {
         </Box>
       </Box>
 
-      {/* Main Content */}
       <Box className="main-content">
         <Box className="sorting-header">
           <Typography variant="h5" sx={{ fontSize: "0.9rem", padding: "1rem" }}>
