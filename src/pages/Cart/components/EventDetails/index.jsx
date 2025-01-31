@@ -159,14 +159,8 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     //   "venue_start",
     //   eventDetails.eventDate?.format("YYYY-MM-DD")
     // );
-    formData.append(
-      "event_start_date",
-      eventDetails.eventDate?.format("YYYY-MM-DD")
-    );
-    formData.append(
-      "event_end_date",
-      eventDetails.eventDate?.add(3, "days").format("YYYY-MM-DD") //static.....................
-    );
+    formData.append("event_start_date", startDate?.format("YYYY-MM-DD"));
+    formData.append("event_end_date", endDate?.format("YYYY-MM-DD"));
     formData.append("event_name", eventDetails.eventName);
     formData.append("number_of_days", numberOfDays);
 
@@ -258,82 +252,59 @@ const EventDetails = ({ cartItems, billingDetails }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
-        <Box
-          sx={{
-            padding: "2rem",
-            backgroundColor: "#f9f9f9",
-            minHeight: "100vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "29rem",
-            marginTop: "1rem",
-          }}
-        >
-          {/* <Paper
-          elevation={4}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "#f4f4f4",
+          padding: "1rem",
+          marginTop: "3rem",
+        }}
+      >
+        <Paper
+          elevation={5}
           sx={{
             p: 4,
             width: "100%",
-            maxWidth: 700,
-            borderRadius: 2,
+            maxWidth: 600,
+            borderRadius: 3,
             backgroundColor: "#fff",
+            boxShadow: "0px 5px 15px rgba(0,0,0,0.1)",
           }}
-        > */}
-
-          <Grid
-            container
-            spacing={3}
-            sx={{
-              "@media(max-width:600px)": {
-                marginLeft: "6rem",
-                width: "21rem",
-              },
-            }}
+        >
+          <Typography
+            variant="h5"
+            textAlign="center"
+            fontWeight="bold"
+            sx={{ mb: 3 }}
           >
-            <Typography
-              variant="h5"
-              textAlign="center"
-              fontWeight="600"
-              sx={{
-                padding: "1.5rem",
-              }}
-            >
-              Event Details
-            </Typography>
+            Event Details
+          </Typography>
 
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <DatePicker
-                label={<FieldLabel label="Event Date" />}
-                value={eventDetails.eventDate}
+                label={<FieldLabel label="Enter the date" />}
+                value={[startDate, endDate]}
                 onChange={handleDateChange}
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </Grid>
             <Grid item xs={6}>
               <TimePicker
-                label={<FieldLabel label="Event Start Time" />}
+                label={<FieldLabel label="Start Time" />}
                 value={eventDetails.startTime}
                 onChange={(newTime) => handleTimeChange("startTime", newTime)}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                  seconds: renderTimeViewClock,
-                }}
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </Grid>
             <Grid item xs={6}>
               <TimePicker
-                label={<FieldLabel label="Event End Time" />}
+                label={<FieldLabel label="End Time" />}
                 value={eventDetails.endTime}
                 onChange={(newTime) => handleTimeChange("endTime", newTime)}
-                viewRenderers={{
-                  hours: renderTimeViewClock,
-                  minutes: renderTimeViewClock,
-                  seconds: renderTimeViewClock,
-                }}
                 renderInput={(params) => <TextField {...params} fullWidth />}
               />
             </Grid>
@@ -342,13 +313,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 label={<FieldLabel label="Event Name" />}
                 name="eventName"
                 value={eventDetails.eventName}
-                onChange={(e) =>
-                  setEventDetails({
-                    ...eventDetails,
-                    eventName: e.target.value,
-                  })
-                }
-                placeholder="Enter event name"
+                onChange={handleChange}
                 fullWidth
               />
             </Grid>
@@ -357,13 +322,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 label={<FieldLabel label="Event Venue" />}
                 name="eventVenue"
                 value={eventDetails.eventVenue}
-                onChange={(e) =>
-                  setEventDetails({
-                    ...eventDetails,
-                    eventVenue: e.target.value,
-                  })
-                }
-                placeholder="Enter venue name"
+                onChange={handleChange}
                 fullWidth
               />
             </Grid>
@@ -372,13 +331,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 label={<FieldLabel label="Receiver Name" />}
                 name="receiverName"
                 value={eventDetails.receiverName}
-                onChange={(e) =>
-                  setEventDetails({
-                    ...eventDetails,
-                    receiverName: e.target.value,
-                  })
-                }
-                placeholder="Receiver Name"
+                onChange={handleChange}
                 fullWidth
               />
             </Grid>
@@ -387,176 +340,51 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 label={<FieldLabel label="Receiver Mobile" />}
                 name="receiverMobile"
                 value={eventDetails.receiverMobile}
-                onChange={(e) =>
-                  setEventDetails({
-                    ...eventDetails,
-                    receiverMobile: e.target.value,
-                  })
-                }
-                placeholder="Receiver Mobile Number"
+                onChange={handleChange}
                 fullWidth
               />
             </Grid>
-            <Button
-              sx={{
-                width: "39rem",
-                marginTop: "2rem",
-                marginLeft: "2rem",
-                border: "1px solid",
-              }}
-              onClick={() => setOpenLocation(!openLocation)}
-            >
-              Location
-            </Button>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                component="label"
-                fullWidth
-                // startIcon={<UploadFileIcon />}
-              >
-                Upload Invitation
-                <input
-                  type="file"
-                  name="upload_invitation"
-                  onChange={handleFileChange}
-                  hidden
-                />
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                component="label"
-                fullWidth
-                // startIcon={<UploadFileIcon />}
-              >
-                Upload Gate Pass
-                <input
-                  type="file"
-                  name="upload_gatepass"
-                  hidden
-                  onChange={handleFileChange}
-                />
-              </Button>
-            </Grid>
-            <Box
-              mt={4}
-              textAlign="center"
-              sx={{
-                display: "flex",
-                margin: "20px auto",
-              }}
-            >
-              {isCheckoutAllowed ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={handleCheckout}
-                >
-                  Checkout
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={handleProceedToTerms}
-                >
-                  Terms
-                </Button>
-              )}
-            </Box>
           </Grid>
 
-          {/* </Paper> */}
-          <Modal
-            open={showTerms}
-            onClose={() => setShowTerms(false)}
-            aria-labelledby="terms-modal-title"
-            aria-describedby="terms-modal-description"
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "80%",
-                maxWidth: 600,
-                bgcolor: "background.paper",
-                border: "1px solid #000",
-                boxShadow: 24,
-                p: 4,
-                borderRadius: 2,
-                height: "80vh",
-                maxHeight: "80vh",
-                overflowY: "auto",
-              }}
-            >
-              <Terms onContinue={handleAcceptTerms} />
-            </Box>
-          </Modal>
-          <Modal
-            open={isOrderSummaryOpen}
-            onClose={handleModalClose}
-            aria-labelledby="order-summary-title"
-            aria-describedby="order-summary-description"
-          >
-            <OrderSummery
-              cartItems={cartItems}
-              billingDetails={billingDetails}
-              handleConfirmOrder={handleConfirmOrder}
-              handleModalClose={handleModalClose}
-            />
-          </Modal>
-          <CustomModal
-            open={openModal}
-            onClose={() => setOpenModal(false)}
-            message={modalMessage}
-            type={modalType}
-          />
-          {/* <Modal
-          open={openLocation}
-          onClose={() => setOpenLocation(false)}
-          aria-labelledby="order-summary-title"
-          aria-describedby="order-summary-description"
-        > */}
-          <Box sx={{ position: "relative" }}>
-            {openLocation && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "90%",
-                  transform: "translate(-120%, -50%)",
-                  width: "50rem",
-                  height: "auto",
-                  maxWidth: 500,
-                  bgcolor: "background.paper",
-                  boxShadow: 24,
-                  borderRadius: 2,
-                  p: 3,
-                  zIndex: "20",
-                }}
+          <Box mt={4} textAlign="center">
+            {isCheckoutAllowed ? (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={handleCheckout}
+                sx={{ width: "100%", py: 1.5 }}
               >
-                <LocationSection
-                  onContinue={handleLocationContinue}
-                  setOpenLocation={setOpenLocation}
-                />
-              </Box>
+                Checkout
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                onClick={handleProceedToTerms}
+                sx={{ width: "100%", py: 1.5 }}
+              >
+                Accept Terms
+              </Button>
             )}
           </Box>
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={4000}
-            onClose={() => setSnackbarOpen(false)}
-          >
-            <Alert severity="error" sx={{ width: "100%" }}>
-              Please fill in all mandatory fields!
-            </Alert>
-          </Snackbar>
-        </Box>
+        </Paper>
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <Alert severity="error">Please fill in all mandatory fields!</Alert>
+        </Snackbar>
+
+        <CustomModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          message={modalMessage}
+          type={modalType}
+        />
       </Box>
     </LocalizationProvider>
   );
