@@ -76,7 +76,6 @@ const Category = () => {
       if (res.data.data && res.data.data.length > 0) {
         setData(res.data.data);
         // console.log(res.data.data);
-        console.log(category);
 
         setActiveCategory(category);
         dispatch(setLoading(false));
@@ -99,9 +98,9 @@ const Category = () => {
       );
     }
 
-    if (numberOfDays) {
-      filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
-    }
+    // if (numberOfDays) {
+    //   filtered = filtered.filter((item) => item.stock_in_hand >= numberOfDays);
+    // }
 
     if (searchQuery) {
       filtered = filtered.filter((item) =>
@@ -234,6 +233,8 @@ const Category = () => {
   const handleHighStockChange = (event) => {
     setHighStockChecked(event.target.checked);
   };
+
+  console.log(getPaginatedData());
 
   return (
     <>
@@ -415,7 +416,7 @@ const Category = () => {
               </Collapse>
             </Box>
           </Box>
-          {filteredItems.length < 0 ? (
+          {filteredItems.length > 0 ? (
             <Box className="main-content">
               <Box className="sorting-header">
                 <Typography variant="p" className="number-results">

@@ -101,6 +101,9 @@
     margin-top: 0rem;
     width: 40rem;
     margin-left: -52px;
+    @media (max-width: 650px) {
+      width: 23rem;
+    }
     .Product-detail-heading {
       margin-top: 24px;
       border-radius: 2px 2px 0 0;
@@ -117,6 +120,11 @@
       padding-top: 1.2rem;
       padding: 2rem 2rem;
       border: 1px solid #f0f0f0;
+      @media (max-width: 650px) {
+        width: 23rem;
+        display: flex;
+        gap: 2rem;
+      }
     }
   }
   .Spec-container {
@@ -138,6 +146,10 @@
       padding-top: 1rem;
       padding: 2rem 2rem;
       border: 1px solid #f0f0f0;
+      @media (max-width: 650px) {
+        width: 24rem;
+        gap: 6rem;
+      }
     }
   }
 }
@@ -236,6 +248,9 @@
     display: flex;
     flex-wrap: wrap;
     width: 21rem;
+  }
+  @media (max-width: 650px) {
+    gap: 0.5rem;
   }
 
   .feature {

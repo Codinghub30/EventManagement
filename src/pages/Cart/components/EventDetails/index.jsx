@@ -1,5 +1,5 @@
 // React related imports
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Third party library
 import {
@@ -36,7 +36,7 @@ import CustomModal from "../../../../components/CustomModal";
 import OrderSummery from "./components/OrderSummery";
 import { config } from "../../../../api/config";
 import axios from "axios";
-import { formatDate } from "../../../../utils/helperFunc";
+import { formatDate, getCurrentCity } from "../../../../utils/helperFunc";
 
 const FieldLabel = ({ label }) => (
   <Typography component="span">
@@ -76,6 +76,14 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
   );
   const servicesItem = useSelector((state) => state.services.services);
   const technicianItem = useSelector((state) => state.technicians.technicians);
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: null,
+    lng: null,
+    city: "",
+    town: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
   const formatedStartDate = formatDate(startDate);
@@ -206,7 +214,7 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
   const handleConfirmOrder = async () => {
     const formData = new FormData();
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-    formData.append("event_date", `432424 to 324324}`);
+    formData.append("event_date", `432424 to 324324}`); //static
     // formData.append(
     //   "venue_start",
     //   eventDetails.eventDate?.format("YYYY-MM-DD")
@@ -233,9 +241,9 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
       "venue_open_time",
       eventDetails.startTime?.format("hh:mm A")
     );
-    formData.append("location_lat", 65545.4); //hardcoded
-    formData.append("location_long", 12.553434); //hardcoded
-    formData.append("event_location", "mysuru"); //hardcoded
+    formData.append("location_lat", currentLocation.lat);
+    formData.append("location_long", currentLocation.lng);
+    formData.append("event_location", currentLocation.city);
     formData.append(
       "event_start_time",
       eventDetails.startTime?.format("hh:mm A")
@@ -303,6 +311,30 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
     }
     setIsOrderSummaryOpen(true);
   };
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const locationData = await getCurrentCity();
+        // setCityData(locationData);
+        setCurrentLocation({
+          lat: locationData.lat,
+          lng: locationData.lng,
+          city: locationData.city,
+          town: locationData.town,
+        });
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
+  useEffect(() => {
+    console.log(currentLocation);
+  }, [currentLocation]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -338,7 +370,11 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={10} sx={{ marginBottom: "1rem" }}>
+            <Grid
+              item
+              xs={10}
+              sx={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}
+            >
               <TextField
                 label="Start Date"
                 value={formatedStartDate}

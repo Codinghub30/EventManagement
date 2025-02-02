@@ -22,7 +22,7 @@ const Technician = ({
   const [technicians, setTechnicians] = useState([]);
   const [filteredTechnicians, setFilteredTechnicians] = useState([]);
   const [loading, setLoading] = useState(true);
-  const MAX_SELECTION = 7; // Selection limit
+  const MAX_SELECTION = 7;
 
   useEffect(() => {
     const fetchTechnicians = async () => {

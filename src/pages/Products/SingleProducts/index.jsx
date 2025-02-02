@@ -8,11 +8,14 @@ import {
   Box,
   Button,
   Divider,
+  Drawer,
   IconButton,
   Modal,
   Tab,
   Tabs,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -36,16 +39,17 @@ import { getErrorMessage } from "../../../utils/helperFunc";
 import Review from "./components/Review";
 import Technician from "./components/Technician";
 import ImageSlider from "./components/SliderImage";
+import { addTechnician } from "../../../redux/slice/technicianSlice";
 
 // styles
 import "./styles.scss";
-import { addTechnician } from "../../../redux/slice/technicianSlice";
 
 const SingleProducts = () => {
   const [cart, setCart] = useState([]);
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [technicianModalOpen, setTechnicianModalOpen] = useState(false);
+  const [bottomDrawerOpen, setBottomDrawerOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [technicians, setTechnicians] = useState([]);
   const [showProduct, setShowProduct] = useState(false);
@@ -57,6 +61,8 @@ const SingleProducts = () => {
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const fetchSingleProduct = async () => {
     try {
@@ -136,7 +142,7 @@ const SingleProducts = () => {
 
   const handleAddToCart = async () => {
     try {
-      setTechnicianModalOpen(true);
+      setBottomDrawerOpen(true);
 
       const res = await authService.getAllTechnicians();
 
@@ -183,9 +189,9 @@ const SingleProducts = () => {
           })
         );
       });
+      setBottomDrawerOpen(false);
     }
 
-    setTechnicianModalOpen(false);
     setOpen(true);
 
     setTimeout(() => {
@@ -207,9 +213,9 @@ const SingleProducts = () => {
     }
   };
 
-  const handleCloseTechnicianModal = () => {
-    setTechnicianModalOpen(false);
-  };
+  // const handleCloseTechnicianModal = () => {
+  //   setTechnicianModalOpen(false);
+  // };
 
   const handleClose = () => {
     clearTimeout(TimeoutId);
@@ -466,11 +472,20 @@ const SingleProducts = () => {
               </Box>
             </Box>
           </Box>
+
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
             className="tabs-container"
-            sx={{ backgroundColor: "#f1f6fc", padding: "0.8rem" }}
+            variant={isMobile ? "scrollable" : "standard"} // Scrollable on mobile
+            scrollButtons="auto" // Show scroll buttons when needed
+            allowScrollButtonsMobile
+            centered={!isMobile} // Centers tabs on desktop, but not mobile
+            sx={{
+              backgroundColor: "#f1f6fc",
+              padding: "0.8rem",
+              "& .MuiTabs-scroller": { overflowX: "auto !important" }, // Ensures smooth scrolling
+            }}
           >
             <Tab label="About" />
             <Tab label="Product Details" />
@@ -646,7 +661,7 @@ const SingleProducts = () => {
             </Box>
           </Box>
 
-          <Modal
+          {/* <Modal
             open={technicianModalOpen}
             onClose={handleCloseTechnicianModal}
             aria-labelledby="technician-modal-title"
@@ -689,7 +704,56 @@ const SingleProducts = () => {
                 Continue
               </Button>
             </Box>
-          </Modal>
+          </Modal> */}
+          <Drawer
+            anchor="bottom"
+            open={bottomDrawerOpen}
+            onClose={() => setBottomDrawerOpen(false)}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                maxHeight: "80vh",
+                overflowY: "auto",
+                padding: "1.5rem",
+                bgcolor: "background.paper",
+                borderTopLeftRadius: "16px",
+                borderTopRightRadius: "16px",
+                boxShadow: 24,
+              }}
+            >
+              {/* Close Button */}
+              <IconButton
+                sx={{ position: "absolute", right: 10, top: 10 }}
+                onClick={() => setBottomDrawerOpen(false)}
+              >
+                {/* <CloseIcon /> */}
+              </IconButton>
+
+              {/* Modal Title */}
+              <Typography variant="h6" textAlign="center" gutterBottom>
+                Select a Technician
+              </Typography>
+
+              {/* Technician List */}
+              <Technician
+                selectedTechnicians={technicians}
+                onSelectTechnician={setTechnicians}
+                productCategory={product.product_category}
+              />
+
+              {/* Continue Button */}
+              <Box textAlign="center" mt={2}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleContinue}
+                >
+                  Continue
+                </Button>
+              </Box>
+            </Box>
+          </Drawer>
           <Modal
             open={open}
             onClose={handleClose}

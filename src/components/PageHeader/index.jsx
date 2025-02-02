@@ -36,6 +36,11 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrencyIntl, getCurrentCity } from "../../utils/helperFunc";
 import { logout } from "../../redux/slice/authSlice";
+import {
+  quantityDecrement,
+  quantityIncrement,
+  removeFromCart,
+} from "../../redux/slice/CartSlice";
 
 // Assests
 import Calenders from "../../assets/Calenders.png";
@@ -57,11 +62,6 @@ import GavelIcon from "@mui/icons-material/Gavel";
 
 // styles
 import "./styles.scss";
-import {
-  quantityDecrement,
-  quantityIncrement,
-  removeFromCart,
-} from "../../redux/slice/CartSlice";
 
 const PageHeader = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,6 +71,10 @@ const PageHeader = () => {
   const userDetails = useSelector((state) => state.auth.userDetails);
   const count = useSelector((state) => state.cart.cart.length);
   const cartItems = useSelector((state) => state.cart.cart);
+  const techniciansItems = useSelector(
+    (state) => state.technicians.technicians
+  );
+  const serviceItems = useSelector((state) => state.services.services);
   const location = useLocation();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -78,6 +82,7 @@ const PageHeader = () => {
   const [menuAnchor, setMenuAnchor] = useState(null);
 
   const dispatch = useDispatch();
+  const totalItems = [...cartItems, ...techniciansItems, ...serviceItems];
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -299,7 +304,7 @@ const PageHeader = () => {
                   }}
                 >
                   <Badge
-                    badgeContent={cartItems.length}
+                    badgeContent={totalItems.length}
                     color="error"
                     sx={{
                       "& .MuiBadge-badge": {

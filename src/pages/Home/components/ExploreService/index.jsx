@@ -54,24 +54,24 @@ const ExploreService = () => {
           <Box
             key={service.id}
             sx={{
-              background: "linear-gradient(135deg, #e3cae4, #e35fea)",
+              background: "#f2caf7",
               borderRadius: "12px",
-              boxShadow: "0px 5px 15px rgba(160, 32, 240, 0.5)",
+              boxShadow: "0px 5px 15px rgba(160, 32, 240, 0.3)",
               padding: "2rem",
               textAlign: "center",
               cursor: "pointer",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
-              color: "#fff",
+              color: "#6a0dad",
               "&:hover": {
                 transform: "scale(1.05)",
-                boxShadow: "0px 8px 20px rgba(160, 32, 240, 0.7)",
+                boxShadow: "0px 8px 20px rgba(160, 32, 240, 0.5)",
               },
             }}
             onClick={() => navigate(`/service/${service.name}`)}
           >
             <Box
               sx={{
-                background: "rgba(255, 255, 255, 0.2)",
+                background: "#e39beb",
                 width: "70px",
                 height: "70px",
                 borderRadius: "50%",
@@ -80,7 +80,7 @@ const ExploreService = () => {
                 justifyContent: "center",
                 margin: "auto",
                 marginBottom: "1rem",
-                boxShadow: "0px 0px 15px rgba(255, 255, 255, 0.3)",
+                boxShadow: "0px 0px 15px rgba(160, 32, 240, 0.4)",
               }}
             >
               {service.icon}
@@ -106,11 +106,11 @@ const ExploreService = () => {
           padding: "0.7rem 2rem",
           fontWeight: "bold",
           fontSize: "1rem",
-          background: "linear-gradient(90deg, #8a2be2, #4b0082)",
+          background: "#c026d3", // Purple gradient
           color: "#fff",
           borderRadius: "8px",
           "&:hover": {
-            background: "linear-gradient(90deg, #4b0082, #8a2be2)",
+            background: "linear-gradient(90deg, #6a0dad, #8a2be2)",
           },
         }}
       >

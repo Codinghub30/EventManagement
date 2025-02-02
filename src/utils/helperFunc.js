@@ -12,7 +12,6 @@ export const getErrorMessage = (error) => {
     return "An unexpected error occurred.";
   }
 };
-
 export async function getCurrentCity() {
   const GOOGLE_API_KEY = "AIzaSyDLyeYKWC3vssuRVGXktAT_cY-8-qHEA_g";
 
@@ -44,11 +43,18 @@ export async function getCurrentCity() {
             )?.long_name;
 
             resolve({
+              lat: latitude,
+              lng: longitude,
               city: city || "City not found",
               town: town || "Town not found",
             });
           } else {
-            resolve({ city: "City not found", town: "Town not found" });
+            resolve({
+              lat: latitude,
+              lng: longitude,
+              city: "City not found",
+              town: "Town not found",
+            });
           }
         } catch (error) {
           reject("Error fetching location data.");
@@ -57,7 +63,7 @@ export async function getCurrentCity() {
       (error) => {
         reject(error.message || "Error getting location.");
       },
-      { enableHighAccuracy: true } // Request high-accuracy location
+      { enableHighAccuracy: true }
     );
   });
 }
