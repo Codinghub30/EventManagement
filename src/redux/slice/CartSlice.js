@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  cart: JSON.parse(localStorage.getItem("cartData")) || [],
+  cart: [],
 };
 
 const cartSlice = createSlice({
@@ -30,28 +30,23 @@ const cartSlice = createSlice({
     },
 
     quantityDecrement: (state, action) => {
-      const item = state.cart.find((item) => item._id === action.payload);
-      if (item) {
-        if (item.quantity > 1) {
-          item.quantity -= 1;
-        } else {
-          state.cart = state.cart.filter((item) => item._id !== action.payload);
-        }
-      }
+      state.cart = state.cart.map((item) =>
+        item._id === action.payload
+          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+          : item
+      );
     },
 
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter((item) => item._id !== action.payload);
     },
 
-    clearCart(state) {
+    clearCart: (state) => {
       state.cart = [];
-      localStorage.setItem("cartData", JSON.stringify(state.cart));
     },
   },
 });
 
-// state.cart = state.cart.filter((item) => item._id !== action.payload);
 export const {
   addToCart,
   quantityIncrement,

@@ -79,6 +79,8 @@ const Products = () => {
     try {
       const res = await authService.rentalProduct();
       setProducts(res.data.data);
+      console.log(res);
+
       setFilteredItems(res.data.data);
       dispatch(setLoading(false));
     } catch (error) {
@@ -241,7 +243,7 @@ const Products = () => {
             </Box>
             <Collapse in={openSections.categories}>
               <Box sx={{ marginTop: "0.5rem" }}>
-                {categories.map((category) => (
+                {categories?.map((category) => (
                   <FormControlLabel
                     key={category}
                     control={
@@ -391,7 +393,7 @@ const Products = () => {
         <Box className="main-content">
           <Box className="sorting-header">
             <Typography variant="p">
-              Showing {filteredItems.length} results
+              Showing {filteredItems?.length} results
             </Typography>
             <Box
               sx={{

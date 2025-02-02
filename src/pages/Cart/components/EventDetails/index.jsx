@@ -36,6 +36,7 @@ import CustomModal from "../../../../components/CustomModal";
 import OrderSummery from "./components/OrderSummery";
 import { config } from "../../../../api/config";
 import axios from "axios";
+import { formatDate } from "../../../../utils/helperFunc";
 
 const FieldLabel = ({ label }) => (
   <Typography component="span">
@@ -46,7 +47,7 @@ const FieldLabel = ({ label }) => (
   </Typography>
 );
 
-const EventDetails = ({ cartItems, billingDetails }) => {
+const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
   const [eventDetails, setEventDetails] = useState({
     eventDate: null,
     // venueStart:null,
@@ -73,12 +74,15 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const { startDate, endDate, numberOfDays } = useSelector(
     (state) => state.date
   );
+  const servicesItem = useSelector((state) => state.services.services);
+  const technicianItem = useSelector((state) => state.technicians.technicians);
 
   const dispatch = useDispatch();
+  const formatedStartDate = formatDate(startDate);
+  const formatedEndDate = formatDate(endDate);
 
   const handleProceedToTerms = () => {
     if (
-      !eventDetails.eventDate ||
       !eventDetails.startTime ||
       !eventDetails.endTime ||
       !eventDetails.eventName.trim() ||
@@ -117,6 +121,38 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     const { name, value } = e.target;
     setEventDetails({ ...eventDetails, [name]: value });
   };
+  const techniciansData = technicianItem?.map((item, index) => ({
+    // orderId:
+    // _id: item._id,
+    product_image:
+      "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
+    product_name: `${item.product_name}`,
+    product_price: item.product_price,
+    quantity: item.quantity,
+    vendor_name: item.vendor_name,
+    vendor_id: item.vendor_id,
+    shop_name: item.shop_name,
+    commission_percentage: item.commission_percentage,
+    commission_tax: item.commission_tax,
+    context: "technician",
+    category: item.category,
+    eventStartDate: startDate,
+    eventEndDate: endDate,
+    totalPrice: (item.product_price || 0) * (item.quantity || 1),
+  }));
+  // _id: `tech_${technician._id}`,
+  // product_image:
+  //   technician.image ||
+  //   "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
+  // product_name: `${technician.service_name}`,
+  // product_price: technician.price,
+  // vendor_name: technician.vendor_name,
+  // shop_name: technician.shop_name,
+  // vendor_id: technician.vendor_id,
+  // category: technician.category,
+  // commission_percentage: technician.commission_percentage,
+  // commission_tax: technician.commission_tax,
+  // quantity: 1,
 
   const productData = cartItems?.map((item, index) => ({
     orderId: item._id,
@@ -128,8 +164,24 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     context: "product",
     sellerName: cartItems.vendor_name || "Unknown",
     sellerId: cartItems.vendor_id || "Unknown",
-    eventStartDate: eventDetails.eventDate?.format("YYYY-MM-DD"),
-    eventEndDate: eventDetails.eventDate?.add(3, "days").format("YYYY-MM-DD"),
+    eventStartDate: startDate,
+    eventEndDate: endDate,
+  }));
+  const servicesData = servicesItem?.map((item) => ({
+    _id: `service_${item._id}`,
+    service_image: item.product_image,
+    service_name: item.product_name,
+    service_price: item.product_price,
+    quantity: item.quantity,
+    vendor_name: item.vendor_name,
+    vendor_id: item.vendor_id,
+    shop_name: item.shop_name,
+    category: item.category,
+    commission_percentage: item.commission_percentage,
+    commission_tax: item.commission_tax,
+    eventStartDate: startDate,
+    eventEndDate: endDate,
+    totalPrice: (item.product_price || 0) * (item.quantity || 1),
   }));
 
   const handleDateChange = (newDate) => {
@@ -154,13 +206,13 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   const handleConfirmOrder = async () => {
     const formData = new FormData();
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-    formData.append("event_date", eventDetails.eventDate?.format("YYYY-MM-DD"));
+    formData.append("event_date", `432424 to 324324}`);
     // formData.append(
     //   "venue_start",
     //   eventDetails.eventDate?.format("YYYY-MM-DD")
     // );
-    formData.append("event_start_date", startDate?.format("YYYY-MM-DD"));
-    formData.append("event_end_date", endDate?.format("YYYY-MM-DD"));
+    formData.append("event_start_date", startDate);
+    formData.append("event_end_date", endDate);
     formData.append("event_name", eventDetails.eventName);
     formData.append("number_of_days", numberOfDays);
 
@@ -171,9 +223,11 @@ const EventDetails = ({ cartItems, billingDetails }) => {
     formData.append("receiver_name", eventDetails.receiverName);
     formData.append("receiver_mobilenumber", eventDetails.receiverMobile);
     formData.append("product_data", JSON.stringify(productData));
-    formData.append("user_id", userData._id); //userData._id
-    formData.append("user_name", userData.username); //userData.username
-    formData.append("user_mailid", userData.email); //userData.email
+    formData.append("service_data", JSON.stringify(servicesData));
+    formData.append("tech_data", JSON.stringify(techniciansData));
+    formData.append("user_id", userData._id);
+    formData.append("user_name", userData.username);
+    formData.append("user_mailid", userData.email);
     formData.append("venue_name", eventDetails.eventVenue);
     formData.append(
       "venue_open_time",
@@ -220,6 +274,7 @@ const EventDetails = ({ cartItems, billingDetails }) => {
       setModalMessage("Order Created Successfully");
       setModalType("success");
       isOrderSummaryOpen(false);
+      handleClearAll();
     } catch (error) {
       console.error(
         "Error creating order:",
@@ -236,7 +291,6 @@ const EventDetails = ({ cartItems, billingDetails }) => {
   };
   const handleCheckout = async () => {
     if (
-      !eventDetails.eventDate ||
       !eventDetails.startTime ||
       !eventDetails.endTime ||
       !eventDetails.eventName.trim() ||
@@ -284,12 +338,19 @@ const EventDetails = ({ cartItems, billingDetails }) => {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <DatePicker
-                label={<FieldLabel label="Enter the date" />}
-                value={[startDate, endDate]}
-                onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} fullWidth />}
+            <Grid item xs={10} sx={{ marginBottom: "1rem" }}>
+              <TextField
+                label="Start Date"
+                value={formatedStartDate}
+                fullWidth
+                InputProps={{ readOnly: true }}
+              />
+
+              <TextField
+                label="End Date"
+                value={formatedEndDate}
+                fullWidth
+                InputProps={{ readOnly: true }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -358,15 +419,30 @@ const EventDetails = ({ cartItems, billingDetails }) => {
                 Checkout
               </Button>
             ) : (
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                onClick={handleProceedToTerms}
-                sx={{ width: "100%", py: 1.5 }}
-              >
-                Accept Terms
-              </Button>
+              <Box mt={4} textAlign="center">
+                {/* 🔹 Informational Message */}
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "#555",
+                    fontSize: "0.9rem",
+                    marginBottom: "10px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ⚠️ Before proceeding to place your order, you need to accept
+                  the Terms & Conditions.
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="large"
+                  onClick={handleProceedToTerms}
+                  sx={{ width: "100%", py: 1.5 }}
+                >
+                  Accept Terms
+                </Button>
+              </Box>
             )}
           </Box>
         </Paper>
@@ -378,7 +454,47 @@ const EventDetails = ({ cartItems, billingDetails }) => {
         >
           <Alert severity="error">Please fill in all mandatory fields!</Alert>
         </Snackbar>
+        <Modal
+          open={showTerms}
+          onClose={() => setShowTerms(false)}
+          aria-labelledby="terms-modal-title"
+          aria-describedby="terms-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "80%",
+              maxWidth: 600,
+              bgcolor: "background.paper",
+              border: "1px solid #000",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+              height: "80vh",
+              maxHeight: "80vh",
+              overflowY: "auto",
+            }}
+          >
+            <Terms onContinue={handleAcceptTerms} />
+          </Box>
+        </Modal>
 
+        <Modal
+          open={isOrderSummaryOpen}
+          onClose={handleModalClose}
+          aria-labelledby="order-summary-title"
+          aria-describedby="order-summary-description"
+        >
+          <OrderSummery
+            cartItems={cartItems}
+            billingDetails={billingDetails}
+            handleConfirmOrder={handleConfirmOrder}
+            handleModalClose={handleModalClose}
+          />
+        </Modal>
         <CustomModal
           open={openModal}
           onClose={() => setOpenModal(false)}

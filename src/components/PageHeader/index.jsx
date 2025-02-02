@@ -36,6 +36,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useDispatch, useSelector } from "react-redux";
 import { formatCurrencyIntl, getCurrentCity } from "../../utils/helperFunc";
 import { logout } from "../../redux/slice/authSlice";
+
 // Assests
 import Calenders from "../../assets/Calenders.png";
 import HomePage from "../../assets/homepage.png";
@@ -47,6 +48,12 @@ import ShoppingCart from "../../assets/shoppingCart.png";
 import Bell from "../../assets/bell.png";
 import Bookings from "../../assets/bookingss.png";
 import DigiService from "../../assets/digitalService.png";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import EventIcon from "@mui/icons-material/Event";
+import InfoIcon from "@mui/icons-material/Info";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import GavelIcon from "@mui/icons-material/Gavel";
 
 // styles
 import "./styles.scss";
@@ -68,6 +75,7 @@ const PageHeader = () => {
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [menuAnchor, setMenuAnchor] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -79,10 +87,14 @@ const PageHeader = () => {
       navigate(`/products?search=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
+  useEffect(() => {
+    const homeVisited = sessionStorage.getItem("homeVisited");
 
-  const handleOpenCalender = () => {
-    setIsCalendarOpen(true);
-  };
+    if (!homeVisited) {
+      setIsCalendarOpen(true);
+      sessionStorage.setItem("homeVisited", "true");
+    }
+  }, []);
 
   const handleCalendarClose = () => {
     setIsCalendarOpen(false);
@@ -102,12 +114,11 @@ const PageHeader = () => {
   }, []);
 
   const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setMenuAnchor(event.currentTarget);
   };
 
-  // Close Profile Dropdown
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setMenuAnchor(null);
   };
   const totalPrice = cartItems.reduce((total, item) => {
     if (!item.product_price) return total;
@@ -158,7 +169,12 @@ const PageHeader = () => {
                   fontWeight: "bold",
                 }}
               > */}
-              <img src={Logo} alt="Logo" />
+              <img
+                src={Logo}
+                alt="Logo"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate("/")}
+              />
               {/* </Typography> */}
 
               <Box
@@ -185,23 +201,7 @@ const PageHeader = () => {
                   />
                   <Typography variant="p">Home</Typography>
                 </Link>
-                <Link
-                  to="/aboutUs"
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
-                  <img
-                    src={AnalyticsImg}
-                    alt="Not found"
-                    style={{ width: "17px", marginTop: "1.5px" }}
-                  />
-                  About
-                </Link>
+
                 <Link
                   to="/products"
                   style={{
@@ -274,6 +274,19 @@ const PageHeader = () => {
             </Box>
             <Box>
               <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                >
+                  <FmdGoodOutlinedIcon sx={{ color: "black", fontSize: 24 }} />
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: "bold", color: "black" }}
+                  >
+                    {currLocation.city
+                      ? `${currLocation.city}, ${currLocation.town}`
+                      : "Fetching location..."}
+                  </Typography>
+                </Box>
                 <Link
                   to={"/cart"}
                   style={{
@@ -333,263 +346,179 @@ const PageHeader = () => {
                     </IconButton>
 
                     <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
+                      anchorEl={menuAnchor}
+                      open={Boolean(menuAnchor)}
                       onClose={handleMenuClose}
                       PaperProps={{
                         sx: {
-                          padding: "20px",
-                          boxShadow: "0px 4px 12px rgba(0,0,0,0.2)",
-                          left: "1103px",
-                          width: "26rem",
+                          width: "280px",
+                          padding: "15px",
+                          borderRadius: "12px",
+                          boxShadow: "0px 5px 15px rgba(0,0,0,0.2)",
                         },
                       }}
                     >
-                      <Box className="cart-dropdown">
+                      {isAuthenticated ? (
                         <Box
-                          className="icon-header"
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            gap: "0.8rem",
-                            cursor: "pointer",
-                          }}
-                          onClick={handleMenuClose}
+                          sx={{ textAlign: "center", paddingBottom: "12px" }}
                         >
-                          <Box
+                          <Avatar
+                            src={userDetails.profileImage}
                             sx={{
-                              display: "flex",
-                              gap: "0.8rem",
-                              cursor: "pointer",
+                              width: 64,
+                              height: 64,
+                              margin: "0 auto",
+                              mb: 1,
                             }}
-                          >
-                            <KeyboardBackspaceIcon sx={{ color: "#1b4b66" }} />
-
-                            <Typography
-                              color="#1b4b66"
-                              sx={{ fontWeight: "600" }}
-                              onClick={handleMenuClose}
-                            >
-                              Back
-                            </Typography>
-                          </Box>
-                          <Button
-                            sx={{ marginRight: "2rem" }}
-                            onClick={() => navigate("/account")}
-                          >
-                            Accounts
-                          </Button>
-                        </Box>
-                        {cartItems.length > 0 ? (
-                          <List
-                            sx={{
-                              maxHeight: "352px",
-                              overflowY: "auto",
-                            }}
-                          >
-                            {cartItems.map((item) => (
-                              <>
-                                <ListItem
-                                  key={item._id}
-                                  className="cart-item"
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: "1rem",
-                                    paddingBottom: "2rem",
-                                  }}
-                                >
-                                  <Box
-                                    component="img"
-                                    src={
-                                      Array.isArray(item.product_image)
-                                        ? item.product_image[0]
-                                        : item.product_image
-                                    }
-                                    alt={item.product_name}
-                                    sx={{
-                                      width: 60,
-                                      height: 60,
-                                      borderRadius: "8px",
-                                      objectFit: "cover",
-                                    }}
-                                    className="cart-item-image"
-                                  />
-
-                                  <ListItemText
-                                    primary={
-                                      <Box
-                                        display="flex"
-                                        justifyContent="space-between"
-                                        alignItems="center"
-                                      >
-                                        <Box>
-                                          <Typography
-                                            variant="body1"
-                                            fontWeight="bold"
-                                          >
-                                            {item.product_name}
-                                          </Typography>
-                                          <Typography
-                                            variant="body2"
-                                            color="textSecondary"
-                                          >
-                                            {item.product_category}
-                                          </Typography>
-
-                                          <Box
-                                            display="flex"
-                                            alignItems="center"
-                                            border="1px solid #ccc"
-                                            borderRadius="8px"
-                                            width="fit-content"
-                                            mt={1}
-                                            px={1}
-                                          >
-                                            <IconButton
-                                              size="small"
-                                              sx={{ p: "4px" }}
-                                              onClick={() =>
-                                                DecrementItem(item._id)
-                                              }
-                                            >
-                                              <RemoveIcon fontSize="1rem" />
-                                            </IconButton>
-
-                                            <Typography
-                                              sx={{
-                                                minWidth: 24,
-                                                textAlign: "center",
-                                                fontWeight: "bold",
-                                              }}
-                                            >
-                                              {item.quantity}
-                                            </Typography>
-
-                                            <IconButton
-                                              size="small"
-                                              sx={{ p: "4px" }}
-                                              onClick={() =>
-                                                IncrementItem(item._id)
-                                              }
-                                            >
-                                              <Add fontSize="small" />
-                                            </IconButton>
-                                          </Box>
-                                        </Box>
-
-                                        <Box
-                                          display="flex"
-                                          flexDirection="column"
-                                          alignItems="flex-end"
-                                        >
-                                          <IconButton
-                                            size="small"
-                                            onClick={() => RemoveItem(item._id)}
-                                          >
-                                            <CloseIcon />
-                                          </IconButton>
-                                          <Typography
-                                            variant="body1"
-                                            fontWeight="bold"
-                                            sx={{ paddingTop: "1rem" }}
-                                          >
-                                            ${item.product_price.toFixed(2)}
-                                          </Typography>
-                                        </Box>
-                                      </Box>
-                                    }
-                                  />
-                                </ListItem>
-                                <Divider />
-                              </>
-                            ))}
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "space-between",
-                                gap: "1.1rem",
-                                marginTop: "1rem",
-                                padding: "1rem 0rem",
-                              }}
-                            >
-                              <Typography
-                                variant="p"
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                }}
-                              >
-                                <Box>Total Tax: </Box>
-
-                                <Box>
-                                  {formatCurrencyIntl(totalPrice * 0.18)}
-                                </Box>
-                              </Typography>
-                              <Typography
-                                variant="p"
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "space-between",
-                                }}
-                              >
-                                <Box sx={{ fontWeight: 500 }}>
-                                  {" "}
-                                  Total Price:{" "}
-                                </Box>
-
-                                <Box>
-                                  {formatCurrencyIntl(
-                                    totalPrice * 1.18 - totalPrice * 0.02
-                                  )}
-                                </Box>
-                              </Typography>
-                            </Box>
-                          </List>
-                        ) : (
-                          <Typography
-                            textAlign="center"
-                            sx={{ padding: "10px" }}
-                          >
-                            Your cart is empty.
+                          />
+                          <Typography variant="h6" fontWeight="bold">
+                            {userDetails.username}
                           </Typography>
-                        )}
-                      </Box>
+                          <Typography variant="body2" color="textSecondary">
+                            {userDetails.email}
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <Box
+                          sx={{ textAlign: "center", paddingBottom: "12px" }}
+                        >
+                          <Avatar
+                            sx={{
+                              width: 64,
+                              height: 64,
+                              margin: "0 auto",
+                              mb: 1,
+                            }}
+                          />
+                          <Typography variant="h6" fontWeight="bold">
+                            Guest User
+                          </Typography>
+                        </Box>
+                      )}
 
-                      <Divider />
+                      <Divider sx={{ mb: 1 }} />
 
-                      <Box
-                        className="profile-buttons"
-                        sx={{
-                          display: "flex",
-                          width: "22rem",
-                          gap: "4rem",
-                          margin: "1rem",
-                          "@media(max-width:600px)": {
-                            margin: "0.5rem",
-                          },
-                        }}
-                      >
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          sx={{ backgroundColor: "#1b4b66" }}
+                      <List>
+                        <ListItem
+                          button
                           component={Link}
-                          to="/cart"
+                          to="/profile"
                           onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
                         >
-                          View Cart
-                        </Button>
+                          <PersonIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="My Account" />
+                        </ListItem>
+
+                        <ListItem
+                          button
+                          component={Link}
+                          to="/my-tickets"
+                          onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <EventIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="My Tickets" />
+                        </ListItem>
+
+                        <ListItem
+                          button
+                          component={Link}
+                          to="/about"
+                          onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <InfoIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="About Us" />
+                        </ListItem>
+
+                        <ListItem
+                          button
+                          component={Link}
+                          to="/help-center"
+                          onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <HelpOutlineIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="Help Center" />
+                        </ListItem>
+
+                        <ListItem
+                          button
+                          component={Link}
+                          to="/terms"
+                          onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <GavelIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="Terms & Conditions" />
+                        </ListItem>
+                      </List>
+
+                      <Divider sx={{ my: 1 }} />
+
+                      {isAuthenticated ? (
+                        <ListItem
+                          button
+                          onClick={() => {
+                            handleLogout();
+                            handleMenuClose();
+                          }}
+                          sx={{
+                            "&:hover": { backgroundColor: "#ffebee" },
+                            padding: "12px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <LogoutIcon
+                            sx={{ marginRight: "12px", color: "#d32f2f" }}
+                          />
+                          <ListItemText
+                            primary="Logout"
+                            sx={{ color: "#d32f2f" }}
+                          />
+                        </ListItem>
+                      ) : (
                         <Button
-                          fullWidth
                           variant="contained"
-                          color="error"
-                          onClick={handleLogout}
+                          color="primary"
+                          fullWidth
+                          sx={{ borderRadius: "8px", marginTop: "10px" }}
+                          onClick={() => navigate("/login")}
                         >
-                          Logout
+                          Sign In
                         </Button>
-                      </Box>
+                      )}
                     </Menu>
                   </>
                 ) : (
@@ -666,7 +595,7 @@ const PageHeader = () => {
           </Drawer>
         </AppBar>
       </Box>
-      <Modal open={isCalendarOpen} onClose={handleCalendarClose}>
+      <Modal open={isCalendarOpen}>
         <Box
           sx={{
             position: "absolute",
@@ -680,6 +609,7 @@ const PageHeader = () => {
             width: "450px",
             maxWidth: "95%",
             textAlign: "center",
+            border: "none",
           }}
         >
           <Box
@@ -689,7 +619,10 @@ const PageHeader = () => {
               padding: "10px",
             }}
           >
-            <Calendar handleCalendarClose={handleCalendarClose} />
+            <Calendar
+              handleCalendarClose={handleCalendarClose}
+              calendarClose={handleCalendarClose}
+            />
           </Box>
 
           <Box
@@ -700,12 +633,13 @@ const PageHeader = () => {
               marginTop: "20px",
             }}
           >
-            <Button
+            {/* <Button
               variant="contained"
               onClick={handleCalendarClose}
               sx={{
                 flex: 1,
-                background: "linear-gradient(90deg, #ff6f61, #ff8a73)",
+                background:
+                  "linear-gradient(90deg,rgb(203, 8, 229),rgb(188, 59, 205))",
                 color: "#fff",
                 textTransform: "uppercase",
                 fontWeight: "bold",
@@ -713,12 +647,13 @@ const PageHeader = () => {
                 borderRadius: "8px",
                 boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
                 "&:hover": {
-                  background: "linear-gradient(90deg, #ff8a73, #ff6f61)",
+                  background:
+                    "linear-gradient(90deg,rgb(164, 70, 177),rgb(146, 86, 154))",
                 },
               }}
             >
               Close
-            </Button>
+            </Button> */}
           </Box>
         </Box>
       </Modal>

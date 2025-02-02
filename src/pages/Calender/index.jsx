@@ -8,7 +8,7 @@ import "./styles.scss";
 import { Box, Button } from "@mui/material";
 import CustomModal from "../../components/CustomModal";
 
-const Calendar = ({ handleCalendarClose }) => {
+const Calendar = ({ calendarClose }) => {
   const [selectedDates, setSelectedDates] = useState([null, null]);
   const [openModal, setOpenModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -30,6 +30,7 @@ const Calendar = ({ handleCalendarClose }) => {
       setModalMessage("Thank you! Your event dates are confirmed.");
       setModalType("success");
       navigate("/");
+      calendarClose();
     } else {
       alert("Please select a date range first.");
     }

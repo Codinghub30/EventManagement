@@ -30,20 +30,15 @@ const Footer = () => {
           <ul>
             <li>Contact Us</li>
             <li>About Us</li>
-            <li>Careers</li>
-            <li>Press</li>
           </ul>
         </div>
 
         <div className="footer-column">
           <h3>Policy</h3>
           <ul>
-            <li>Return Policy</li>
-            <li>Terms of Use</li>
-            <li>Sitemap</li>
-            <li>Security</li>
-            <li>Privacy</li>
-            <li>EPR Compliance</li>
+            <li>Privacy Policy</li>
+            <li>Terms and conditions</li>
+            <li>Refund</li>
           </ul>
         </div>
 

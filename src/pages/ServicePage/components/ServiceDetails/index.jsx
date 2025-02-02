@@ -72,7 +72,7 @@ const ServiceDetails = () => {
   };
 
   return (
-    <Box className="service-details" sx={{ p: 2 }}>
+    <Box className="service-details" sx={{ p: 6, pb: 20 }}>
       <Typography
         variant="p"
         className="service-details-heading"

@@ -15,11 +15,12 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import ReviewSection from "./components/ReviewSection";
 import "./styles.scss";
 import authService from "../../../../api/ApiService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../../redux/slice/LoaderSlice";
 import { getErrorMessage } from "../../../../utils/helperFunc";
 import { addToCart } from "../../../../redux/slice/CartSlice";
 import CustomModal from "../../../../components/CustomModal";
+import { addService } from "../../../../redux/slice/serviceSlice";
 
 const SingleService = () => {
   const { id } = useParams();
@@ -29,6 +30,7 @@ const SingleService = () => {
   const [openModals, setOpenModals] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("success");
+  const servicesItem = useSelector((state) => state.services.services);
   const dispatch = useDispatch();
 
   const fetchServiceData = async () => {
@@ -56,14 +58,32 @@ const SingleService = () => {
   };
 
   const handleAddService = () => {
+    // dispatch(
+    //   addToCart({
+    //     _id: Date.now(),
+    //     product_image: serviceData.shop_image_or_logo,
+    //     product_name: serviceData.shop_name,
+    //     product_price: serviceData.pricing,
+    //   })
+
     dispatch(
-      addToCart({
-        _id: Date.now(),
-        product_image: serviceData.shop_image_or_logo,
+      addService({
+        _id: serviceData._id,
+        product_image:
+          serviceData.shop_image_or_logo ||
+          "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
         product_name: serviceData.shop_name,
         product_price: serviceData.pricing,
+        vendor_name: serviceData.vendor_name,
+        shop_name: serviceData.shop_name,
+        vendor_id: serviceData.vendor_id,
+        category: serviceData.category,
+        commission_percentage: serviceData.commission_percentage,
+        commission_tax: serviceData.commission_tax,
+        quantity: 1,
       })
     );
+
     setOpenModals(true);
     setModalMessage("Service is added to the cart");
     setModalType("success");

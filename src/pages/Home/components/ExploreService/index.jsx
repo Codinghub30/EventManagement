@@ -5,87 +5,34 @@ import HomeWorkIcon from "@mui/icons-material/HomeWork";
 import HotelIcon from "@mui/icons-material/Hotel";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
-  BuildOutlined,
   DesignServicesOutlined,
-  CodeOutlined,
   VideoLibraryOutlined,
-  BrushOutlined,
-  AppsOutlined,
 } from "@mui/icons-material";
 import "./styles.scss";
 
 const ExploreService = () => {
   const navigate = useNavigate();
 
-  const fetchApi = async () => {
-    // Placeholder for API integration
-    // const res = await authService.getServices();
-    // console.log(res);
-  };
-
   useEffect(() => {
-    fetchApi();
+    // Placeholder for API integration
   }, []);
 
   const services = [
-    {
-      id: 1,
-      ServiceName: "Resort",
-      image: <HomeWorkIcon style={{ width: "4rem", height: "37px" }} />,
-    },
-    {
-      id: 2,
-      ServiceName: "Rooms",
-      image: <PeopleAltIcon style={{ width: "4rem", height: "37px" }} />,
-    },
-    {
-      id: 3,
-      ServiceName: "Hotels",
-      image: <HotelIcon style={{ width: "4rem", height: "37px" }} />,
-    },
-    {
-      id: 4,
-      ServiceName: " Freelancer",
-      image: <PeopleAltIcon style={{ width: "4rem", height: "37px" }} />,
-    },
-    {
-      id: 5,
-      ServiceName: "Photographers",
-      image: <VideoLibraryOutlined style={{ width: "4rem", height: "37px" }} />,
-    },
-    {
-      id: 6,
-      ServiceName: "Stage Designers",
-      image: (
-        <DesignServicesOutlined style={{ width: "4rem", height: "37px" }} />
-      ),
-    },
+    { id: 1, name: "Resort", icon: <HomeWorkIcon /> },
+    { id: 2, name: "Rooms", icon: <PeopleAltIcon /> },
+    { id: 3, name: "Hotels", icon: <HotelIcon /> },
+    { id: 4, name: "Freelancer", icon: <PeopleAltIcon /> },
+    { id: 5, name: "Photographers", icon: <VideoLibraryOutlined /> },
+    { id: 6, name: "Stage Designers", icon: <DesignServicesOutlined /> },
   ];
-
-  const handleService = () => {
-    navigate("/services");
-  };
-
-  const handleServiceClick = (serviceName) => {
-    navigate(`/service/${serviceName}`);
-  };
 
   return (
     <Box sx={{ padding: "2rem", textAlign: "center" }}>
       <Typography
         sx={{
-          color: "#17a2b8",
-          fontSize: "1rem",
-          fontWeight: "bold",
-        }}
-      >
-        Future
-      </Typography>
-      <Typography
-        sx={{
           fontSize: "2rem",
           fontWeight: "bold",
-          color: "#343a40",
+          color: "#6a0dad",
           marginBottom: "2rem",
         }}
       >
@@ -103,54 +50,49 @@ const ExploreService = () => {
           gap: "1.5rem",
         }}
       >
-        {services.map((item) => (
+        {services.map((service) => (
           <Box
-            key={item.id}
+            key={service.id}
             sx={{
-              backgroundColor: "#f1f8ff",
-              borderRadius: "10px",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              padding: "1.5rem",
+              background: "linear-gradient(135deg, #e3cae4, #e35fea)",
+              borderRadius: "12px",
+              boxShadow: "0px 5px 15px rgba(160, 32, 240, 0.5)",
+              padding: "2rem",
               textAlign: "center",
               cursor: "pointer",
-              transition: "transform 0.3s ease",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
+              color: "#fff",
               "&:hover": {
                 transform: "scale(1.05)",
+                boxShadow: "0px 8px 20px rgba(160, 32, 240, 0.7)",
               },
             }}
-            onClick={() => handleServiceClick(item.ServiceName)}
+            onClick={() => navigate(`/service/${service.name}`)}
           >
             <Box
-              src={item.image}
-              alt={item.ServiceName}
-              style={{
-                width: "115px",
-                height: "87px",
-                objectFit: "contain",
+              sx={{
+                background: "rgba(255, 255, 255, 0.2)",
+                width: "70px",
+                height: "70px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "auto",
                 marginBottom: "1rem",
-                borderRadius: "1rem",
+                boxShadow: "0px 0px 15px rgba(255, 255, 255, 0.3)",
               }}
-              className="icon-container"
             >
-              {item.image}
+              {service.icon}
             </Box>
             <Typography
               sx={{
                 fontWeight: "bold",
                 fontSize: "1.2rem",
                 marginBottom: "0.5rem",
-                color: "#343a40",
               }}
             >
-              {item.ServiceName}
-            </Typography>
-            <Typography
-              sx={{
-                color: "#6c757d",
-                fontSize: "0.9rem",
-              }}
-            >
-              {item.description}
+              {service.name}
             </Typography>
           </Box>
         ))}
@@ -158,16 +100,17 @@ const ExploreService = () => {
 
       <Button
         variant="contained"
-        onClick={handleService}
+        onClick={() => navigate("/services")}
         sx={{
           marginTop: "2rem",
-          padding: "0.5rem 2rem",
-          textTransform: "capitalize",
+          padding: "0.7rem 2rem",
           fontWeight: "bold",
-          backgroundColor: "#007bff",
+          fontSize: "1rem",
+          background: "linear-gradient(90deg, #8a2be2, #4b0082)",
           color: "#fff",
+          borderRadius: "8px",
           "&:hover": {
-            backgroundColor: "#0056b3",
+            background: "linear-gradient(90deg, #4b0082, #8a2be2)",
           },
         }}
       >

@@ -5,7 +5,9 @@ import locationReducer from "../slice/locationSlice";
 import {
   persistedCartReducer,
   persistedAuthReducer,
-  persistedDateReducer, // Use persistedDateReducer
+  persistedDateReducer,
+  persistedTechReducer,
+  persistedServiceReducer,
 } from "../persists/persistsReducer";
 
 const store = configureStore({
@@ -14,7 +16,9 @@ const store = configureStore({
     loader: loaderReducer,
     auth: persistedAuthReducer,
     location: locationReducer,
-    date: persistedDateReducer, // Use the correct reducer
+    date: persistedDateReducer,
+    services: persistedServiceReducer,
+    technicians: persistedTechReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

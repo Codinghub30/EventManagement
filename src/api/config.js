@@ -2,6 +2,9 @@ export const config = {
   BASEURL: "https://api.nithyaevent.com/api",
   IMAGEURL: "https://api.nithyaevent.com/",
 
+  // BASEURL: "http://192.168.1.103:9000/api",
+  // IMAGEURL: "http://192.168.1.103:9000/",
+
   // USER
   USER_REGISTER: "/user/user-register",
   USER_LOGIN: "/user/user-login",

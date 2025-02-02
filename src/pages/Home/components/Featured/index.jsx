@@ -38,7 +38,7 @@ const Featured = () => {
         }}
       >
         <Typography variant="h5" sx={{ fontWeight: "bold", color: "#343a40" }}>
-          New Arrivals
+          Featured Products
         </Typography>
         <Button
           variant="outlined"
@@ -130,25 +130,33 @@ const Featured = () => {
                   ${item.product_price}
                 </Typography>
               </Box>
-              <Button
-                variant="outlined"
-                size="small"
+              <Box
                 sx={{
-                  width: "19rem",
-                  textTransform: "capitalize",
-                  fontWeight: "bold",
-                  marginTop: "1rem",
-                  borderColor: "#007bff",
-                  color: "black",
-                  border: "2px solid black",
-                  "&:hover": {
-                    backgroundColor: "#007bff",
-                    color: "#fff",
-                  },
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "0 auto",
                 }}
               >
-                Add to Bag
-              </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    width: "15rem",
+                    textTransform: "capitalize",
+                    fontWeight: "bold",
+                    marginTop: "1rem",
+                    backgroundColor: "#c026d3",
+                    color: "white",
+                    border: "none",
+                    "&:hover": {
+                      borderColor: "black",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Add to Bag
+                </Button>
+              </Box>
             </CardContent>
           </Card>
         ))}

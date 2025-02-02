@@ -41,7 +41,7 @@ const Trusted = () => {
       <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
         <Typography
           sx={{
-            color: "#17a2b8",
+            color: "#db62ea",
             fontSize: { xs: "1rem", md: "1.2rem" },
             fontWeight: "bold",
           }}
@@ -78,7 +78,7 @@ const Trusted = () => {
           flexDirection: { xs: "column", md: "row" },
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "#4299e1",
+          backgroundColor: "#ed6bfd",
           borderRadius: "10px",
           padding: { xs: "1rem", md: "3rem" },
           color: "#fff",

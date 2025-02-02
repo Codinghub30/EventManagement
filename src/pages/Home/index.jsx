@@ -119,24 +119,11 @@ const Home = () => {
                   >
                     {card.subtitle}
                   </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      padding: "0.5rem 2rem",
-                      fontSize: "1rem",
-                      fontWeight: "bold",
-                      textTransform: "none",
-                    }}
-                  >
-                    Get Started
-                  </Button>
                 </Box>
               </Box>
             ))}
           </Slider>
         </Box>
-        <Box></Box>
       </Box>
       <ExploreCategory />
       <Trusted />

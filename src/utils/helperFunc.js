@@ -71,3 +71,29 @@ export const formatCurrencyIntl = (amount) => {
     maximumFractionDigits: 2,
   }).format(amount);
 };
+
+export const formatDate = (dateString, formatType = "YYYY-MM-DD HH:mm A") => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+
+  const formatOptions = {
+    "YYYY-MM-DD": { year: "numeric", month: "2-digit", day: "2-digit" },
+    "DD/MM/YYYY": { day: "2-digit", month: "2-digit", year: "numeric" },
+    "MMMM D, YYYY": { year: "numeric", month: "long", day: "numeric" },
+    "YYYY-MM-DD HH:mm A": {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    },
+    "dddd, MMMM D YYYY": {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  };
+
+  const options = formatOptions[formatType] || formatOptions["YYYY-MM-DD"];
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};

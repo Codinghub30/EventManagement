@@ -93,7 +93,7 @@ const Faq = () => {
         <Box sx={{ flex: 1 }}>
           <Typography
             sx={{
-              color: "#17a2b8",
+              color: "#ed6bfd",
               fontWeight: "bold",
               fontSize: "1.2rem",
               textTransform: "uppercase",

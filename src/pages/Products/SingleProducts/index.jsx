@@ -39,6 +39,7 @@ import ImageSlider from "./components/SliderImage";
 
 // styles
 import "./styles.scss";
+import { addTechnician } from "../../../redux/slice/technicianSlice";
 
 const SingleProducts = () => {
   const [cart, setCart] = useState([]);
@@ -84,7 +85,6 @@ const SingleProducts = () => {
         .slice(0, 4);
 
       setRelatedProduct(filteredProducts);
-      console.log("The ", filteredProducts);
 
       dispatch(setLoading(false));
     } catch (error) {
@@ -166,13 +166,19 @@ const SingleProducts = () => {
     if (technicians && technicians.length > 0) {
       technicians.forEach((technician) => {
         dispatch(
-          addToCart({
+          addTechnician({
             _id: `tech_${technician._id}`,
             product_image:
               technician.image ||
               "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
-            product_name: `${technician.service_name} (${technician.category})`,
+            product_name: `${technician.service_name}`,
             product_price: technician.price,
+            vendor_name: technician.vendor_name,
+            shop_name: technician.shop_name,
+            vendor_id: technician.vendor_id,
+            category: technician.category,
+            commission_percentage: technician.commission_percentage,
+            commission_tax: technician.commission_tax,
             quantity: 1,
           })
         );
@@ -426,8 +432,6 @@ const SingleProducts = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: "0.5rem",
-                    // max-width: 400px;
-                    // /* margin: auto;
                   }}
                 >
                   <ReplayIcon sx={{ fontSize: "1.2rem", color: "#ff6f61" }} />

@@ -151,11 +151,11 @@ const ExploreCategory = () => {
       <Box sx={{ textAlign: "center", marginTop: "2rem" }}>
         <Button
           variant="contained"
-          color="primary"
           sx={{
             padding: "10px 20px",
             fontSize: "1rem",
             fontWeight: "bold",
+            backgroundColor: "#c026d3",
           }}
           onClick={handleViewAll}
         >

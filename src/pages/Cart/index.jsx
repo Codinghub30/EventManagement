@@ -26,23 +26,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import authService from "../../api/ApiService";
 import {
   addToCart,
+  clearCart,
   quantityDecrement,
   quantityIncrement,
   removeFromCart,
 } from "../../redux/slice/CartSlice";
 import { getErrorMessage } from "../../utils/helperFunc";
 import EventDetails from "./components/EventDetails";
+import { setLoading } from "../../redux/slice/LoaderSlice";
+import BreadCrumb from "../../components/BreadCrumb";
+import {
+  clearTechnicians,
+  decrementTechnicianQuantity,
+  incrementTechnicianQuantity,
+  removeTechnician,
+} from "../../redux/slice/technicianSlice";
+import { clearServices, removeService } from "../../redux/slice/serviceSlice";
 
 // Assests
 import Check from "../../assets/check.png";
 
 // Styles
 import "./styles.scss";
-import { setLoading } from "../../redux/slice/LoaderSlice";
-import BreadCrumb from "../../components/BreadCrumb";
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cart);
+  const servicesItem = useSelector((state) => state.services.services);
+  const technicianItem = useSelector((state) => state.technicians.technicians);
+  const allItems = [...cartItems, ...servicesItem, ...technicianItem];
   const [technicians, setTechnicians] = useState([]);
   const dispatch = useDispatch();
   const { startDate, endDate, numberOfDays } = useSelector(
@@ -61,32 +72,64 @@ const Cart = () => {
     try {
       const res = await authService.getAllTechnicians();
       setTechnicians(res.data.tech);
-      console.log(res.data.tech);
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
       getErrorMessage(error);
     }
   };
-  const handleAddTechnicianToCart = (technician) => {
-    const technicianItem = {
-      _id: technician._id,
-      product_image:
-        "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
-      product_name: `${technician.service_name} (${technician.category})`,
-      product_price: technician.price,
-      quantity: 1,
-      vendor_name: technician.vendor_name,
-    };
+  // const handleAddTechnicianToCart = (technician) => {
+  //   const technicianItem = {
+  //     _id: technician._id,
+  //     product_image:
+  //       "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
+  //     product_name: `${technician.service_name} (${technician.category})`,
+  //     product_price: technician.price,
+  //     quantity: 1,
+  //     vendor_name: technician.vendor_name,
+  //     vendor_id: technician.vendor_id,
+  //     shop_name: technician.shop_name,
+  //   };
 
-    dispatch(addToCart(technicianItem));
-  };
-  const totalPrice = cartItems.reduce((total, item) => {
+  //   dispatch(addToCart(technicianItem));
+  // };
+  const totalPrice = allItems.reduce((total, item) => {
     if (!item.product_price) return total;
     const price = item.product_price;
     return total + (price * item.quantity || 0);
   }, 0);
+  const handleQuantityDecrement = (itemId) => {
+    if (cartItems.some((cartItem) => cartItem._id === itemId)) {
+      dispatch(quantityDecrement(itemId));
+    } else if (technicianItem.some((tech) => tech._id === itemId)) {
+      dispatch(decrementTechnicianQuantity(itemId));
+    }
+    // else if (servicesItem.some((service) => service._id === itemId)) {
+    //   dispatch(decrementService(itemId));
+    // }
+  };
 
+  const handleQuantityIncrement = (itemId) => {
+    if (cartItems.some((cartItem) => cartItem._id === itemId)) {
+      dispatch(quantityIncrement(itemId));
+    } else if (technicianItem.some((tech) => tech._id === itemId)) {
+      dispatch(incrementTechnicianQuantity(itemId));
+    }
+  };
+  const handleDeleteItem = (itemId) => {
+    if (cartItems.some((cartItems) => cartItems._id === itemId)) {
+      dispatch(removeFromCart(itemId));
+    } else if (technicianItem.some((tech) => tech._id === itemId)) {
+      dispatch(removeTechnician(itemId));
+    } else if (servicesItem.some((service) => service._id === itemId)) {
+      dispatch(removeService(itemId));
+    }
+  };
+  const handleClearAll = () => {
+    dispatch(clearCart()); // Clears all products
+    dispatch(clearTechnicians()); // Clears all technicians
+    dispatch(clearServices());
+  };
   useEffect(() => {
     getTechnicians();
   }, []);
@@ -106,7 +149,7 @@ const Cart = () => {
         {/* Cart Product Section */}
         <Grid item xs={12} md={8}>
           {/* <Paper elevation={3} sx={{ padding: "1.5rem" }}> */}
-          {cartItems.length > 0 ? (
+          {allItems.length > 0 ? (
             <TableContainer sx={{ width: "90%" }}>
               <Table>
                 <TableHead>
@@ -121,7 +164,7 @@ const Cart = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {cartItems.map((item) => (
+                  {allItems.map((item) => (
                     <TableRow key={item._id}>
                       <TableCell
                         sx={{
@@ -154,6 +197,8 @@ const Cart = () => {
                         </Box>
                       </TableCell>
                       <TableCell>${item.product_price.toFixed(2)}</TableCell>
+
+                      {/* Quantity */}
                       <TableCell>
                         <Box
                           sx={{
@@ -167,10 +212,7 @@ const Cart = () => {
                         >
                           <IconButton
                             size="small"
-                            onClick={() =>
-                              dispatch(quantityDecrement(item._id))
-                            }
-                            disabled={item.quantity === 1 || !item.quantity}
+                            onClick={() => handleQuantityDecrement(item._id)}
                           >
                             <RemoveIcon />
                           </IconButton>
@@ -179,15 +221,13 @@ const Cart = () => {
                           </Typography>
                           <IconButton
                             size="small"
-                            onClick={() =>
-                              dispatch(quantityIncrement(item._id))
-                            }
-                            disabled={!item.quantity}
+                            onClick={() => handleQuantityIncrement(item._id)}
                           >
                             <AddIcon />
                           </IconButton>
                         </Box>
                       </TableCell>
+
                       <TableCell>
                         {item.product_price && item.quantity !== undefined
                           ? (item.product_price * item.quantity).toFixed(2)
@@ -195,7 +235,7 @@ const Cart = () => {
                       </TableCell>
                       <TableCell>
                         <IconButton
-                          onClick={() => dispatch(removeFromCart(item._id))}
+                          onClick={() => handleDeleteItem(item._id)}
                           color="error"
                         >
                           <DeleteIcon />
@@ -215,6 +255,7 @@ const Cart = () => {
         </Grid>
 
         {/* Order Summary Section */}
+
         <Grid item xs={12} md={4}>
           {/* <Paper elevation={3} sx={{ padding: "1.5rem", borderRadius: "8px" }}> */}
           <Typography
@@ -310,7 +351,7 @@ const Cart = () => {
         cartItems={cartItems}
         billingDetails={{
           cartValue: totalPrice,
-          eventDays: 2,
+          eventDays: numberOfDays,
           baseAmount: totalPrice * 0.9,
           tdsCharges: totalPrice * 0.02,
           amountAfterTds: totalPrice * 0.98,
@@ -319,6 +360,7 @@ const Cart = () => {
           totalGst: totalPrice * 0.18,
           grandTotal: totalPrice * 1.18 - totalPrice * 0.02,
         }}
+        handleClearAll={handleClearAll}
       />
     </Box>
   );

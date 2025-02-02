@@ -43,9 +43,6 @@ const CustomModal = ({ open, onClose, message, type }) => {
         <Typography variant="body1" sx={{ mb: 3 }}>
           {message}
         </Typography>
-        <Button variant="contained" color="primary" onClick={onClose}>
-          Close
-        </Button>
       </Box>
     </Modal>
   );
