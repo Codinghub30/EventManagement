@@ -104,10 +104,10 @@ const Cart = () => {
   const amountAfterTds = totalPrice - tdsCharges;
   const grandTotal = amountAfterTds + totalGst;
 
-  const handleQuantityDecrement = (itemId) => {
-    if (cartItems.some((cartItem) => cartItem._id === itemId)) {
+  const handleQuantityDecrement = (itemId, type) => {
+    if (type === "product") {
       dispatch(quantityDecrement(itemId));
-    } else if (technicianItem.some((tech) => tech._id === itemId)) {
+    } else if (type === "technicians") {
       dispatch(decrementTechnicianQuantity(itemId));
     }
     // else if (servicesItem.some((service) => service._id === itemId)) {
@@ -115,13 +115,14 @@ const Cart = () => {
     // }
   };
 
-  const handleQuantityIncrement = (itemId) => {
-    if (cartItems.some((cartItem) => cartItem._id === itemId)) {
+  const handleQuantityIncrement = (itemId, type) => {
+    if (type === "product") {
       dispatch(quantityIncrement(itemId));
-    } else if (technicianItem.some((tech) => tech._id === itemId)) {
+    } else if (type === "technicians") {
       dispatch(incrementTechnicianQuantity(itemId));
     }
   };
+
   const handleDeleteItem = (itemId) => {
     if (cartItems.some((cartItems) => cartItems._id === itemId)) {
       dispatch(removeFromCart(itemId));
@@ -181,13 +182,17 @@ const Cart = () => {
                           </TableCell>
                           <TableCell>
                             <IconButton
-                              onClick={() => handleQuantityDecrement(item._id)}
+                              onClick={() =>
+                                handleQuantityDecrement(item._id, "product")
+                              }
                             >
                               <RemoveIcon />
                             </IconButton>
                             {item.quantity || 1}
                             <IconButton
-                              onClick={() => handleQuantityIncrement(item._id)}
+                              onClick={() =>
+                                handleQuantityIncrement(item._id, "product")
+                              }
                             >
                               <AddIcon />
                             </IconButton>
@@ -216,13 +221,17 @@ const Cart = () => {
                           <TableCell>₹{item.price?.toFixed(2)}</TableCell>
                           <TableCell>
                             <IconButton
-                              onClick={() => handleQuantityDecrement(item._id)}
+                              onClick={() =>
+                                handleQuantityDecrement(item._id, "technicians")
+                              }
                             >
                               <RemoveIcon />
                             </IconButton>
                             {item.quantity || 1}
                             <IconButton
-                              onClick={() => handleQuantityIncrement(item._id)}
+                              onClick={() =>
+                                handleQuantityIncrement(item._id, "technicians")
+                              }
                             >
                               <AddIcon />
                             </IconButton>
