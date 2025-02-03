@@ -1,21 +1,30 @@
+// React related imports
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Paper, Divider, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+// Third party Library
+import { Box, Typography, Grid, Paper, Divider, Button } from "@mui/material";
+
+// Custom Components
 import authService from "../../../../api/ApiService";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import "./styles.scss";
-import { useDispatch } from "react-redux";
 import { setLoading } from "../../../../redux/slice/LoaderSlice";
 import {
   formatCurrencyIntl,
   getErrorMessage,
+  formatDate,
 } from "../../../../utils/helperFunc";
+
+// styles
+import "./styles.scss";
 
 const BookingDetails = () => {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
   const [products, setProducts] = useState([]);
+  const [items, setItems] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,8 +32,42 @@ const BookingDetails = () => {
       try {
         dispatch(setLoading(true));
         const res = await authService.getOrder(id);
-        setBooking(res.data.orderId);
-        setProducts(res.data.orderId.product_data);
+        const order = res.data.orderId;
+
+        console.log(res);
+        console.log(order);
+        setBooking(order);
+
+        // Combine all items into a single array
+        const combinedItems = [
+          ...(order.product_data || []).map((item) => ({
+            id: item.id || item._id,
+            name: item.productName || item.product_name || "N/A",
+            price: item.productPrice || item.product_price || 0,
+            quantity: item.quantity || 1,
+            seller: item.sellerName || item.vendor_name || "Unknown",
+            category: "Product",
+          })),
+          ...(order.service_data || []).map((item) => ({
+            id: item.id || item._id,
+            name: item.service_name || "N/A",
+            price: item.service_price || 0,
+            quantity: item.quantity || 1,
+            seller: item.sellerName || item.vendor_name || "Unknown",
+            category: "Service",
+          })),
+          ...(order.tech_data || []).map((item) => ({
+            id: item.id || item._id,
+            name: item.product_name || "N/A",
+            price: item.product_price || 0,
+            quantity: item.quantity || 1,
+            seller: item.vendor_name || "Unknown",
+            category: "Technician",
+          })),
+        ];
+
+        setItems(combinedItems);
+
         dispatch(setLoading(false));
       } catch (error) {
         dispatch(setLoading(false));
@@ -40,7 +83,7 @@ const BookingDetails = () => {
 
     // Add a border and title
     doc.setFillColor(240, 240, 240);
-    doc.rect(5, 5, 200, 287, "F"); // Background rectangle
+    doc.rect(5, 5, 200, 287, "F");
     doc.setFontSize(20);
     doc.setTextColor(40, 40, 40);
     doc.text("Invoice", 105, 15, null, null, "center");
@@ -56,49 +99,114 @@ const BookingDetails = () => {
     yPosition += lineSpacing;
     doc.text(`Location: ${booking.event_location}`, leftMargin, yPosition);
     yPosition += lineSpacing;
-    doc.text(`Date: ${booking.event_date}`, leftMargin, yPosition);
+    doc.text(
+      `Date: ${formatDate(booking.event_start_date)}`,
+      leftMargin,
+      yPosition
+    );
     yPosition += lineSpacing;
     doc.text(`Start Time: ${booking.event_start_time}`, leftMargin, yPosition);
     yPosition += lineSpacing;
     doc.text(`End Time: ${booking.event_end_time}`, leftMargin, yPosition);
 
-    // Products Table
-    const tableColumn = ["Product Name", "Price", "Quantity"];
-    const tableRows = [];
+    yPosition += 10;
 
-    products.forEach((product) => {
-      const productData = [
-        product.productName,
-        `₹${product.productPrice.toString().replace(/[^\d.]/g, "")}`,
-        product.quantity,
+    // Function to generate tables
+    const generateTable = (title, data) => {
+      if (data.length === 0) return;
+
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text(title, leftMargin, yPosition);
+      yPosition += lineSpacing;
+
+      const tableColumn = [
+        "Item Name",
+        "Category",
+        "Price",
+        "Quantity",
+        "Seller",
       ];
+      const tableRows = [];
 
-      tableRows.push(productData);
-    });
+      data.forEach((item) => {
+        tableRows.push([
+          item.name,
+          item.category,
+          `₹${item.price}`,
+          item.quantity,
+          item.seller,
+        ]);
+      });
 
-    doc.autoTable({
-      startY: yPosition + 10,
-      head: [tableColumn],
-      body: tableRows,
-      styles: {
-        headStyles: { fillColor: [40, 116, 240], textColor: [255, 255, 255] },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-      },
-    });
+      doc.autoTable({
+        startY: yPosition,
+        head: [tableColumn],
+        body: tableRows,
+        styles: {
+          headStyles: { fillColor: [40, 116, 240], textColor: [255, 255, 255] },
+          alternateRowStyles: { fillColor: [245, 245, 245] },
+        },
+      });
 
-    const finalY = doc.previousAutoTable.finalY + 10;
-    doc.text(`Base Amount: ₹${booking.base_amount}`, leftMargin, finalY);
-    doc.text(
-      `Amount After TDS Deduction: ₹${booking.amount_after_deduction}`,
-      leftMargin,
-      finalY + lineSpacing
+      yPosition = doc.previousAutoTable.finalY + 10;
+    };
+
+    // Generate tables for each category
+    generateTable(
+      "Products",
+      items.filter((item) => item.category === "Product")
     );
-    doc.text(
-      `GST Applied Value: ₹${booking.gst_applied_value}`,
-      leftMargin,
-      finalY + 2 * lineSpacing
+    generateTable(
+      "Services",
+      items.filter((item) => item.category === "Service")
+    );
+    generateTable(
+      "Technicians",
+      items.filter((item) => item.category === "Technician")
     );
 
+    // Payment Details
+    doc.setFontSize(12);
+    doc.text(
+      `Base Amount:${formatCurrencyIntl(booking.base_amount)}`,
+      leftMargin,
+      yPosition
+    );
+    yPosition += lineSpacing;
+    doc.text(
+      `Amount After TDS Deduction:${formatCurrencyIntl(
+        booking.amount_after_deduction
+      )}`,
+      leftMargin,
+      yPosition
+    );
+    yPosition += lineSpacing;
+    doc.text(
+      `GST Applied Value:${formatCurrencyIntl(booking.gst_applied_value)}`,
+      leftMargin,
+      yPosition
+    );
+    yPosition += lineSpacing;
+    doc.text(
+      `Total Paid Amount:${formatCurrencyIntl(booking.paid_amount)}`,
+      leftMargin,
+      yPosition
+    );
+    yPosition += lineSpacing;
+    doc.text(
+      `Payment Method: ${booking.payment_method}`,
+      leftMargin,
+      yPosition
+    );
+    yPosition += lineSpacing;
+    doc.text(
+      `Payment Status: ${booking.payment_status}`,
+      leftMargin,
+      yPosition
+    );
+
+    // Footer
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
     doc.text("Thank you for your business!", 105, 280, null, null, "center");
@@ -129,28 +237,25 @@ const BookingDetails = () => {
         <Grid item xs={12} md={8}>
           <Paper className="booking-box" elevation={3}>
             <Typography variant="h6" className="section-title">
-              Total: {products.length} items
+              Total: {items.length} items
             </Typography>
             <Box className="booking-product-container">
-              {products.map((item) => (
+              {items.map((item) => (
                 <Box className="booking-products" key={item.id}>
                   <Box className="product-details">
                     <Typography className="product-name">
-                      {item.productName}
-                    </Typography>
-                    <Typography className="product-dimensions">
-                      Dimensions: {item.productDimension}
+                      Product Name: {item.name}
                     </Typography>
                     <Typography className="product-seller">
-                      Seller: <strong>{item.sellerName}</strong>
+                      Seller: <strong>{item.seller}</strong>
                     </Typography>
                     <Typography className="product-store">
-                      Store: {item.store}
+                      Category: {item.category}
                     </Typography>
                   </Box>
                   <Box className="product-price-quantity">
                     <Typography className="product-price">
-                      ₹{item.productPrice}
+                      ₹{item.price}
                     </Typography>
                     <Typography className="product-quantity">
                       Quantity: {item.quantity}
@@ -209,7 +314,7 @@ const BookingDetails = () => {
               </Typography>
               <Typography variant="p" className="event-info-details">
                 <strong className="event-info-title">Date:</strong> &nbsp;{" "}
-                {booking.event_date}
+                {formatDate(booking.event_start_date)}
               </Typography>
               <Typography variant="p" className="event-info-details">
                 <strong className="event-info-title">Start Time:</strong> &nbsp;{" "}

@@ -7,21 +7,26 @@ import {
   YouTube,
   LocationOn,
 } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className="footer-main">
       <div className="footer-container">
         <div className="footer-column">
           <h3>Shop by Category</h3>
+
           <ul>
-            <li>Sounds</li>
-            <li>Lights</li>
-            <li>Fabrications</li>
-            <li>Shamiana</li>
-            <li>Fabrication</li>
-            <li>Video</li>
-            <li>Genset</li>
+            <li onClick={() => navigate("/category/sound")}>Sounds</li>
+            <li onClick={() => navigate("/category/lighting")}>Lights</li>
+            <li onClick={() => navigate("/category/fabrication")}>
+              Fabrications
+            </li>
+            <li onClick={() => navigate("/category/shamiana")}>Shamiana</li>
+            <li onClick={() => navigate("/category/video")}>Video</li>
+            <li onClick={() => navigate("/category/genset")}>Genset</li>
           </ul>
         </div>
 
@@ -36,8 +41,10 @@ const Footer = () => {
         <div className="footer-column">
           <h3>Policy</h3>
           <ul>
-            <li>Privacy Policy</li>
-            <li>Terms and conditions</li>
+            <li onClick={() => navigate("/privacyPolicy")}>Privacy Policy</li>
+            <li onClick={() => navigate("/TermsAndCondition")}>
+              Terms and conditions
+            </li>
             <li>Refund</li>
           </ul>
         </div>

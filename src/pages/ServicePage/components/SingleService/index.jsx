@@ -21,6 +21,7 @@ import { getErrorMessage } from "../../../../utils/helperFunc";
 import { addToCart } from "../../../../redux/slice/CartSlice";
 import CustomModal from "../../../../components/CustomModal";
 import { addService } from "../../../../redux/slice/serviceSlice";
+import moment from "moment";
 
 const SingleService = () => {
   const { id } = useParams();
@@ -38,6 +39,7 @@ const SingleService = () => {
     try {
       const response = await authService.getParticularService(id);
       setServiceData(response.data);
+      console.log(response.data);
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -57,30 +59,24 @@ const SingleService = () => {
     setOpenModal(!openModal);
   };
 
-  const handleAddService = () => {
-    // dispatch(
-    //   addToCart({
-    //     _id: Date.now(),
-    //     product_image: serviceData.shop_image_or_logo,
-    //     product_name: serviceData.shop_name,
-    //     product_price: serviceData.pricing,
-    //   })
+  console.log("The service data", serviceData);
 
+  const handleAddService = () => {
     dispatch(
       addService({
-        _id: serviceData._id,
-        product_image:
+        orderId: Date.now().toString(),
+        id: serviceData.vendor_id,
+        context: "service",
+        shopName: serviceData.shop_name,
+        storeImage:
           serviceData.shop_image_or_logo ||
           "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
-        product_name: serviceData.shop_name,
-        product_price: serviceData.pricing,
-        vendor_name: serviceData.vendor_name,
-        shop_name: serviceData.shop_name,
-        vendor_id: serviceData.vendor_id,
-        category: serviceData.category,
-        commission_percentage: serviceData.commission_percentage,
-        commission_tax: serviceData.commission_tax,
-        quantity: 1,
+        vendorName: serviceData.vendor_name,
+        pricing: serviceData.pricing,
+        totalPrice: serviceData.pricing * 1,
+        orderDate: moment().utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+        commissionTax: serviceData.commission_tax || 0,
+        commissionPercentage: serviceData.commission_percentage || 0,
       })
     );
 
@@ -88,6 +84,38 @@ const SingleService = () => {
     setModalMessage("Service is added to the cart");
     setModalType("success");
   };
+
+  // const handleAddService = () => {
+  //   // dispatch(
+  //   //   addToCart({
+  //   //     _id: Date.now(),
+  //   //     product_image: serviceData.shop_image_or_logo,
+  //   //     product_name: serviceData.shop_name,
+  //   //     product_price: serviceData.pricing,
+  //   //   })
+
+  //   dispatch(
+  //     addService({
+  //       id: serviceData.vendor_id,
+  //       product_image:
+  //         serviceData.shop_image_or_logo ||
+  //         "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
+  //       product_name: serviceData.shop_name,
+  //       product_price: serviceData.pricing,
+  //       vendor_name: serviceData.vendor_name,
+  //       shop_name: serviceData.shop_name,
+  //       // vendor_id: serviceData.vendor_id,
+  //       category: serviceData.category,
+  //       commission_percentage: serviceData.commission_percentage,
+  //       commission_tax: serviceData.commission_tax,
+  //       quantity: 1,
+  //     })
+  //   );
+
+  //   setOpenModals(true);
+  //   setModalMessage("Service is added to the cart");
+  //   setModalType("success");
+  // };
 
   if (!serviceData) return <Typography>Loading...</Typography>;
   console.log(serviceData);

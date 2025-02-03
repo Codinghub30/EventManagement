@@ -55,6 +55,7 @@ import Bookings from "../../assets/bookingss.png";
 import DigiService from "../../assets/digitalService.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import EventIcon from "@mui/icons-material/Event";
 import InfoIcon from "@mui/icons-material/Info";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -280,7 +281,7 @@ const PageHeader = () => {
             <Box>
               <Box sx={{ display: "flex", gap: "1rem" }}>
                 <Box
-                  sx={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                  sx={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
                 >
                   <FmdGoodOutlinedIcon sx={{ color: "black", fontSize: 24 }} />
                   <Typography
@@ -324,7 +325,7 @@ const PageHeader = () => {
                   </Badge>
                 </Link>
 
-                <Link
+                {/* <Link
                   to={"/cart"}
                   style={{
                     textDecoration: "none",
@@ -339,7 +340,7 @@ const PageHeader = () => {
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
-                </Link>
+                </Link> */}
                 {isAuthenticated ? (
                   <>
                     <IconButton onClick={handleMenuOpen}>
@@ -415,12 +416,27 @@ const PageHeader = () => {
                             borderRadius: "8px",
                           }}
                         >
+                          <SupervisorAccountIcon
+                            sx={{ marginRight: "12px", color: "#1b4b66" }}
+                          />
+                          <ListItemText primary="My Profile" />
+                        </ListItem>
+                        <ListItem
+                          button
+                          component={Link}
+                          to="/account"
+                          onClick={handleMenuClose}
+                          sx={{
+                            "&:hover": { backgroundColor: "#f5f5f5" },
+                            padding: "10px 15px",
+                            borderRadius: "8px",
+                          }}
+                        >
                           <PersonIcon
                             sx={{ marginRight: "12px", color: "#1b4b66" }}
                           />
-                          <ListItemText primary="My Account" />
+                          <ListItemText primary="Accounts" />
                         </ListItem>
-
                         <ListItem
                           button
                           component={Link}
@@ -458,7 +474,7 @@ const PageHeader = () => {
                         <ListItem
                           button
                           component={Link}
-                          to="/help-center"
+                          to="/privacyPolicy"
                           onClick={handleMenuClose}
                           sx={{
                             "&:hover": { backgroundColor: "#f5f5f5" },
@@ -469,13 +485,13 @@ const PageHeader = () => {
                           <HelpOutlineIcon
                             sx={{ marginRight: "12px", color: "#1b4b66" }}
                           />
-                          <ListItemText primary="Help Center" />
+                          <ListItemText primary="Privacy Policy" />
                         </ListItem>
 
                         <ListItem
                           button
                           component={Link}
-                          to="/terms"
+                          to="/TermsAndCondition"
                           onClick={handleMenuClose}
                           sx={{
                             "&:hover": { backgroundColor: "#f5f5f5" },

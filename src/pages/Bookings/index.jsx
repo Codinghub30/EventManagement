@@ -15,7 +15,7 @@ import authService from "../../api/ApiService";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { setLoading } from "../../redux/slice/LoaderSlice";
-import { getErrorMessage } from "../../utils/helperFunc";
+import { formatDate, getErrorMessage } from "../../utils/helperFunc";
 import EventImg from "../../assets/bookingImg.jpg";
 import SliderImage from "../Products/SingleProducts/components/SliderImage";
 import Sliders from "../../components/Sliders";
@@ -103,7 +103,7 @@ const Bookings = () => {
                 >
                   <EventIcon fontSize="small" color="secondary" />
                   <Typography variant="body2" sx={{ marginLeft: "0.5rem" }}>
-                    {booking.event_date}
+                    {formatDate(booking.event_start_date)}
                   </Typography>
                 </Box>
                 <Box

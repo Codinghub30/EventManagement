@@ -2,16 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  TextField,
   Typography,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import {
-  Autocomplete,
-  GoogleMap,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import CloseIcon from "@mui/icons-material/Close";
 import authService from "../../../../../../api/ApiService";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,8 +16,8 @@ import { getErrorMessage } from "../../../../../../utils/helperFunc";
 
 const LocationSection = ({ onContinue, setOpenLocation }) => {
   const [isAddingNewAddress, setIsAddingNewAddress] = useState(false);
-  const [autocomplete, setAutocomplete] = useState(null);
-  const [searchedLocation, setSearchedLocation] = useState("");
+  const [searchedLocation, setSearchedLocation] = useState(null);
+  const [selectedSavedAddress, setSelectedSavedAddress] = useState(null);
   const [savedLocations, setSavedLocations] = useState([]);
   const [locationCoords, setLocationCoords] = useState({
     lat: null,
@@ -38,25 +34,28 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     libraries: ["places"],
   });
 
-  const onLoadAutocomplete = (autocompleteInstance) => {
-    setAutocomplete(autocompleteInstance);
+  const handlePlaceSelect = async (place) => {
+    console.log("Place selected:", place);
+
+    if (!place) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ placeId: place.value.place_id }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        setSearchedLocation(results[0].formatted_address);
+        setSelectedSavedAddress(null);
+        setLocationCoords({
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng(),
+        });
+      }
+    });
   };
 
-  const onPlaceChanged = () => {
-    const place = autocomplete.getPlace();
-    const locationName = place?.formatted_address || "No address found";
-    const locationLat = place?.geometry?.location?.lat();
-    const locationLng = place?.geometry?.location?.lng();
-
-    setSearchedLocation(locationName);
-    setLocationCoords({ lat: locationLat, lng: locationLng });
-  };
   const getAddress = async () => {
     try {
       dispatch(setLoading(true));
       const res = await authService.getUserProfile(userDetails._id);
-      console.log("Getting user Address", res.data);
-
       setAddressDetails(res.data.saved_address);
       dispatch(setLoading(false));
     } catch (error) {
@@ -67,15 +66,9 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
 
   const handleSaveLocation = async () => {
     if (searchedLocation) {
-      const newLocation = {
-        id: Date.now(),
-        name: searchedLocation,
-        checked: false,
-      };
-      // setSavedLocations([...addressDetails, newLocation]);
-      const res = await authService.addAddress(userDetails._id, {
+      await authService.addAddress(userDetails._id, {
         saved_address: {
-          id: userDetails._id,
+          id: Date.now(),
           selected_region: searchedLocation,
           latitude: locationCoords.lat,
           longitude: locationCoords.lng,
@@ -89,32 +82,36 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
     }
   };
 
-  const handleCheckboxChange = (id) => {
-    setSavedLocations((prevLocations) =>
-      prevLocations.map((location) =>
-        location.id === id
-          ? { ...location, checked: !location.checked }
-          : location
-      )
-    );
+  const handleSavedAddressSelect = (location) => {
+    setSelectedSavedAddress(location);
+    setSearchedLocation(null);
+    setLocationCoords({ lat: location.latitude, lng: location.longitude });
   };
+
   const handleContinue = () => {
-    const selectedLocations = savedLocations
-      .filter((location) => location.checked)
-      .map((location) => location.name)
-      .join(", ");
-
-    console.log(selectedLocations);
-
-    onContinue({
-      address: selectedLocations,
-      lat: locationCoords.lat,
-      lng: locationCoords.lng,
-    });
+    if (searchedLocation) {
+      // If user searched a new location
+      onContinue({
+        address: searchedLocation,
+        lat: locationCoords.lat,
+        lng: locationCoords.lng,
+      });
+    } else if (selectedSavedAddress) {
+      // If user selected a saved address
+      onContinue({
+        address: selectedSavedAddress.selected_region,
+        lat: selectedSavedAddress.latitude,
+        lng: selectedSavedAddress.longitude,
+      });
+    } else {
+      alert("Please select or search for a location before continuing.");
+    }
   };
+
   useEffect(() => {
     getAddress();
   }, []);
+
   if (!isLoaded) {
     return <Typography>Loading...</Typography>;
   }
@@ -140,16 +137,17 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
 
       {addressDetails.map((location) => (
         <FormControlLabel
-          key={location.id}
+          key={location._id}
           control={
             <Checkbox
-              checked={location.checked}
-              onChange={() => handleCheckboxChange(location.id)}
+              checked={selectedSavedAddress?.id === location.id}
+              onChange={() => handleSavedAddressSelect(location)}
             />
           }
           label={location.selected_region}
         />
       ))}
+
       {!isAddingNewAddress ? (
         <Button
           variant="outlined"
@@ -171,24 +169,33 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
           <Typography variant="subtitle1" gutterBottom>
             Add New Address
           </Typography>
-          <Autocomplete
-            onLoad={onLoadAutocomplete}
-            onPlaceChanged={onPlaceChanged}
-          >
-            <TextField
-              label="Search Location"
-              placeholder="Enter a location"
-              fullWidth
-              value={searchedLocation}
-              onChange={(e) => setSearchedLocation(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-          </Autocomplete>
+
+          {/* Google Places Autocomplete Input */}
+          <GooglePlacesAutocomplete
+            apiKey={GOOGLE_MAPS_API_KEY}
+            selectProps={{
+              value: searchedLocation
+                ? { label: searchedLocation, value: searchedLocation }
+                : null,
+              onChange: handlePlaceSelect,
+              placeholder: "Enter a location",
+            }}
+          />
+
           <GoogleMap
-            mapContainerStyle={{ height: "200px", width: "100%" }}
-            center={{ lat: 12.9716, lng: 77.5946 }}
+            mapContainerStyle={{
+              height: "200px",
+              width: "100%",
+              marginTop: "10px",
+            }}
+            center={
+              locationCoords.lat
+                ? locationCoords
+                : { lat: 12.9716, lng: 77.5946 }
+            }
             zoom={12}
           />
+
           <Box display="flex" justifyContent="space-between" mt={2}>
             <Button
               variant="contained"
@@ -208,12 +215,13 @@ const LocationSection = ({ onContinue, setOpenLocation }) => {
           </Box>
         </Box>
       )}
+
       <Button
         variant="contained"
         fullWidth
         color="primary"
         sx={{ mt: 2 }}
-        onClick={handleContinue}
+        onClick={handleContinue} // Now properly handles saved address selection
       >
         Continue
       </Button>

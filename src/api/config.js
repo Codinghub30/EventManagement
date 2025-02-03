@@ -67,4 +67,7 @@ export const config = {
 
   // FAQ
   GET_ALL_FAQ: "/faq/get-all-faq",
+
+  //Terms and condition
+  TERMS_AND_CONDTION: "/user-tnc/get-all-tnc-user",
 };

@@ -23,6 +23,9 @@ import ServiceDetails from "./pages/ServicePage/components/ServiceDetails";
 import SingleService from "./pages/ServicePage/components/SingleService";
 import CalendarModal from "./pages/Calender";
 import Calendar from "./pages/Calender";
+import Toc from "./pages/Toc";
+import Terms from "./pages/Cart/components/Terms";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 // import LoginMobile from "./pages/LoginMobile";
 
 // Lazy-loaded components
@@ -236,6 +239,22 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/TermsAndCondition"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <Toc />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/privacyPolicy"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <PrivacyPolicy />
                 </PrivateRoute>
               }
             />

@@ -1,6 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
+
+// Third party library
 import { Box, Card, CardContent, Typography, Button } from "@mui/material";
+
+// Custom Components
 import Featured from "../../pages/Home/components/Featured/index";
 import ExploreService from "../../pages/Home/components/ExploreService/index";
 import NearVendor from "../../pages/Home/components/NearVendor/index";
@@ -8,17 +12,24 @@ import Details from "../../pages/Home/components/Details/index";
 import ExploreCategory from "../../pages/Home/components/ExploreCategory/index";
 import Gallery from "./components/Gallery";
 import Faq from "./components/Faq";
-import "./styles.scss";
-import MainImage from "../../assets/AboutMain.jpg";
 import Trusted from "./components/Trusted";
+
+// Assests
+import MainImage from "../../assets/AboutMain.jpg";
+import HomePage1 from "../../assets/HomePage1.jpg";
+import HomePage2 from "../../assets/HomePage2.jpeg";
+import HomePage3 from "../../assets/HomePage3.jpeg";
+
+// styles
+import "./styles.scss";
+
 const cardsData = [
   {
     title: "Make Your Event is Simple Now",
     subtitle:
       "Make your event planing stress-free. Streamline every detail with ease. Focus on what truly matters - Celebrating !",
     buttonText: "Book Now",
-    image:
-      "https://www.tourismsaskatchewan.com/-/media/things-to-do/events/sasktel-centre-concert-events.ashx",
+    image: HomePage1,
   },
   {
     title: "Plan with Ease, Celebrate in Style",
@@ -32,16 +43,14 @@ const cardsData = [
     subtitle:
       "Whether it's a wedding, party, or corporate gathering, we ensure your event shines and your guests are amazed.",
     buttonText: "Sign Up",
-    image:
-      "https://images.squarespace-cdn.com/content/v1/55c37beae4b0336075603f86/1443039469134-E9SLQBQ2OW1Y69KPKFDO/image-asset.jpeg?format=2500w",
+    image: HomePage2,
   },
   {
     title: "Your Event, Perfectly Crafted",
     subtitle:
       "From concept to execution, experience flawless event management for an unforgettable celebration.",
     buttonText: "Book Now",
-    image:
-      "https://media.licdn.com/dms/image/v2/C561BAQE-51J-8KkMZg/company-background_10000/company-background_10000/0/1584559866970/eventscom_cover?e=2147483647&v=beta&t=3bktbE7ts5aNwH8XEUM5rW0G2aMbuQ1b2dHBVQgZqmA",
+    image: HomePage3,
   },
 ];
 {

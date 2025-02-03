@@ -54,6 +54,8 @@ const authService = {
   // Faq section
   getFaq: () => api.get(`${config.GET_ALL_FAQ}`),
 
+  //Terms and condition
+  getToc: () => api.get(`${config.TERMS_AND_CONDTION}`),
   //  Review section
   reviewProduct: (payload, productId) =>
     api.put(`${config.WRITE_A_REVIEW}${productId}`, payload),

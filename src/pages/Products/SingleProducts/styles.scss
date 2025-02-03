@@ -211,6 +211,7 @@
   padding: 3rem;
   display: flex;
   margin: 10 auto;
+  flex-direction: column;
   @media (max-width: 800px) {
     flex-direction: column;
     gap: 0rem;

@@ -1,6 +1,6 @@
 // React and react related imports
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { replace, useNavigate, useParams } from "react-router-dom";
 
 // Third party library
@@ -63,6 +63,9 @@ const SingleProducts = () => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { startDate, endDate, numberOfDays } = useSelector(
+    (state) => state.date
+  );
 
   const fetchSingleProduct = async () => {
     try {
@@ -155,16 +158,29 @@ const SingleProducts = () => {
       getErrorMessage(error);
     }
   };
+  console.log(product);
 
   const handleContinue = () => {
     if (product) {
       dispatch(
         addToCart({
-          _id: product._id,
-          product_image: product.product_image,
-          product_name: product.product_name,
-          product_price: product.product_price,
-          quantity: quantity,
+          orderId: Date.now().toString(), // Unique order ID
+          id: product._id, // Product ID
+          productName: product.product_name, // Product Name
+          productPrice: product.product_price, // Product price
+          mrpPrice: product.mrp_rate, // MRP price
+          store: product.shop_name, // Store name
+          imageUrl: product.product_image, // Product image
+          productDimension: product.product_dimension || "Not Specified", // Product dimension
+          totalPrice: product.product_price * quantity, // Total price calculation
+          quantity: quantity, // Selected quantity
+          context: "product", // Context type
+          sellerName: product.vendor_name, // Seller Name
+          sellerId: product.vendor_id, // Seller ID
+          eventStartDate: startDate, // Event start date
+          eventEndDate: endDate, // Event end date
+          commissionTax: product.commission_tax || 0, // Default to 0
+          commissionPercentage: product.commission_percentage || 0, // Default to 0
         })
       );
     }
@@ -173,23 +189,26 @@ const SingleProducts = () => {
       technicians.forEach((technician) => {
         dispatch(
           addTechnician({
-            _id: `tech_${technician._id}`,
+            orderId: Date.now().toString(), // Ensure unique ID
+            service_id: technician._id, // Technician ID
             product_image:
               technician.image ||
               "https://centrechurch.org/wp-content/uploads/2022/03/img-person-placeholder.jpeg",
-            product_name: `${technician.service_name}`,
-            product_price: technician.price,
-            vendor_name: technician.vendor_name,
-            shop_name: technician.shop_name,
-            vendor_id: technician.vendor_id,
             category: technician.category,
-            commission_percentage: technician.commission_percentage,
-            commission_tax: technician.commission_tax,
-            quantity: 1,
+            price: technician.price, // Technician price
+            service_name: technician.service_name, // Service name
+            shop_name: technician.shop_name, // Shop name
+            vendor_id: technician.vendor_id, // Vendor ID
+            vendor_name: technician.vendor_name, // Vendor name
+            eventStartDate: startDate, // Event start date
+            eventEndDate: endDate, // Event end date
+            quantity: 1, // Default quantity
+            totalPrice: technician.price * 1, // Total price calculation
+            commission_tax: technician.commission_tax || 0, // Default commission tax
+            commission_percentage: technician.commission_percentage || 0, // Default commission percentage
           })
         );
       });
-      setBottomDrawerOpen(false);
     }
 
     setOpen(true);

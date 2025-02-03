@@ -11,13 +11,13 @@ import { useSelector } from "react-redux";
 
 const OrderSummary = ({
   cartItems,
+  technicianItem,
+  servicesItem,
   billingDetails,
   eventDetails,
   handleConfirmOrder,
 }) => {
-  const { startDate, endDate, numberOfDays } = useSelector(
-    (state) => state.date
-  );
+  const { numberOfDays } = useSelector((state) => state.date);
 
   const containerStyle = {
     width: "100%",
@@ -51,23 +51,75 @@ const OrderSummary = ({
       </Typography>
       <Divider sx={{ my: 2 }} />
 
-      {/* Cart Items */}
-      {cartItems?.map((item, index) => (
-        <Grid container key={index} sx={{ mb: 1 }}>
-          <Grid item xs={8}>
-            <Typography>
-              {item.product_name}{" "}
-              <span style={{ fontWeight: "bold" }}>X{item.quantity}</span>
-            </Typography>
-          </Grid>
-          <Grid item xs={4} sx={{ textAlign: "right" }}>
-            <Typography>₹{item.product_price.toLocaleString()}</Typography>
-          </Grid>
-        </Grid>
-      ))}
-      <Divider sx={{ my: 2 }} />
+      {/* 🛒 Products */}
+      {cartItems.length > 0 && (
+        <>
+          <Typography variant="subtitle1" fontWeight="bold">
+            🛍️ Products
+          </Typography>
+          {cartItems.map((item, index) => (
+            <Grid container key={index} sx={{ mb: 1 }}>
+              <Grid item xs={8}>
+                <Typography>
+                  {item.productName}{" "}
+                  <span style={{ fontWeight: "bold" }}>X{item.quantity}</span>
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ textAlign: "right" }}>
+                <Typography>₹{item.productPrice.toLocaleString()}</Typography>
+              </Grid>
+            </Grid>
+          ))}
+          <Divider sx={{ my: 2 }} />
+        </>
+      )}
 
-      {/* Billing Details */}
+      {/* 👨‍🔧 Technicians */}
+      {technicianItem?.length > 0 && (
+        <>
+          <Typography variant="subtitle1" fontWeight="bold">
+            🛠️ Technicians
+          </Typography>
+          {technicianItem.map((item, index) => (
+            <Grid container key={index} sx={{ mb: 1 }}>
+              <Grid item xs={8}>
+                <Typography>
+                  {item.service_name}{" "}
+                  <span style={{ fontWeight: "bold" }}>X{item.quantity}</span>
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ textAlign: "right" }}>
+                <Typography>₹{item.price.toLocaleString()}</Typography>
+              </Grid>
+            </Grid>
+          ))}
+          <Divider sx={{ my: 2 }} />
+        </>
+      )}
+
+      {/* 💼 Services */}
+      {servicesItem?.length > 0 && (
+        <>
+          <Typography variant="subtitle1" fontWeight="bold">
+            🎯 Services
+          </Typography>
+          {servicesItem.map((item, index) => (
+            <Grid container key={index} sx={{ mb: 1 }}>
+              <Grid item xs={8}>
+                <Typography>
+                  {item.shopName}{" "}
+                  <span style={{ fontWeight: "bold" }}>X{item.quantity}</span>
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ textAlign: "right" }}>
+                <Typography>₹{item.totalPrice.toLocaleString()}</Typography>
+              </Grid>
+            </Grid>
+          ))}
+          <Divider sx={{ my: 2 }} />
+        </>
+      )}
+
       <Grid container>
         <Grid item xs={6}>
           <Typography>Total</Typography>
@@ -86,7 +138,6 @@ const OrderSummary = ({
       </Grid>
       <Divider sx={{ my: 2 }} />
 
-      {/* Calculation Details */}
       <Grid container>
         <Grid item xs={6}>
           <Typography>Base Amount</Typography>
@@ -137,7 +188,7 @@ const OrderSummary = ({
       </Typography>
       <Divider sx={{ my: 2 }} />
 
-      {/* Event Details with Map */}
+      {/* 📍 Event Details with Map */}
       <Typography
         variant="h6"
         sx={{ color: "#6c63ff", fontWeight: "bold", mt: 2 }}
@@ -165,7 +216,7 @@ const OrderSummary = ({
         </Typography>
       </Box>
 
-      {/* Message Box */}
+      {/* 💬 Message Box */}
       <TextField
         fullWidth
         multiline
@@ -175,7 +226,7 @@ const OrderSummary = ({
         sx={{ mt: 2 }}
       />
 
-      {/* Action Buttons */}
+      {/* 🚀 Action Buttons */}
       <Box sx={{ mt: 3, textAlign: "center" }}>
         <Button
           variant="contained"
