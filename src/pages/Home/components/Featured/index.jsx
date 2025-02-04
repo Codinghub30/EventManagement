@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import authService from "../../../../api/ApiService";
 import "./styles.scss";
+import { Scale } from "@mui/icons-material";
 
 const Featured = () => {
   const [featuredProduct, setFeaturedProduct] = useState([]);
@@ -40,22 +41,6 @@ const Featured = () => {
         <Typography variant="h5" sx={{ fontWeight: "bold", color: "#343a40" }}>
           Featured Products
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={handleViewAll}
-          sx={{
-            textTransform: "capitalize",
-            fontWeight: "bold",
-            borderColor: "#007bff",
-            color: "#007bff",
-            "&:hover": {
-              backgroundColor: "#007bff",
-              color: "#fff",
-            },
-          }}
-        >
-          View All
-        </Button>
       </Box>
 
       <Box
@@ -160,6 +145,33 @@ const Featured = () => {
             </CardContent>
           </Card>
         ))}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "3rem",
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={handleViewAll}
+          sx={{
+            textTransform: "capitalize",
+            fontWeight: "bold",
+            color: "white",
+            backgroundColor: "#c026d3",
+            width: "8rem",
+            height: "40px",
+            border: "none",
+            "&:hover": {
+              transform: "scale(1.1)",
+              color: "#fff",
+            },
+          }}
+        >
+          View All
+        </Button>
       </Box>
     </Box>
   );

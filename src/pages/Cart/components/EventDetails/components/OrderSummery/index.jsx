@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 
 const OrderSummary = ({
   cartItems,
-  technicianItem,
+  technicianItems,
   servicesItem,
   billingDetails,
   eventDetails,
@@ -19,6 +19,7 @@ const OrderSummary = ({
 }) => {
   const { numberOfDays } = useSelector((state) => state.date);
 
+  // const baseAmount = billingDetails.baseAmount * 3;
   const containerStyle = {
     width: "100%",
     height: "200px",
@@ -28,6 +29,8 @@ const OrderSummary = ({
     lat: 12.2958,
     lng: 76.6394,
   };
+
+  console.log(technicianItems);
 
   return (
     <Box
@@ -51,13 +54,12 @@ const OrderSummary = ({
       </Typography>
       <Divider sx={{ my: 2 }} />
 
-      {/* 🛒 Products */}
-      {cartItems.length > 0 && (
+      {cartItems?.length > 0 && (
         <>
           <Typography variant="subtitle1" fontWeight="bold">
             🛍️ Products
           </Typography>
-          {cartItems.map((item, index) => (
+          {cartItems?.map((item, index) => (
             <Grid container key={index} sx={{ mb: 1 }}>
               <Grid item xs={8}>
                 <Typography>
@@ -75,12 +77,12 @@ const OrderSummary = ({
       )}
 
       {/* 👨‍🔧 Technicians */}
-      {technicianItem?.length > 0 && (
+      {technicianItems?.length > 0 && (
         <>
           <Typography variant="subtitle1" fontWeight="bold">
             🛠️ Technicians
           </Typography>
-          {technicianItem.map((item, index) => (
+          {technicianItems?.map((item, index) => (
             <Grid container key={index} sx={{ mb: 1 }}>
               <Grid item xs={8}>
                 <Typography>
@@ -144,7 +146,7 @@ const OrderSummary = ({
         </Grid>
         <Grid item xs={6} sx={{ textAlign: "right" }}>
           <Typography>
-            ₹{billingDetails?.baseAmount?.toLocaleString()}
+            ₹{billingDetails.baseAmount?.toLocaleString()}
           </Typography>
         </Grid>
         <Grid item xs={6}>

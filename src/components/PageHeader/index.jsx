@@ -49,9 +49,13 @@ import AnalyticsImg from "../../assets/pieChart.png";
 import Delivery from "../../assets/deliveryHome.png";
 import Calendar from "../../pages/Calender";
 import Settings from "../../assets/Settings.png";
-import ShoppingCart from "../../assets/shoppingCart.png";
-import Bell from "../../assets/bell.png";
-import Bookings from "../../assets/bookingss.png";
+// import ShoppingCart from "../../assets/shoppingCart.png";
+import ShoppingCart from "../../assets/carts.png";
+import Homes from "../../assets/hom.png";
+import Serv from "../../assets/serv.png";
+import Calend from "../../assets/calend.png";
+import Products from "../../assets/prod.png";
+import Locations from "../../assets/loc.png";
 import DigiService from "../../assets/digitalService.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
@@ -201,7 +205,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={HomePage}
+                    src={Homes}
                     alt="Not found"
                     style={{ width: "18px", marginTop: "1px" }}
                   />
@@ -219,7 +223,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={Delivery}
+                    src={Products}
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
@@ -253,7 +257,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={DigiService}
+                    src={Serv}
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
@@ -270,7 +274,7 @@ const PageHeader = () => {
                   }}
                 >
                   <img
-                    src={Bookings}
+                    src={Calend}
                     alt="Not found"
                     style={{ width: "17px", marginTop: "1.5px" }}
                   />
@@ -283,7 +287,17 @@ const PageHeader = () => {
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
                 >
-                  <FmdGoodOutlinedIcon sx={{ color: "black", fontSize: 24 }} />
+                  {/* <FmdGoodOutlinedIcon sx={{ color: "black", fontSize: 24 }} /> */}
+                  <img
+                    src={Locations}
+                    alt="Not found"
+                    style={{
+                      width: "1.5rem",
+                      height: "25px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  />
                   <Typography
                     variant="body2"
                     sx={{ fontWeight: "bold", color: "black" }}
@@ -320,7 +334,7 @@ const PageHeader = () => {
                     <img
                       src={ShoppingCart}
                       alt="Not found"
-                      style={{ width: "20px", marginTop: "1.5px" }}
+                      style={{ width: "28px", marginTop: "1.5px" }}
                     />
                   </Badge>
                 </Link>

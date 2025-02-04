@@ -54,9 +54,10 @@ const ExploreService = () => {
           <Box
             key={service.id}
             sx={{
-              background: "#f2caf7",
+              // background: "#bee3f8",
               borderRadius: "12px",
-              boxShadow: "0px 5px 15px rgba(160, 32, 240, 0.3)",
+              // boxShadow: "0px 5px 15px rgba(160, 32, 240, 0.3)",
+              border: "1px solid #1e1d1d85",
               padding: "2rem",
               textAlign: "center",
               cursor: "pointer",
@@ -64,14 +65,14 @@ const ExploreService = () => {
               color: "#6a0dad",
               "&:hover": {
                 transform: "scale(1.05)",
-                boxShadow: "0px 8px 20px rgba(160, 32, 240, 0.5)",
+                // boxShadow: "0px 8px 20px rgba(160, 32, 240, 0.5)",
               },
             }}
             onClick={() => navigate(`/service/${service.name}`)}
           >
             <Box
               sx={{
-                background: "#e39beb",
+                // background: "#e39beb",
                 width: "70px",
                 height: "70px",
                 borderRadius: "50%",
@@ -80,7 +81,8 @@ const ExploreService = () => {
                 justifyContent: "center",
                 margin: "auto",
                 marginBottom: "1rem",
-                boxShadow: "0px 0px 15px rgba(160, 32, 240, 0.4)",
+                border: "1px solid #000000a3",
+                // boxShadow: "0px 0px 15px rgba(160, 32, 240, 0.4)",
               }}
             >
               {service.icon}
@@ -106,7 +108,7 @@ const ExploreService = () => {
           padding: "0.7rem 2rem",
           fontWeight: "bold",
           fontSize: "1rem",
-          background: "#c026d3", // Purple gradient
+          background: "purple",
           color: "#fff",
           borderRadius: "8px",
           "&:hover": {

@@ -96,8 +96,8 @@ const Cart = () => {
 
   const totalPrice = productTotal + serviceTotal + technicianTotal;
 
-  const baseAmount = totalPrice * 0.9;
-  const tdsCharges = totalPrice * 0.02;
+  const baseAmount = totalPrice * numberOfDays;
+  const tdsCharges = baseAmount * 0.02;
   const cgst = totalPrice * 0.09;
   const sgst = totalPrice * 0.09;
   const totalGst = cgst + sgst;
@@ -160,7 +160,6 @@ const Cart = () => {
           {allItems.length > 0 ? (
             <TableContainer sx={{ width: "90%", mt: 3 }}>
               <Table>
-                {/* Common Table Header */}
                 <TableHead>
                   <TableRow>
                     <TableCell sx={{ fontWeight: "bold" }}>Item Name</TableCell>
@@ -258,7 +257,15 @@ const Cart = () => {
                         <TableRow key={item.orderId}>
                           <TableCell>{item.shopName}</TableCell>
                           <TableCell>₹{item.pricing?.toFixed(2)}</TableCell>
-                          <TableCell>{item.quantity || 1}</TableCell>
+                          <TableCell>
+                            <IconButton disabled={true}>
+                              <RemoveIcon />
+                            </IconButton>
+                            {item.quantity || 1}
+                            <IconButton disabled={true}>
+                              <AddIcon />
+                            </IconButton>
+                          </TableCell>
                           <TableCell>₹{item.totalPrice?.toFixed(2)}</TableCell>
                           <TableCell>
                             <IconButton
@@ -296,27 +303,25 @@ const Cart = () => {
 
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="p" sx={{ color: "#626262" }}>
-              Total:
+              Cart Value:
             </Typography>
             <Typography>₹{totalPrice.toLocaleString()}</Typography>
           </Box>
-
-          <Divider sx={{ marginBottom: "1rem" }} />
 
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              fontWeight: 600,
+              paddingBottom: "1rem",
             }}
           >
-            <Typography variant="p" sx={{ color: "#333" }}>
-              Total Price:
+            <Typography variant="p" sx={{ color: "#626262" }}>
+              Events Days
             </Typography>
-            <Typography sx={{ fontWeight: 600 }}>
-              ₹{totalPrice.toLocaleString()}
-            </Typography>
+            <Typography>{numberOfDays}</Typography>
           </Box>
+
+          <Divider sx={{ marginBottom: "1rem" }} />
 
           {/* Base Amount */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -334,6 +339,13 @@ const Cart = () => {
             <Typography>-₹{tdsCharges.toLocaleString()}</Typography>
           </Box>
 
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="p" sx={{ color: "#626262" }}>
+              Amount After TDS Deduction:
+            </Typography>
+            <Typography>-₹{baseAmount - tdsCharges}</Typography>
+          </Box>
+
           {/* CGST (9%) */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="p" sx={{ color: "#626262" }}>
@@ -348,6 +360,12 @@ const Cart = () => {
               SGST (9%):
             </Typography>
             <Typography>₹{sgst.toLocaleString()}</Typography>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="p" sx={{ color: "#626262" }}>
+              Total Gst: (CGST + SGST)
+            </Typography>
+            <Typography>₹{totalGst.toLocaleString()}</Typography>
           </Box>
 
           <Divider sx={{ margin: "1rem 0" }} />
@@ -371,16 +389,18 @@ const Cart = () => {
       {/* Event Details */}
       <EventDetails
         cartItems={cartItems}
+        technicianItems={technicianItem}
+        servicesItem={servicesItem}
         billingDetails={{
           cartValue: totalPrice,
           eventDays: numberOfDays,
-          baseAmount: totalPrice * 0.9,
-          tdsCharges: totalPrice * 0.02,
-          amountAfterTds: totalPrice * 0.98,
-          cgst: totalPrice * 0.09,
-          sgst: totalPrice * 0.09,
-          totalGst: totalPrice * 0.18,
-          grandTotal: totalPrice * 1.18 - totalPrice * 0.02,
+          baseAmount: baseAmount,
+          tdsCharges: tdsCharges,
+          amountAfterTds: baseAmount - tdsCharges,
+          cgst: cgst,
+          sgst: sgst,
+          totalGst: totalGst,
+          grandTotal: grandTotal,
         }}
         handleClearAll={handleClearAll}
       />

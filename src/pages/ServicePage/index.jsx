@@ -98,7 +98,9 @@ const ServicePage = () => {
   return (
     <Box className="service-page">
       <Box className="search-bar">
-        <Typography variant="p">Our Services</Typography>
+        <Typography variant="p" style={{ color: "#c026d3" }}>
+          Our Services
+        </Typography>
         <Typography variant="h6">
           Turning Every Moment into an Enjoyable Journey.
         </Typography>

@@ -1,11 +1,18 @@
-import { Box, Typography, Button } from "@mui/material";
+// React related imports
 import { useNavigate } from "react-router-dom";
+
+// Third party library
+import { Box, Typography, Button } from "@mui/material";
+
+// Assests
 import Shamiana from "../../../../assets/tent1.jpg";
 import Sound from "../../../../assets/speakerFinal.jpg";
 import Lights from "../../../../assets/lights.jpg";
 import Video from "../../../../assets/cameraFinal.jpg";
 import Fabrication from "../../../../assets/carpet.png";
 import Genset from "../../../../assets/genset.png";
+
+// styles
 import "./styles.scss";
 
 const ExploreCategory = () => {
@@ -106,15 +113,6 @@ const ExploreCategory = () => {
               }}
             >
               <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Typography
-                  sx={{
-                    fontWeight: "600",
-                    fontSize: "1.1rem",
-                    color: category.textColor,
-                  }}
-                >
-                  Nithya's {`${category.name}`}
-                </Typography>
                 <Typography
                   sx={{
                     fontWeight: "600",

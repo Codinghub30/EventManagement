@@ -71,14 +71,13 @@ const Trusted = () => {
         </Typography>
       </Box>
 
-      {/* Feature Section */}
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "#ed6bfd",
+          backgroundColor: "#c026d3",
           borderRadius: "10px",
           padding: { xs: "1rem", md: "3rem" },
           color: "#fff",

@@ -48,7 +48,12 @@ const FieldLabel = ({ label }) => (
   </Typography>
 );
 
-const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
+const EventDetails = ({
+  cartItems,
+  technicianItems,
+  billingDetails,
+  handleClearAll,
+}) => {
   const [eventDetails, setEventDetails] = useState({
     eventDate: null,
     // venueStart:null,
@@ -91,19 +96,19 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
   const formatedEndDate = formatDate(endDate);
 
   const handleProceedToTerms = () => {
-    if (
-      !eventDetails.startTime ||
-      !eventDetails.endTime ||
-      !eventDetails.eventName.trim() ||
-      !eventDetails.eventVenue.trim() ||
-      !eventDetails.receiverName.trim() ||
-      !eventDetails.receiverMobile.trim()
-    ) {
-      setSnackbarOpen(true);
-      return;
-    } else {
-      setShowTerms(true);
-    }
+    //   if (
+    //     !eventDetails.startTime ||
+    //     !eventDetails.endTime ||
+    //     !eventDetails.eventName.trim() ||
+    //     !eventDetails.eventVenue.trim() ||
+    //     !eventDetails.receiverName.trim() ||
+    //     !eventDetails.receiverMobile.trim()
+    //   ) {
+    //     setSnackbarOpen(true);
+    //     return;
+    //   } else {
+    setShowTerms(true);
+    //   }
   };
 
   const handleAcceptTerms = () => {
@@ -336,22 +341,23 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
     }
     handleClearAll();
   };
+  console.log("The technicaina ", technicianItems);
 
   const handleModalClose = () => {
     setIsOrderSummaryOpen(false);
   };
   const handleCheckout = async () => {
-    if (
-      !eventDetails.startTime ||
-      !eventDetails.endTime ||
-      !eventDetails.eventName.trim() ||
-      !eventDetails.eventVenue.trim() ||
-      !eventDetails.receiverName.trim() ||
-      !eventDetails.receiverMobile.trim()
-    ) {
-      setSnackbarOpen(true);
-      return;
-    }
+    // if (
+    //   !eventDetails.startTime ||
+    //   !eventDetails.endTime ||
+    //   !eventDetails.eventName.trim() ||
+    //   !eventDetails.eventVenue.trim() ||
+    //   !eventDetails.receiverName.trim() ||
+    //   !eventDetails.receiverMobile.trim()
+    // ) {
+    //   setSnackbarOpen(true);
+    //   return;
+    // }
     setIsOrderSummaryOpen(true);
   };
   useEffect(() => {
@@ -624,6 +630,8 @@ const EventDetails = ({ cartItems, billingDetails, handleClearAll }) => {
         >
           <OrderSummery
             cartItems={cartItems}
+            technicianItems={technicianItems}
+            servicesItem={servicesItem}
             billingDetails={billingDetails}
             handleConfirmOrder={handleConfirmOrder}
             handleModalClose={handleModalClose}
