@@ -182,7 +182,7 @@ const Summery = ({ open, onClose, eventDetails }) => {
             }}
           >
             <GoogleMapReact
-              bootstrapURLKeys={{ key: "YOUR_GOOGLE_MAPS_API_KEY" }} // Replace with your Google Maps API key
+              bootstrapURLKeys={{ key: "YOUR_GOOGLE_MAPS_API_KEY" }} 
               defaultCenter={mapCenter}
               defaultZoom={mapZoom}
             />
