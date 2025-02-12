@@ -58,7 +58,7 @@ const Footer = () => {
           </div>
           <div className="location">
             <LocationOn />
-            <span>United States</span>
+            <span>Bengaluru, India</span>
           </div>
           <p>© 2025 | Nithya All Rights Reserved</p>
         </div>

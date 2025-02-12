@@ -243,30 +243,9 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/TermsAndCondition"
-              element={
-                <PrivateRoute isAuthenticated={isAuthenticated}>
-                  <Toc />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/privacyPolicy"
-              element={
-                <PrivateRoute isAuthenticated={isAuthenticated}>
-                  <PrivacyPolicy />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/returnPolicy"
-              element={
-                <PrivateRoute isAuthenticated={isAuthenticated}>
-                  <ReturnPolicy />
-                </PrivateRoute>
-              }
-            />
+            <Route path="/TermsAndCondition" element={<Toc />} />
+            <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+            <Route path="/returnPolicy" element={<ReturnPolicy />} />
           </Routes>
           <Footer />
         </Suspense>
