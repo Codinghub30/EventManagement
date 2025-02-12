@@ -50,13 +50,13 @@ const Faq = () => {
       id: 1,
       Title: "What is Nithya?",
       description:
-        "NithyaTickets is a powerful online ticketing platform designed to make event management easy and efficient. Organizers can create, sell, and manage event tickets with ease.",
+        "Nithya Event is a powerful online Event Booking platform designed to make event management easy and efficient. Organizers can create, sell, and manage event tickets with ease.",
     },
     {
       id: 2,
       Title: "What features does Nithya provide?",
       description:
-        "Our platform offers tailored ticketing options, secure payment processing, real-time analytics, and tools to track ticket sales and revenue for all event sizes.",
+        "Our platform offers tailored Event options, secure payment processing, real-time analytics, and tools to track ticket sales and revenue for all event sizes.",
     },
     {
       id: 3,
@@ -68,7 +68,7 @@ const Faq = () => {
       id: 4,
       Title: "Is NithyaTickets secure?",
       description:
-        "Yes, NithyaTickets uses encrypted payment systems to ensure secure and reliable transactions for both organizers and attendees.",
+        "Yes, Nithya Event uses encrypted payment systems to ensure secure and reliable transactions for both organizers and attendees.",
     },
   ];
 
