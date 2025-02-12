@@ -21,6 +21,7 @@ import BookingDetails from "./pages/Bookings/components/BookingDetails";
 import ServicePage from "./pages/ServicePage";
 import ServiceDetails from "./pages/ServicePage/components/ServiceDetails";
 import SingleService from "./pages/ServicePage/components/SingleService";
+import ReturnPolicy from "./pages/ReturnPolicy";
 import CalendarModal from "./pages/Calender";
 import Calendar from "./pages/Calender";
 import Toc from "./pages/Toc";
@@ -255,6 +256,14 @@ function App() {
               element={
                 <PrivateRoute isAuthenticated={isAuthenticated}>
                   <PrivacyPolicy />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/returnPolicy"
+              element={
+                <PrivateRoute isAuthenticated={isAuthenticated}>
+                  <ReturnPolicy />
                 </PrivateRoute>
               }
             />

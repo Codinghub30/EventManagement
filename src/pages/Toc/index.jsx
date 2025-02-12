@@ -155,25 +155,27 @@ const Toc = () => {
           8. CANCELLATION FEES AND REFUNDS Cancellation Window:
           <br /> Customers may cancel their order within 48 hours of placing the
           order. Cancellations made after this period may not be eligible for a
-          full refund. A. Cancellation Fees: If a cancellation is requested, a
-          20% cancellation fee will be applied to cover processing and
-          administrative costs. B. Refund Policy: Full Refund: Eligible
+          full refund. <br />
+          A. Cancellation Fees: If a cancellation is requested, a 20%
+          cancellation fee will be applied to cover processing and
+          administrative costs. <br /> B. Refund Policy: Full Refund: Eligible
           cancellations made within the specified cancellation Fees, And window
           will receive a full refund, processed within 7 business days. Partial
           Refund: If a product is returned due to defects, the Company may issue
-          a partial refund after an assessment of the product’s condition. C.
-          Late Fees: In the event of a late payment, the Customer will be liable
-          to pay a late fee of [ or Amount] for each day the payment is delayed
-          beyond the due date. D. Rental Fees: Rental Amount: The Customer
-          agrees to pay a rental fee of [or Amount] for the entire rental
-          duration. Due Dates: Payment must be made in advance on or before the
-          first day of the rental period. E. Rental Period: The rental period
-          will commence on [Start Date] and conclude on [End Date]. The Customer
-          is responsible for returning the rented equipment by the end of the
-          rental period. Late returns may incur additional fees. F. Notification
-          of Cancellation: To cancel an order, customers must notify NithyaEvent
-          by sending an email to support@nithyaevent.com with their order
-          details. <br /> <br />
+          a partial refund after an assessment of the product’s condition.
+          <br /> C. Late Fees: In the event of a late payment, the Customer will
+          be liable to pay a late fee of [ or Amount] for each day the payment
+          is delayed beyond the due date. <br />
+          D. Rental Fees: Rental Amount: The Customer agrees to pay a rental fee
+          of [or Amount] for the entire rental duration. Due Dates: Payment must
+          be made in advance on or before the first day of the rental period.
+          <br /> E. Rental Period: The rental period will commence on [Start
+          Date] and conclude on [End Date]. The Customer is responsible for
+          returning the rented equipment by the end of the rental period. Late
+          returns may incur additional fees.
+          <br /> F. Notification of Cancellation: To cancel an order, customers
+          must notify NithyaEvent by sending an email to support@nithyaevent.com
+          with their order details. <br /> <br />
           9. ADDITIONAL CHARGES AND DELIVERY Additional Charges: <br /> Any
           additional costs incurred, such as equipment damages, loss, or
           extended rental periods, will be billed separately. These charges are

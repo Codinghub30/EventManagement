@@ -45,7 +45,7 @@ const Footer = () => {
             <li onClick={() => navigate("/TermsAndCondition")}>
               Terms and conditions
             </li>
-            <li>Refund</li>
+            <li onClick={() => navigate("/returnPolicy")}>Refund Policy</li>
           </ul>
         </div>
 
